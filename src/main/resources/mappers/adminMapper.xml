@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.mapper.AdministratorMapper">
+    <!-- 1. 관리자 등록 -->
+    <insert id="insertAdminOne" parameterType="com.example.dto.Administrator">
+        INSERT INTO ADMINISTRATOR (id, password, name)
+        VALUES (#{id}, #{password}, #{name})
+    </insert>
+
+    <!-- 2. 관리자 정보 조회 -->
+    <select id="selectAdminOne" parameterType="string" resultType="Administrator">
+        SELECT m.* FROM Administrator m where id = #{id}
+    </select>
+
+    <!-- 3. 클래스 등록 신청 정보 조회 -->
+    <select id="selectClassProductList" resultType="ClassProduct">
+        SELECT * FROM CLASSPRODUCT WHERE CHK IN(0,1) ORDER BY REGDATE DESC
+    </select>
+
+    <!-- 4. 클래스 승인 -->
+    <update id="updateClassProductChk_Confirm" parameterType="long">
+        UPDATE CLASSPRODUCT SET CHK=1 WHERE CLASSCODE = #{classcode}
+    </update>
+
+    <!-- 5. 클래스 승인 취소 -->
+    <update id="updateClassProductChk_Cancle" parameterType="long">
+        UPDATE CLASSPRODUCT SET CHK=0 WHERE CLASSCODE = #{classcode}
+    </update>
+
+</mapper>

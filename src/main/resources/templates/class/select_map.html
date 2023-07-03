@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>클래스 검색(지도)</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+</head>
+
+<body>
+    <main th:fragment="selectMapFragment">
+        <div class="container">
+            <div class="row mb-2">
+                <div class="col d-flex">
+                    <div class="d-flex">
+                        <div class="input-group me-3">
+                            <input id="keyword_map" type="search" class="form-control" placeholder="검색어를 입력하세요."
+                                aria-label="Text input with dropdown button"
+                                onkeyup="if(window.event.keyCode==13){searchClassActionMap(1)}" />
+                            <button class="btn btn-success" type="button" onclick="searchClassActionMap(1)">
+                                <i class="fas fa-search fa-sm"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="d-flex me-3">
+                        <div class="searchhead_map me-3">지역</div>
+                        <div>
+                            <select class="form-select" aria-label="Default select example"
+                                onchange="getLocalcate_map(this.value)">
+                                <th:block th:each="obj : ${list2}">
+                                    <option th:value="${obj.code}" th:text="${obj.cate}"></option>
+                                </th:block>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="d-flex me-3">
+                        <div class="searchhead_map me-3">카테고리</div>
+                        <div>
+                            <select class="form-select" aria-label="Default select example"
+                                onchange="getActcate_map(this.value)">
+                                <th:block th:each="obj : ${list1}">
+                                    <option th:value="${obj.code}" th:text="${obj.cate}"></option>
+                                </th:block>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="d-flex">
+                        <div class="searchhead_map me-3">날짜</div>
+                        <div>
+                            <input id="classdate_map" type="search" class="form-control datepicker"
+                                placeholder="날짜를 선택하세요">
+                        </div>
+                    </div>
+                    <div class="ms-auto">
+                        <button class="btn btn-outline-success" onclick="searchClassActionMap(1)"><i
+                                class="bi bi-search me-2"></i>검색</button>
+                        <a th:href="@{select.do?search=list}">
+                            <button class="btn btn-outline-success"><i class="bi bi-card-list me-2"></i>목록 보기</button>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <hr class="divider">
+        </div>
+        <div class="container-fluid px-4">
+            <div class="row">
+                <div class="col-3 px-3" style="height:900px; overflow-y: scroll;">
+                    <div id="classlist_map">
+
+
+                    </div>
+                    <!-- 동적 생성 -->
+                    <div class="d-flex justify-content-center">
+                        <ul id="pagination-demo" class="pagination-sm"></ul>
+                    </div>
+                </div>
+
+                <div class="col-9">
+                    <div id="map" style="width: 100%; height: 900px;"></div>
+                </div>
+            </div>
+        </div>
+
+
+
+        <!--jQuery-->
+        <script th:src="@{/js/jquery-3.6.4.min.js}"></script>
+        <!-- kakao map library -->
+        <script type="text/javascript"
+            src="//dapi.kakao.com/v2/maps/sdk.js?appkey=4847ab83c2fe2a7607fbdad0614a758b"></script>
+        <!--twbsPagination js-->
+        <script th:src="@{/js/jquery.twbsPagination.min.js}"></script>
+        <!--axios library-->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.3.5/axios.min.js"></script>
+        <script>
+            const contextPath = $('#contextPathHolder').attr('data-contextPath');
+
+            var citycode_map = 0;
+            var activitycode_map = 0;
+            var classdate_map = "";
+
+            var localcode_map = 0;
+            var actcode_map = 0;
+            var classlevel_map = 0;
+            var minprice_map = 0;
+            var maxprice_map = 0;
+            var keyword_map = "";
+
+            var option = 1;
+
+            var positions = [];
+
+            var currentPage = 1;
+
+            function initPagination(pages) {
+
+                $('#pagination-demo').twbsPagination('destroy');	// 페이지 갱신
+
+                $('#pagination-demo').twbsPagination({
+                    startPage: currentPage,
+                    totalPages: pages,
+                    visiblePages: 5,
+                    first: '처음',
+                    last: '마지막',
+                    prev: '이전',
+                    next: '다음',
+                    initiateStartPageClick: false,
+                    onPageClick: function (event, page) {
+                        searchClassAction(page);
+                    }
+                });
+            };
+
+            searchClassActionMap(1);
+
+            function getLocalcate_map(code) {
+
+                if (code == 1) {
+                    citycode_map = 0;
+                }
+                else {
+                    citycode_map = code;
+                }
+            }
+
+            function getActcate_map(code) {
+
+                if (code == 1) {
+                    activitycode_map = 0;
+                }
+                else {
+                    activitycode_map = code;
+                }
+            }
+
+            async function searchClassActionMap(page) {
+
+                currentPage = page;
+
+                if ($('#classdate_map').val().length !== 0) {
+                    classdate_map = $("#classdate_map").val();
+                }
+                else {
+                    classdate_map = "";
+                }
+                if ($('#keyword_map').val().length !== 0) {
+                    keyword_map = $('#keyword_map').val();
+                }
+                else {
+                    keyword_map = "";
+                }
+
+                const url = contextPath + "/api/class/selectclasslist.json";
+                const headers = { "Content-Type": "application/json" };
+
+                const { data } = await axios.get(url,
+                    {
+                        params:
+                        {
+                            citycode: citycode_map, activitycode: activitycode_map,
+                            localcode: localcode_map, actcode: actcode_map,
+                            classlevel: classlevel_map, classdate: classdate_map,
+                            minprice: minprice_map, maxprice: maxprice_map, keyword: keyword_map,
+                            page: page, option: option
+                        }
+                    },
+                    { headers });
+
+                // console.log(data);
+
+                const classlist_map = $('#classlist_map')[0];
+
+                classlist_map.innerHTML = '';
+
+                initPagination(Number(data.pages));
+
+                if (data.type === 'A') {
+
+                    for (let obj of data.list) {
+
+                        if (obj.address3 === null) {
+                            obj.address3 = "";
+                        }
+
+                        classlist_map.innerHTML +=
+
+                            '<div class="col mb-3">' +
+                            '<a href="#" onclick=updatehit(' + obj.classcode + ') class="nav-link">' +
+                            '<div class="card shadow-sm">' +
+                            '<div class="card-header text-center">' + obj.title + '</div>' +
+                            '<img class="card-img-top" height="269" style="object-fit:cover" src="' + contextPath + '/class/image?no=' + obj.mainImg + '">' +
+                            '<div class="card-body">' +
+                            '<div class="d-flex align-items-center justify-content-end mb-2">' +
+                            '<div class="card-text nickname text-center me-2">' + obj.nickname + '</div>' +
+                            '<img style="width: 30px; height: 30px; object-fit:cover; border-radius: 10px;" src="' +
+                            contextPath + '/class/image?no=' + obj.profileImg + '">' +
+                            '</div>' +
+                            '<p class="card-text price fw-bold">' + priceToString(obj.price) + '원(1인)' + '</p>' +
+                            '<p class="card-text local">' + obj.address1 + " " + obj.address2 + " " + obj.address3 + '</p>' +
+                            '</div>' +
+                            '</div>' +
+                            '</a>' +
+                            '</div>';
+                    }
+
+                }
+
+                else if (data.type === 'B') {
+
+                    for (let obj of data.list) {
+
+                        if (obj.address3 === null) {
+                            obj.address3 = "";
+                        }
+
+                        classlist_map.innerHTML +=
+
+                            '<div class="col mb-3">' +
+                            '<a href="product.do?classcode=' + obj.classcode + '" class="nav-link">' +
+                            '<div class="card shadow-sm">' +
+                            '<div class="card-header text-center">' + obj.title + '</div>' +
+                            '<img class="card-img-top" height="269" style="object-fit:cover" src="' + contextPath + '/class/image?no=' + obj.mainImg + '">' +
+                            '<div class="card-body">' +
+                            '<div class="d-flex align-items-center justify-content-end mb-2">' +
+                            '<div class="card-text nickname text-center me-2">' + obj.nickname + '</div>' +
+                            '<img style="width: 30px; height: 30px; object-fit:cover; border-radius: 10px;" src="' +
+                            contextPath + '/class/image?no=' + obj.profileImg + '">' +
+                            '</div>' +
+                            '<div class="d-flex align-items-center mb-2">' +
+                            '<div class="card-text classdate flex-fill me-1">' + obj.classdate + '</div>' +
+                            '<div class="card-text price fw-bold flex-fill">' + priceToString(obj.price) + '원(1인)' + '</div>' +
+                            '</div>' +
+
+                            '<p class="card-text local">' + obj.address1 + " " + obj.address2 + " " + obj.address3 + '</p>' +
+
+                            '</div>' +
+                            '</div>' +
+                            '</a>' +
+                            '</div>';
+                    }
+
+                }
+
+                // 함수 실행될 때마다 전역 변수 positions 배열 요소 초기화
+
+                positions.splice(0, positions.length);
+
+                // 초기화된 변수 positions에 list 형태로 지도 생성에 필요한 정보를 저장 
+
+                for (let obj of data.list) {
+                
+                    if (obj.address3 === null) {
+                        obj.address3 = "";
+                    }
+
+                    positions.push({
+                        title: obj.title,
+                        latlng: new kakao.maps.LatLng(Number(obj.latitude), Number(obj.longitude)),
+                        price: obj.price,
+                        address: obj.address1 + obj.address2 + obj.address3,
+                        mainImg: Number(obj.mainImg)
+                    });
+
+                }
+
+                // console.log("위치", positions);
+
+                onloadMap();
+            }
+
+
+            function onloadMap() {
+
+                var container = document.getElementById('map');
+
+                var options = {
+                    center: new kakao.maps.LatLng(35.180182599322045, 129.07538647683208), // 위도, 경도
+                    level: 3
+                    // 지도의 레벨
+                };
+
+                // 지도 생성 함수
+                var map = new kakao.maps.Map(container, options);
+
+                //console.log(positions);
+
+                var bounds = new kakao.maps.LatLngBounds();
+
+                positions.forEach(function (pos) {
+
+                    // 마커 이미지의 이미지 주소입니다
+                    var imageSrc = "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png";
+
+                    // 마커 이미지의 이미지 크기 입니다
+                    var imageSize = new kakao.maps.Size(24, 35);
+
+                    // 마커 이미지를 생성합니다    
+                    var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize);
+
+                    // 마커를 생성합니다
+                    var marker = new kakao.maps.Marker({
+                        map: map, // 마커를 표시할 지도
+                        position: pos.latlng, // 마커를 표시할 위치
+                        title: pos.title, // 마커의 타이틀, 마커에 마우스를 올리면 타이틀이 표시됩니다
+                        image: markerImage // 마커 이미지 
+                    });
+
+                    var img = document.createElement('img');
+                    img.setAttribute("src", contextPath + "/class/image?no=" + pos.mainImg);
+                    // img.setAttribute("width", "90");
+                    // img.setAttribute("height", "90");
+
+                    var imgbox = document.createElement('div');
+                    imgbox.classList.add('imgbox');
+
+                    imgbox.appendChild(img);
+
+                    var address = document.createElement('div');
+                    address.classList.add('address');
+
+                    var addresstext = document.createTextNode(pos.address);
+                    address.appendChild(addresstext);
+
+                    var infobox = document.createElement('div');
+                    infobox.classList.add('infobox');
+
+                    infobox.appendChild(address);
+
+                    var body = document.createElement('div');
+                    body.classList.add('body');
+
+                    body.appendChild(imgbox);
+                    body.appendChild(infobox);
+
+                    var title = document.createElement('div');
+                    title.classList.add('title');
+
+                    var titletext = document.createTextNode(pos.title);
+
+                    title.appendChild(titletext);
+
+                    var closebutton = document.createElement('button');
+                    closebutton.classList.add('close');
+
+                    closebutton.onclick = function () {
+                        overlay.setMap(null);
+                    }
+                    // closebutton.appendChild('<i class="bi bi-x-circle"></i>');
+                    // closebutton.appendChild(document.createTextNode('닫기'));
+
+                    var head = document.createElement('div');
+                    head.classList.add('head');
+
+                    head.appendChild(title);
+                    head.appendChild(closebutton);
+
+                    var info = document.createElement('div');
+                    info.classList.add('info');
+
+                    info.appendChild(head);
+                    info.appendChild(body);
+
+                    var wrap = document.createElement('div');
+                    wrap.classList.add('wrap');
+
+                    wrap.appendChild(info);
+
+                    // var content1 = document.createElement('div');
+
+                    // var info = document.createElement('span');
+
+                    // info.appendChild(document.createTextNode(pos.address));
+
+                    // content1.appendChild(info);
+
+                    // closebutton.onclick = function() {
+                    //     overlay.setMap(null);
+                    // }
+
+                    // content1.appendChild(closebutton);
+
+                    var overlay = new daum.maps.CustomOverlay({
+                        position: pos.latlng,
+                        content: wrap,
+                        map: map
+                    });
+
+                    kakao.maps.event.addListener(marker, 'click', function () {
+                        overlay.setMap(map);
+                    });
+
+                    bounds.extend(pos.latlng);
+
+                })
+
+                map.setBounds(bounds);
+
+            }
+
+            function priceToString(price) {
+                return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+            }
+
+            async function updatehit(code) {
+
+                //console.log(code);
+
+                const url = contextPath + '/api/class/updatehit.json';
+                const headers = { "Content-Type": "application/json" };
+                const body = { classcode: code };
+
+                const { data } = await axios.put(url, body, { headers });
+
+                //console.log(data);
+
+                if (data.ret === 1) {
+                    window.location.href = contextPath + '/class/product.do?classcode=' + code;
+                }
+            }
+
+        </script>
+    </main>
+</body>
+
+</html>

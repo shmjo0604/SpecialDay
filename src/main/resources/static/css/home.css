@@ -1,0 +1,364 @@
+html,
+body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+}
+
+/* * {
+    box-sizing: border-box;
+    font-family: 'NotoSansCJKkr', sans-serif;
+    letter-spacing: -0.05em;
+    word-break: keep-all;
+    word-wrap: break-word;
+} */
+
+.container {
+    opacity: 1;
+    height: 100%;
+    position: relative;
+    flex-grow: 1;
+}
+
+div {
+    display: block;
+}
+
+/* 광고 배너 */
+#main_01 {
+    height: 26rem;
+    margin: 0 auto;
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+    padding-left: 10px; /* 좌측 여백 */
+    padding-right: 10px; /* 우측 여백 */
+    overflow: hidden;
+    position: relative;
+    text-align: center; /* 가운데 정렬 */
+}
+
+.banner {
+    position: relative;
+    width: 1400px;
+    height: 320px;
+    margin: 0 auto;
+    padding: 0;
+    overflow: hidden;
+    display: block;
+}
+
+.banner ul {
+    position: absolute;
+    margin: 0px;
+    padding: 0;
+    list-style: none;
+}
+
+.banner ul li {
+    float: left;
+    width: 1400px;
+    height: 320px;
+    margin: 0;
+    padding: 0;
+}
+
+.banner-img {
+    width: 1400px;
+    height: 320px;
+}
+
+/* 배너 재생, 멈춤 */
+.playBtn:hover,
+.stopBtn:hover{
+    background-color: rgb(255, 255, 255);
+    opacity: 0.8;
+    border-radius: 50%;
+}
+.prevBtn {
+    left: 1%;
+    bottom: 42%;
+    margin: 1rem;
+}
+.nextBtn {
+    right: 1%;
+    bottom: 42%;
+}
+.btns {
+    position: absolute;
+    z-index: 3;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    text-align: center;
+}
+.btns>a {
+    display: inline-block;
+    padding: 5px 12px;
+    margin: 5px 0;
+    font-size: 20px;
+}
+
+/* 화살표 배너 이동 */
+.btnmove {
+    position: absolute;
+    width: 1400px;
+    height: 320px;
+    z-index: 1;
+    font-size: 4em;
+    opacity: 0.5;
+}
+.prev1:hover,
+.next1:hover{
+    background-color: rgb(255, 255, 255);
+    border-radius: 95px;
+}
+
+.btnmove.prev {
+    left: 1%;
+    padding: 100px 0;
+}
+
+.btnmove.next {
+    left: 96%;
+    padding: 100px 0;
+}
+
+.banner i {
+    color: rgb(92, 92, 92);
+}
+
+/* 카테고리 아이콘 영역 */
+.icon {
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 1100px; /* 원하는 최대 너비로 조정하세요 */
+}
+
+.icon-list {
+    padding: 1rem;
+    margin: 1rem auto;
+    justify-content: space-between;
+    height: unset;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.icon-list li {
+    flex-basis: calc(33.33% - 40px); /* 아이콘 사이의 간격을 조정 */
+    margin-bottom: 40px; /* 아이콘 사이의 간격을 조정 */
+}
+
+/* ul {
+    list-style-type: disc;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+    padding-inline-start: 40px;
+} */
+
+.cate {
+    padding: 0.5rem 0;
+    border-radius: 10%;
+}
+.cate:hover{
+    transform: scale(1.05);
+    transition: 0.3s;
+    /* background-color: rgb(248, 246, 246); */
+}
+
+#cate-icon {
+    width: 120px;
+    height: 120px;
+    justify-content: center;
+    align-items: center;
+}
+
+.cate-a {
+    text-decoration: none;
+}
+
+ul,ol,li {
+    list-style: none;
+}
+
+.icon-name {
+    font-size: 1.2rem;
+    font-weight: 600;
+    line-height: 1.25rem;
+    color: #323232;
+    margin: 0.25rem 0 0;
+    text-align: center;
+}
+
+/* 탭 메뉴 영역 , 서비스 영역 */
+.main-service {
+    width: 70rem;
+    margin: auto auto 5rem;
+}
+
+.main-cumu {
+    width: 70rem;
+    margin: auto auto 10rem;
+    padding: 20px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+}
+
+.seb-title {
+    margin: 2rem 0;
+    padding: 5px 10px;
+    /* border-left: 8px solid #848484; */
+    /* border-bottom:1px solid #848484; */
+    font-family: 'Do Hyeon', sans-serif;
+    font-size:40px;
+    color: #323232;
+    text-align: center;
+}
+
+#tabMenu input[type="radio"] {
+    display: none;
+}
+
+#tabMenu label {
+    display: inline-block;
+    margin: 0 0;
+    padding: 15px 25px;
+    font-weight: 600;
+    text-align: center;
+    color: #aaa;
+    border: 1px solid transparent;
+}
+
+#tabMenu label:hover {
+    color: #222;
+    cursor: pointer;
+}
+
+#tabMenu input:checked+label {
+    color: cadetblue;
+    border: 1px solid #ddd;
+    background-color: #eee;
+}
+
+.tabContent {
+    display: none;
+    padding: 20px 0 0;
+    border-top: 1px solid #ddd;
+}
+
+.tabContent h2 {
+    display: none;
+}
+
+#notice ul {
+    height: 18rem;
+    list-style: disc;
+}
+
+#notice ul li {
+    font-size: 16px;
+    line-height: 2.5;
+}
+.notice1 a{
+    text-decoration: none;
+    color: #222;
+}
+.notice1 a:hover{
+    color:#848484;
+}
+.notice1 li{
+    list-style: inside;
+}
+
+#gallery ul {
+    height: 18rem;
+}
+
+#gallery ul li {
+    display: inline;
+}
+
+#tab1:checked~#notice,
+#tab2:checked~#gallery {
+    display: block;
+}
+
+/* 새로운 클래스  */
+.main-newclass {
+    width: 70rem;
+    margin: auto auto 5rem;
+}
+
+.newclass {
+    padding: 1rem;
+    margin: 1rem auto 1rem;
+    justify-content: space-between;
+    height: unset;
+    display: flex;
+}
+
+.class {
+    float: left;
+    height: 100%;
+    min-height: 1px;
+    outline: none;
+    margin: 1rem;
+}
+.class img{
+    border-radius: 8%;
+}
+.class img:hover{
+    transform: scale(1.02);
+    transition: 0.4s;
+}
+.new-c1 {
+    text-decoration: none;
+}
+.class-name{
+    margin: 8px;
+    /* font-size: 1rem; */
+    font-weight: 600;
+    line-height: 1.25rem;
+    width: 19rem;
+    color: #323232;
+}
+
+.price{
+    margin: 0 auto;
+    font-size: 15px;
+    color: rgb(31, 40, 61);
+    text-align: right;
+    padding: 0%;
+}
+.local{
+    display: flex;
+    -webkit-box-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    justify-content: center;
+    margin: 10px 10px 2px 30%;
+    padding: 2px 8px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    box-sizing: border-box;
+    border: 1px solid rgb(0, 150, 136);
+    border-radius: 3px;
+    min-width: 3rem;
+    color: rgb(81, 91, 96);
+    background-color: rgb(242, 250, 249);
+    font-size: 12px;
+    line-height: 13px;
+    font-family: "Noto Sans KR";
+    font-style: normal;
+}
+
+.main-commu {
+    width: 70rem;
+    margin: auto auto 5rem;
+}
+
+.hover-event:hover {
+    color: rgb(103, 137, 231);
+    text-decoration-line: underline;
+}

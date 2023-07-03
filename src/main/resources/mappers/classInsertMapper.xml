@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.mapper.ClassInsertMapper">
+
+    <!-- 1. 클래스 등록 -->
+    <insert id="insertClassOne" parameterType="ClassProduct">
+        INSERT INTO classproduct( title, postcode, address1, address2, address3, price, instructor, intro, curriculum, 
+        localcode, actdetailcode, nickname, memberid, latitude, longitude, sns )
+        VALUES ( #{title}, #{postcode}, #{address1}, #{address2}, #{address3}, #{price}, #{instructor}, #{intro}, #{curriculum}, 
+        #{localcode}, #{actdetailcode}, #{nickname}, #{memberid}, #{latitude}, #{longitude}, #{sns} )
+    </insert>
+
+    <!-- 2. 지역 상위 분류 조회 -->
+    <select id="selectCityCateList" resultType="CityCate">
+        SELECT c.* FROM citycate c ORDER BY c.code ASC
+    </select>
+
+    <!-- 3. 지역 하위 분류 조회(by 상위 분류 코드) -->
+    <select id="selectLocalCateList" parameterType="int" resultType="LocalCate">
+        SELECT l.* FROM localcate l WHERE citycode = #{citycode} ORDER BY l.code ASC
+    </select>
+
+    <!-- 4. 클래스 상위 분류 조회 -->
+    <select id="selectActivityCateList" resultType="ActivityCate">
+        SELECT a.* FROM activitycate a ORDER BY a.code ASC
+    </select>
+
+    <!-- 5. 클래스 하위 분류 조회 (by 상위 분류 코드) -->
+    <select id="selectActDetailCateList" parameterType="int" resultType="ActDetailCate">
+        SELECT a.* FROM actdetailcate a WHERE actcode = #{actcode} ORDER BY a.code ASC
+    </select>
+
+    <!-- 6. 클래스 이미지 등록 -->
+    <insert id="insertClassImage" parameterType="java.util.List">
+        INSERT INTO classimage(no, filename, filedata, filetype, filesize, typechk, classcode)
+        SELECT seq_classimage_no.NEXTVAL, T1.* FROM(
+            <foreach item="obj" collection="list" separator=" UNION ALL ">
+                SELECT '${obj.filename}' filename, #{obj.filedata} filedata, '${obj.filetype}' filetype,
+                ${obj.filesize} filesize, ${obj.typechk} typechk, ${obj.classcode} classcode FROM DUAL
+            </foreach>
+        ) T1
+    </insert>
+
+    <!-- 7. 가장 최근에 등록한 클래스 코드 조회 -->
+    <select id="selectClasscodeRecent" parameterType="string" resultType="long">
+        SELECT MAX(c.classcode) FROM classproduct c WHERE memberid = #{id} 
+    </select>
+
+</mapper>

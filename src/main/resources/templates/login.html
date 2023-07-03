@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>SPECIAL DAY : 로그인</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <!--웹 페이지 아이콘 변경-->
+    <link rel="icon" th:href="@{/image/logo.ico}">
+    <!-- Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=DynaPuff&family=Permanent+Marker&display=swap"
+        rel="stylesheet">
+    <!--Bootstrap 용 CSS-->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.3.1/mdb.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <!--Bootstrap 용 Icon CDN-->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+    <!--font awesome 용-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <!--thymeleaf contextpath-->
+    <link id="contextPathHolder" th:data-contextPath="${#httpServletRequest.getContextPath()}" />
+    <style>
+        .form-floating>.form-control {
+            height: 100%;
+        }
+
+        #login-card {
+            /* margin-top: 250px; */
+            /* margin-left: -90px; */
+            border-color: #23ba15;
+
+        }
+
+        /* .logo-wrap img {
+			width: 100%;
+			height: 150px;
+		} */
+
+        #login-button {
+
+            width: 120px;
+            height: 48px;
+            font-size: 20px;
+            background: var(--main-color);
+            color: white;
+            border: solid 1px var(--main-color);
+            border-radius: 5px;
+
+        }
+
+        .login-divider {
+
+            width: 0;
+            border-right: 1px solid #e3e6f0;
+            height: calc(3.75rem - 2rem);
+            margin: auto 0.75rem;
+
+        }
+
+        .footer {
+            padding-left: 45px;
+            margin-left: 48px;
+            margin-bottom: 20px;
+        }
+
+        .modal-header {
+            background-color: #28c41a
+        }
+
+        :root {
+            --body-background-color: #f0f5f3;
+            --font-color: #4e4e4e;
+            --main-color: #23ba15;
+
+        }
+
+        .stepper-wrapper {
+            margin-top: auto;
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .stepper-item {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex: 1;
+
+            @media (max-width: 768px) {
+                font-size: 12px;
+            }
+        }
+
+        .stepper-item::before {
+            position: absolute;
+            content: "";
+            border-bottom: 2px solid #ccc;
+            width: 100%;
+            top: 20px;
+            left: -50%;
+            z-index: 2;
+        }
+
+        .stepper-item::after {
+            position: absolute;
+            content: "";
+            border-bottom: 2px solid #ccc;
+            width: 100%;
+            top: 20px;
+            left: 50%;
+            z-index: 2;
+        }
+
+        .stepper-item .step-counter {
+            position: relative;
+            z-index: 5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #ccc;
+            margin-bottom: 6px;
+        }
+
+        .stepper-item.active {
+            font-weight: bold;
+        }
+
+        .stepper-item.active .step-counter {
+            background-color: #28c41a;
+        }
+
+        .stepper-item.completed .step-counter {
+            background-color: #4bb543;
+        }
+
+        .stepper-item.completed::after {
+            position: absolute;
+            content: "";
+            border-bottom: 2px solid #4bb543;
+            width: 100%;
+            top: 20px;
+            left: 50%;
+            z-index: 3;
+        }
+
+        .stepper-item:first-child::before {
+            content: none;
+        }
+
+        .stepper-item:last-child::after {
+            content: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!--main 영역-->
+    <main>
+        <div class="container mt-5">
+            <div class="row justify-content-center">
+                <div class="col-lg-5">
+                    <div id="login-card" class="card shadow-lg border-0 rounded-lg w-100 mt-5">
+                        <div class="logo-wrap" style="text-align: center; margin-top: 8%; margin-bottom: 5%;">
+                            <a th:href="@{/home.do}">
+                                <img class="p-4" th:src="@{/image/logo.svg}" alt="로고 이미지" />
+                            </a>
+                        </div>
+                        <div class="card-body">
+                            <form id="form" th:action="@{/loginaction.do}" method="post">
+                                <div class="form-floating mb-4">
+                                    <input id="id" class="form-control" type="text" placeholder="ID" name="id" onkeyup="if(window.event.keyCode==13){loginAction()}">
+                                    <label>아이디</label>
+                                </div>
+                                <div class="form-floating mb-4">
+                                    <input id="pw" class="form-control" type="password" placeholder="Password"
+                                        name="password" onkeyup="if(window.event.keyCode==13){loginAction()}">
+                                    <label>패스워드</label>
+                                </div>
+                                <div class="find-wrap d-flex justify-content-center" id="find-wrap">
+                                    <a class="text" type="button" th:href="@{/member/join.do}"
+                                        style="text-decoration: none; color: rgb(118, 118, 118);">회원가입</a>
+
+                                    <div class="login-divider d-none d-sm-block"></div>
+
+                                    <a class="text" type="button" onclick="findId()"
+                                        style="text-decoration: none; color: rgb(118, 118, 118);">아이디 찾기</a>
+
+                                    <div class="login-divider d-none d-sm-block"></div>
+
+                                    <a class="text" type="button" onclick="findPw()"
+                                        style="text-decoration: none; color: rgb(118, 118, 118);">비밀번호 찾기</a>
+                                </div>
+                                <div class="d-flex align-items-center justify-content-center mt-4 mb-0">
+                                    <!-- Controller -->
+                                    <button id="login-button" class="btn btn-outline-success" type="button"
+                                        style="width: 150px;" onclick="loginAction()">로그인</button>
+                                    <!-- RestController -->
+                                    <!-- <button class="btn btn-primary" type="button" onclick="ajaxLoginAction()">로그인</button> -->
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!--modal 영역-->
+    <!--아이디 찾기 modal-->
+    <div class="modal fade" id="findIdModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false"
+        aria-labelledby="findIdModalLabel" aria-hidden="true">
+        <div class="modal-dialog  modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="me-auto"></div>
+                    <h5 class="modal-title" id="findIdModalLabel" style="color: white;">아이디를 잊으셨나요?</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" style="height: 500px;">
+                    <div class="container">
+                        <div class="form-floating mb-4">
+                            <input type="text" name="modal_name" id="modal_name" class="form-control" />
+                            <label for="name" class="form-label">등록하신 이름을 입력해주세요</label>
+                        </div>
+                        <div class="form-floating mb-4">
+                            <input type="text" name="modal_email" id="modal_email" class="form-control"/>
+                            <label for="email" class="form-label">등록하신 이메일을 입력해주세요 </label>
+                        </div>
+                        <div class="form-floating mb-4">
+                            <input type="text" name="modal_phone" id="modal_phone" class="form-control" oninput="autoHyphen(this)"
+                            maxlength="13"/>
+                            <label for="phone" class="form-label">등록하신 전화번호를 입력해주세요( 하이픈('-')은 자동 입력됩니다 )</label>
+                        </div>
+
+                        <div id="printBox" class="mt-2" style="display:none;">
+                            <p class="text-center">입력하신 정보와 일치하는 아이디 목록입니다.</p>
+                            <div class="col border" style="height: 180px;">
+                                <div id="printId"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <input id="findPwModalBtn" type="button" class="btn btn-primary" th:onclick="findPwModalShow()"
+                        value="비밀번호 재설정" style="display:none;" />
+                    <input type="button" class="btn btn-success" th:onclick="findIdAction()" value="아이디 찾기" />
+                    <button type="button" class="btn btn-secondary" onclick="resetAction()">닫기</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ****비밀번호 찾기 modal**** -->
+    <!--modal1. 아이디 존재 유무 확인-->
+    <div class="modal fade" id="findPwfirstModal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="findPwfirstModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-success text-white">
+                    <div class="me-auto"></div>
+                    <h5 class="modal-title" id="findPwfirstModalLabel">비밀번호 찾기</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" style="height: 500px;">
+                    <div class="stepper-wrapper">
+                        <div class="stepper-item active">
+                            <div class="step-counter">1</div>
+                            <div class="step-name">아이디 입력</div>
+                        </div>
+                        <div class="stepper-item">
+                            <div class="step-counter">2</div>
+                            <div class="step-name">이메일 인증</div>
+                        </div>
+                        <div class="stepper-item">
+                            <div class="step-counter">3</div>
+                            <div class="step-name">비밀번호 변경</div>
+                        </div>
+                    </div>
+                    <!-- <h3 class="text-center mb-4">아이디 입력</h3> -->
+                    <div class="container w-75">
+                        <div class="row">
+                            <div class="col">
+                                <div class="form-floating mt-4">
+                                    <input type="text" name="modal_id" id="modal1_id" class="form-control" />
+                                    <label for="name" class="form-label">아이디를 입력해주세요</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-success" th:onclick="findPwIdCheck()">다음</button>
+                    <!-- <button class="btn btn-primary" data-bs-target="#findPwSecondModal" data-bs-toggle="modal">다음</button> -->
+                    <button type="button" class="btn btn-secondary" onclick="resetAction1()">취소</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--modal2. 이메일 인증-->
+    <div class="modal fade" id="findPwSecondModal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="findPwSecondModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-success text-white">
+                    <div class="me-auto"></div>
+                    <h5 class="modal-title" id="findPwSecondModalLabel">비밀번호 찾기</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" style="height: 500px;">
+                    <div class="stepper-wrapper">
+                        <div class="stepper-item completed">
+                            <div class="step-counter">1</div>
+                            <div class="step-name">아이디 입력</div>
+                        </div>
+                        <div class="stepper-item active">
+                            <div class="step-counter">2</div>
+                            <div class="step-name">이메일 인증</div>
+                        </div>
+                        <div class="stepper-item">
+                            <div class="step-counter">3</div>
+                            <div class="step-name">비밀번호 변경</div>
+                        </div>
+                    </div>
+                    <!-- <h3 class="text-center mb-4">이메일 인증</h3> -->
+                    <div class="container w-75">
+                        <div class="row">
+                            <div class="col">
+                                
+                                <div class="input-group input-group mt-5 mb-4">
+                                    <div class="form-floating" aria-describedby="modal2_sendbtn">
+                                        <input class="form-control" type="email" id="modal2_email" 
+                                        placeholder="email@example.com"/>
+                                        <label for="modal2_email" class="form-label">인증번호를 전송할 이메일을 입력해주세요</label>
+                                    </div>
+                                    <button id="modal2_sendbtn" type="button" class="btn btn-success"
+                                    th:onclick="findPwEmailAuth()">이메일 인증</button>
+                                </div>
+                                
+                                <div id="authbox" style="display:none;">
+                                    <hr class="divider">
+                                    <div class="input-group mb-2 mt-4">
+                                        <div class="form-floating" aria-describedby="modal2_authbtn">
+                                            <input type="text" id="modal2_authnum" class="form-control" />
+                                            <label for="modal2_authnum" id="modal2_authnum_label" class="form-label"></label>
+                                        </div>
+                                        <button id="modal2_authbtn1" type="button" class="btn btn-success"
+                                        th:onclick="checkauthnum()">인증</button>
+                                        <button id="modal2_authbtn2" type="button" class="btn btn-outline-danger"
+                                        th:onclick="findPwEmailAuth()">재발급</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="modal-footer">
+                    <button id="modal2_next" class="btn btn-primary" style="display: none;"
+                        data-bs-target="#findPwThirdModal" data-bs-toggle="modal">다음</button>
+                    <button type="button" class="btn btn-secondary" onclick="resetAction2()">취소</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--modal3. 비밀번호 변경-->
+    <div class="modal fade" id="findPwThirdModal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="findPwThirdModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-success text-white">
+                    <div class="me-auto"></div>
+                    <h5 class="modal-title" id="findPwThirdModalLabel">비밀번호 찾기</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" style="height: 500px;">
+                    <div class="stepper-wrapper">
+                        <div class="stepper-item completed">
+                            <div class="step-counter">1</div>
+                            <div class="step-name">아이디 입력</div>
+                        </div>
+                        <div class="stepper-item completed">
+                            <div class="step-counter">2</div>
+                            <div class="step-name">이메일 인증</div>
+                        </div>
+                        <div class="stepper-item active">
+                            <div class="step-counter">3</div>
+                            <div class="step-name">비밀번호 변경</div>
+                        </div>
+                    </div>
+                    <!-- <h4 class="text-center mb-4">비밀번호 변경</h4> -->
+                    <div class="container w-75">
+
+
+                        <div class="form-floating mb-4" style="display:none;">
+                            <input type="text" name="id" id="modal3_id" class="form-control" value="" />
+                            <!-- <label for="phone" class="form-label">등록하신 전화번호를 입력해주세요</label> -->
+                        </div>
+                        <div class="form-floating mb-4">
+                            <input type="password" name="password" id="modal3_password" class="form-control"
+                                value="pw2" />
+                            <label for="name" class="form-label">새 비밀번호를 입력해주세요</label>
+                        </div>
+                        <div class="form-floating mb-4">
+                            <input type="password" id="modal3_password1" class="form-control" value="pw2" />
+                            <label for="email" class="form-label">새 비밀번호를 한 번 더 입력해주세요</label>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <input type="button" class="btn btn-success" th:onclick="findPwAction()" value="확인" />
+                    <button type="button" class="btn btn-secondary" onclick="resetAction3()">취소</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--jQuery-->
+    <script th:src="@{/js/jquery-3.6.4.min.js}"></script>
+    <!--axios library-->
+    <script th:src="@{/js/axios.min.js}"></script>
+    <!--Bootstrap 용 js -->
+    <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+    <!--SweetAlert2 JS-->
+    <script th:src="@{/js/sweetalert2@11.js}"></script>
+    <script>
+        const contextPath = $('#contextPathHolder').attr('data-contextPath');
+
+        var userId = null;
+        var userEmail = null;
+
+        function loginAction() {
+            const id = document.getElementById("id");
+            const pw = document.getElementById("pw");
+            const form = document.getElementById("form");
+
+            if (id.value.length <= 0) {
+                alert('아이디를 입력하세요');
+                id.focus();
+                return false;
+            }
+            if (pw.value.length <= 0) {
+                alert('비밀번호를 입력하세요');
+                pw.focus();
+                return false;
+            }
+
+            form.submit();
+        }
+
+        function findId() {
+            const modal = new bootstrap.Modal(document.getElementById("findIdModal"), {});
+            modal.show();
+        }
+
+        async function findIdAction() {
+            const modal_name = document.getElementById("modal_name");
+            const modal_email = document.getElementById("modal_email");
+            const modal_phone = document.getElementById("modal_phone");
+
+            console.log(modal_name.value);
+            console.log(modal_email.value);
+            console.log(modal_phone.value);
+
+            if (modal_name.value.length <= 0) {
+                alert('이름을 입력하세요');
+                modal_name.focus();
+                return false;
+            }
+
+            if (modal_email.value.length <= 0) {
+                alert('이메일을 입력하세요');
+                modal_email.focus();
+                return false;
+            }
+
+            if (modal_phone.value.length <= 0) {
+                alert('전화번호를 입력하세요');
+                modal_phone.focus();
+                return false;
+            }
+
+            const url = contextPath + '/api/member/findid.json';
+            const headers = { "Content-Type" : "application/json" };
+            const { data } = await axios.get(url,
+                { params: { name: modal_name.value, email: modal_email.value, phone: modal_phone.value } },
+                { headers });
+
+            //console.log(data.ret);
+
+            const printId = document.getElementById("printId");
+            printId.innerHTML = '';
+
+            $("#printBox").css("display", "block");
+
+            if (data.ret === "not") {
+                printId.innerHTML +=
+                    '<p class="text-center">입력하신 정보와 일치하는 아이디가 존재하지 않습니다.</p>';
+            }
+
+            else {
+
+                printId.innerHTML +=
+                    '' +
+                    '<input type="text" readonly class="form-control-plaintext text-center" value=' + data.ret + '>';
+                $("#findPwModalBtn").css("display", "block");
+            }
+
+        }
+
+        function autoHyphen(target) {
+            target.value = target.value
+                .replace(/[^0-9]/g, '')
+                .replace(/^(\d{0,3})(\d{0,4})(\d{0,4})$/g, "$1-$2-$3").replace(/(\-{1,2})$/g, "");
+        }
+
+        function resetAction() {
+
+            $("#findIdModal").modal('hide');
+
+            document.getElementById("modal_name").value = null;
+            document.getElementById("modal_email").value = null;
+            document.getElementById("modal_phone").value = null;
+
+            $("#printBox").css("display", "none");
+
+            // const modal = new bootstrap.Modal(document.getElementById("findIdModal"),{}); -> 작동 안 됩니다. 
+            // modal.hide();
+        }
+
+        function findPwModalShow() {
+
+            $("#findIdModal").modal('hide');
+
+            document.getElementById("modal_name").value = null;
+            document.getElementById("modal_email").value = null;
+            document.getElementById("modal_phone").value = null;
+
+            $("#printBox").css("display", "none");
+
+            findPw();
+
+        }
+
+        function findPw() {
+            const modal = new bootstrap.Modal(document.getElementById("findPwfirstModal"), {});
+            modal.show();
+        }
+
+        function resetAction1() {
+
+            $("#findPwfirstModal").modal('hide');
+            
+            $("#modal1_id").val(null);
+
+        }
+
+        function resetAction2() {
+
+            $("#findPwSecondModal").modal('hide');
+            
+            $("#modal2_email").val(null);
+            $("#modal2_authnum").val(null);
+            
+        }
+
+        function resetAction3() {
+
+            $("#findPwThirdModal").modal('hide');
+
+            $("#modal3_password").val(null);
+            $("#modal3_password1").val(null);
+
+        }
+
+        async function findPwIdCheck() {
+
+            const id = document.getElementById("modal1_id");
+
+            if (id.value.length <= 0) {
+                alert('아이디를 입력하세요');
+                id.focus();
+                return false;
+            }
+
+            const url = contextPath + '/api/member/idcheck.json?id=' + id.value;
+            const headers = { "Content-Type": "application/json" };
+            const { data } = await axios.get(url, { headers });
+            //console.log(data);
+
+            if (data.ret === 0) {
+                alert('존재하지 않는 아이디입니다.');
+                id.value = null;
+                id.focus();
+            }
+            else if (data.ret === 1) {
+                userId = id.value;
+                resetAction1();
+                $("#findPwSecondModal").modal('show');
+            }
+
+        }
+
+        var timer = null;
+        var isRunning = false;
+        var timerstop = 1;
+
+        function findPwEmailAuth() {
+
+            const email = document.getElementById("modal2_email");
+
+            if(email.value.length < 1) {
+                alert("이메일을 입력해주세요.");
+                return false;
+            }
+
+            userEmail = email.value;
+
+            const url = contextPath + '/api/member/findpw.json';
+            const headers = { "Content-Type": "application/json" };
+            const body = { email: email.value }
+            const { data } = axios.post(url, body, { headers });
+
+            // 유효시간 설정
+            var leftSec = 270;
+
+            if (isRunning) {
+                clearInterval(timer);
+                document.querySelector("#modal2_authnum_label").textContent="";
+                startTimer(leftSec);
+            } else {
+                startTimer(leftSec);
+            }
+
+        }
+
+        async function checkauthnum() {
+
+            const authnum = $("#modal2_authnum");
+            //console.log(authnum.val());
+
+            if (authnum.val().length < 1) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: '인증번호를 입력해주세요',
+                    showConfirmButton: true
+                })
+                return false;
+            }
+
+            const url = contextPath + '/api/member/verifyauthnum.json';
+            const headers = { "Content-Type": "application/json" };
+            const body = { email: userEmail, authnum: authnum.val() };
+            const { data } = await axios.post(url, body, { headers });
+
+            console.log(data);
+
+            const status = data.status;
+
+            if (status === 0) {
+
+                Swal.fire({
+                    icon: 'error',
+                    title: '인증번호가 일치하지 않습니다.',
+                    showConfirmButton: true
+                })
+
+                return false;
+            }
+            if (status === -1) {
+
+
+            }
+            if (status === 200) {
+
+                Swal.fire({
+                    icon: 'success',
+                    title: '인증 완료했습니다.',
+                    showConfirmButton: true
+                })
+
+                clearInterval(timer);
+
+                $("#modal2_next").css("display", "block");
+            }
+
+        }
+
+        function startTimer(count) {
+
+            var minutes, seconds;
+
+            timer = setInterval(function () {
+                minutes = parseInt(count / 60, 10);
+                seconds = parseInt(count % 60, 10);
+
+                minutes = minutes < 10 ? "0" + minutes : minutes;
+                seconds = seconds < 10 ? "0" + seconds : seconds;
+
+                document.querySelector("#modal2_authnum_label").textContent = "남은 시간 " + minutes + ":" + seconds;
+
+                // display.html(minutes + ":" + seconds);
+
+                $("#authbox").css("display", "block");
+
+                count--;
+
+                // 타이머 시간 종료
+                if (count < 0) {
+
+                    clearInterval(timer);
+                    document.querySelector("#modal2_authbtn1").disabled = true;
+                    document.querySelector("#modal2_authnum_label").textContent = "시간 초과";
+                    isRunning = false;
+
+                }
+            }, 1000);
+
+            isRunning = true;
+        }
+        async function findPwAction() {
+
+            const password = document.querySelector('#modal3_password');
+            const password1 = document.querySelector('#modal3_password1');
+
+            console.log(userId);
+
+            if (password.value.length < 1) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: '신규 비밀번호를 입력해주세요',
+                    showConfirmButton: true
+                })
+                password.focus();
+                return false;
+            }
+            if (password1.value.length < 1) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: '신규 비밀번호를 다시 한 번 입력해주세요',
+                    showConfirmButton: true
+                })
+                password1.focus();
+                return false;
+            }
+            if (password.value !== password1.value) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: '입력하신 비밀번호가 서로 일치하지 않습니다.',
+                    showConfirmButton: true
+                })
+                password.focus();
+                return false;
+            }
+            if (password.value === password1.value) {
+
+                const url = contextPath + '/api/member/findpwaction.json';
+                const headers = { "Content-Type": "application/json" };
+                const body = { id: userId, password: password.value };
+                const { data } = await axios.put(url, body, { headers });
+
+                //console.log(data.ret);
+
+                if (data.ret === 1) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: '비밀번호를 변경했습니다.',
+                        showConfirmButton: true
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = contextPath + '/login.do';
+                        }
+                    })
+                }
+            }
+        }
+    </script>
+</body>
+
+</html>

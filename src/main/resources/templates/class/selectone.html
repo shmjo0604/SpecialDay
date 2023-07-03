@@ -1,0 +1,1132 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+    <meta name="generator" content="Hugo 0.111.3">
+    <title th:text="${obj.title}"></title>
+    <link rel="canonical" href="https://getbootstrap.com/docs/5.3/examples/blog/">
+    <!--웹 페이지 아이콘 변경-->
+    <link rel="icon" th:href="@{/image/logo.ico}">
+    <!-- Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=DynaPuff&family=Permanent+Marker&display=swap"
+        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@500&display=swap" rel="stylesheet"> 
+    <!--Bootstrap 용 CSS-->
+    <link rel="stylesheet" th:href="@{/css/bootstrap.css}">
+    <!--bx slider css-->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/bxslider/4.2.12/jquery.bxslider.css">
+    <!--CSS-->
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+    <!--Bootstrap 용 Icon CDN-->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+    <!--font awesome 용-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <!--thymeleaf contextpath-->
+    <link id="contextPathHolder" th:data-contextPath="${#httpServletRequest.getContextPath()}" />
+    <meta name="theme-color" content="#712cf9">
+    <style>
+        @import url('https://fonts.googleapis.com/css?family=Nanum+Gothic:400,700,800&display=swap');
+
+        .link-secondary {
+            background-color: #f1f5f1;
+            border-radius: 7px;
+            color: black;
+            font-weight: bold;
+        }
+        .link-secondary:hover {
+            background-color: #d3eed1;
+        }
+
+        .bd-placeholder-img {
+            font-size: 1.125rem;
+            text-anchor: middle;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            user-select: none;
+        }
+
+        @media (min-width: 768px) {
+            .bd-placeholder-img-lg {
+                font-size: 3.5rem;
+            }
+        }
+
+        .b-example-divider {
+            width: 100%;
+            height: 3rem;
+            background-color: rgba(0, 0, 0, .1);
+            border: solid rgba(0, 0, 0, .15);
+            border-width: 1px 0;
+            box-shadow: inset 0 .5em 1.5em rgba(0, 0, 0, .1), inset 0 .125em .5em rgba(0, 0, 0, .15);
+        }
+
+        .b-example-vr {
+            flex-shrink: 0;
+            width: 1.5rem;
+            height: 100vh;
+        }
+
+        .bi {
+            vertical-align: -.125em;
+            fill: currentColor;
+        }
+
+        .nav-scroller {
+            position: relative;
+            z-index: 2;
+            height: 2.75rem;
+            overflow-y: hidden;
+        }
+
+        .nav-scroller .nav {
+            display: flex;
+            flex-wrap: nowrap;
+            padding-bottom: 1rem;
+            margin-top: -1px;
+            overflow-x: auto;
+            text-align: center;
+            white-space: nowrap;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .btn-bd-primary {
+            --bd-violet-bg: #712cf9;
+            --bd-violet-rgb: 112.520718, 44.062154, 249.437846;
+
+            --bs-btn-font-weight: 600;
+            --bs-btn-color: var(--bs-white);
+            --bs-btn-bg: var(--bd-violet-bg);
+            --bs-btn-border-color: var(--bd-violet-bg);
+            --bs-btn-hover-color: var(--bs-white);
+            --bs-btn-hover-bg: #6528e0;
+            --bs-btn-hover-border-color: #6528e0;
+            --bs-btn-focus-shadow-rgb: var(--bd-violet-rgb);
+            --bs-btn-active-color: var(--bs-btn-hover-color);
+            --bs-btn-active-bg: #5a23c8;
+            --bs-btn-active-border-color: #5a23c8;
+        }
+
+        .bd-mode-toggle {
+            z-index: 1500;
+        }
+
+        .slider img {
+            height: 500px !important;
+        }
+
+        .bi-star-fill {
+            /* font-size: 20px; */
+            /* line-height: 30px; */
+            color: rgb(26, 255, 0);
+            /* text-shadow: -2px 0 black, 0 2px black, 2px 0 black, 0 -2px black; */
+        }
+
+        .bi-heart-fill {
+            /* font-size: 20px;
+            line-height: 20px; */
+            color: red;
+            /* text-shadow: -2px 0 black, 0 2px black, 2px 0 black, 0 -2px black; */
+        }
+
+        .productbody {
+            background-color: white;
+        }
+
+        /* 일요일 날짜 빨간색 */
+        .fc-day-sun a {
+            color: red;
+            text-decoration: none;
+        }
+
+        /* 토요일 날짜 파란색 */
+        .fc-day-sat a {
+            color: blue;
+            text-decoration: none;
+        }
+
+        .fc-day-mon a {
+            color: black;
+            text-decoration: none;
+        }
+
+        .fc-day-tue a {
+            color: black;
+            text-decoration: none;
+        }
+
+        .fc-day-wed a {
+            color: black;
+            text-decoration: none;
+        }
+
+        .fc-day-thu a {
+            color: black;
+            text-decoration: none;
+        }
+
+        .fc-day-fri a {
+            color: black;
+            text-decoration: none;
+        }
+
+        .bx-wrapper .bx-controls-direction a {
+            z-index: 1010;
+        }
+
+        .utable>td {
+            font-size: 12px;
+        }
+
+        .card-id {
+            color: rgba(0, 0, 0, 0.5);
+            text-decoration: underline;
+            text-decoration-thickness: 2px;
+            text-underline-offset: 5px;
+
+        }
+
+        .card-regdate {
+            position: relative;
+        }
+
+        .card-button:hover {
+            background-color: #89f689;
+        }
+
+        .card-hit {
+            color: gray;
+
+        }
+        .selectone_cate {
+            font-weight: bold;
+            background-color: #f3fbee;
+            border-radius: 10px;
+            padding: 7px;
+        }
+        .selectone_cate:first-child:hover {
+            background-color: #d3eed1;
+
+        }
+        
+    </style>
+    <!-- Custom styles for this template -->
+    <link href="https://fonts.googleapis.com/css?family=Playfair&#43;Display:700,900&amp;display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <!-- header 영역 -->
+    <header th:replace="~{header :: headerFragment}"></header>
+
+    <div id="wrapper">
+        <div class="container productbody">
+
+            <div class="nav-scroller py-1 mb-2">
+                <nav class="nav d-flex justify-content-start">
+                    <a class="p-2 link-secondary nav-link me-1 inner_anchor" href="#intro">클래스 소개</a>
+                    <a class="p-2 link-secondary nav-link me-1 inner_anchor" href="#curriculum">커리큘럼 소개</a>
+                    <a class="p-2 link-secondary nav-link me-1 inner_anchor" href="#instructor">강사 소개</a>
+                    <a class="p-2 link-secondary nav-link me-1 inner_anchor" href="#address">위치</a>
+                    <a class="p-2 link-secondary nav-link me-1 inner_anchor" href="#review">리뷰</a>
+                    <a class="p-2 link-secondary nav-link me-1 inner_anchor" href="#inquiry">문의</a>
+                </nav>
+            </div>
+            <hr>
+        </div>
+
+        <main class="container productbody">
+
+            <div class="row g-5">
+                <div class="col-md-7">
+                    <div class="mb-3">
+                        <span class="selectone_cate" th:text="${obj.activitycate}"></span>
+                        >
+                        <span class="selectone_cate" th:text="${obj.actdetailcate}"></span>
+                    </div>
+                    <!-- <p th:text="|${obj.activitycate} > ${obj.actdetailcate}|"></p> -->
+                    <div class="p-2 p-md-3 mb-4 rounded bg-dark">
+
+                        <div class="slider">
+                            <img th:src="@{/class/image(no=${mainImg})}">
+                            <th:block th:each="tmp : ${subImg}">
+                                <img th:src="@{/class/image(no=${tmp})}">
+                            </th:block>
+                        </div>
+
+                    </div>
+
+                    <div class="border-bottom">
+                        <div class="d-flex">
+                            <div class="d-flex align-items-center mb-4">
+                                <h3><i class="bi bi-balloon-fill me-2"></i></h3>
+                                <h3 th:text="${obj.title}"></h3>
+                            </div>
+
+                            <!-- <div class="ms-auto d-flex justify-content-between">
+                                <h4 class="mx-2"><i class="bi bi-heart-fill"></i>
+                                    <span class="ms-2 mt-1" style="display:inline-block;">100</span>
+                                </h4>
+                                <h4 class="ms-2"><i class="bi bi-star-fill"></i>
+                                    <span class="ms-2 mt-1" style="display:inline-block;">4.0</span>
+                                </h4>
+                            </div> -->
+                        </div>
+
+                    </div>
+
+                    <article class="blog-post">
+                        <div id="intro">
+                            <h3 class="blog-post-title d-flex align-items-center my-3"><i
+                                    class="bi bi-file-text-fill me-2"></i><span>클래스 소개</span></h3>
+
+                            <div class="d-flex justify-content-start">
+                                <p class="border rounded p-1 me-1" style=" font-size:small; color: rgba(0, 0, 0, 0.7)">
+                                    #친구와
+                                    같이
+                                </p>
+                                <p class="border rounded p-1 me-1" style=" font-size:small; color: rgba(0, 0, 0, 0.7)">
+                                    #실내에서
+                                </p>
+                                <p class="border rounded p-1 me-1" style=" font-size:small; color: rgba(0, 0, 0, 0.7)">
+                                    #편의시설
+                                </p>
+                            </div>
+
+                            <div th:utext="${obj.intro}"></div>
+                        </div>
+
+                        <hr>
+
+                        <div id="curriculum">
+                            <h3 class="d-flex align-items-center my-3"><i
+                                    class="bi bi-signpost-fill me-2"></i><span>커리큘럼
+                                    소개</span></h3>
+
+                            <div th:utext="${obj.curriculum}"></div>
+                        </div>
+
+
+                        <hr>
+
+                        <div id="instructor">
+                            <h3 class="d-flex align-items-center my-3"><i class="bi bi-person-vcard me-2"></i><span>강사
+                                    소개</span>
+                            </h3>
+                            <img th:src="@{/class/image(no=${profile})}" class="mb-3"
+                                style="width: 180px; height: 150px;">
+                            <div th:utext="${obj.instructor}"></div>
+                            <div class="fs-5">
+                                <i class="bi bi-link-45deg me-2"></i><span class="fw-bold">SNS</span> | <a th:href="|https://${obj.sns}|" th:text="${obj.sns}"></a>
+                            </div>
+                        </div>
+
+                        <hr>
+
+                        <div id="address">
+                            <h3 class="d-flex align-items-center mb-3"><i
+                                    class="bi bi-geo-alt-fill me-2"></i><span>위치</span>
+                            </h3>
+
+                            <div class="mx-2" id="map" style="width:750px;height:340px; border: 1px solid dimgray; ">
+                            </div>
+                        </div>
+
+                        <hr>
+
+                        <div id="review">
+                            <h3 class="d-flex align-items-center mb-3"><i class="bi bi-stars me-2"></i><span>리뷰</span>
+                            </h3>
+
+                            <div id="review_box">
+                                <!--동적 생성-->
+                            </div>
+                            <!-- <div class="card mb-3">
+                                <div class="row g-0">
+                                    <div class="col-md-3">
+                                        
+                                    </div>
+                                    <div class="col-md-9">
+                                        <div class="card-body">
+                                            <h5 class="card-title">Card title</h5>
+                                            <p class="card-text">This is a wider card with supporting text below as a
+                                                natural
+                                                lead-in to additional content. This content is a little bit longer.</p>
+                                            <p class="card-text"><small class="text-muted">Last updated 3 mins
+                                                    ago</small>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div> -->
+                        </div>
+
+                        <hr>
+
+                        <div id="inquiry">
+                            <h3 class="d-flex align-items-center mb-3"><i
+                                    class="bi bi-question-square me-2"></i><span>문의</span>
+                            </h3>
+                            <!--문의 하기(로그인 X)-->
+                            <th:block th:if="${user == null}">
+                                <div class="card bg-light mb-3">
+                                    <div class="card-body">
+                                        <div>
+                                            <a th:href="@{/login.do}"
+                                                class="form-control-plaintext text-center nav-link"
+                                                style="cursor: pointer;">문의하기</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </th:block>
+                            <!--문의 작성 및 목록 영역-->
+                            <th:block th:if="${user != null}">
+                                <div class="card bg-light mb-3">
+                                    <div class="card-body">
+                                        <div>
+                                            <button class="form-control-plaintext text-center nav-link" type="button"
+                                                onclick="insertInquiryModal()">문의하기</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                </th:if>
+                        </div>
+
+                        <!--문의 작성 Modal-->
+                        <div class="modal modal-center fade" id="inquiryModal" tabindex="-1" data-bs-backdrop="static"
+                            aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-lg">
+                                <div class="modal-content">
+                                    <div class="modal-header bg-success">
+                                        <div class="me-auto"></div>
+                                        <h1 class="modal-title fs-5 text-white" id="exampleModalLabel">문의하기</h1>
+                                        <button type="button" class="btn-close" onclick="dismissModal()"
+                                            aria-label="Close">
+                                        </button>
+                                    </div>
+                                    <div class="modal-question">
+                                    </div>
+                                    <form th:action="@{/classinquiry/insert.do}" id="form_inquiry" method="post">
+                                        <div class="modal-body">
+                                            <table class="table table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <td class="text-center align-middle">문의 제목</td>
+                                                        <td>
+                                                            <input id="inquiry_title" class="form-control" name="title"
+                                                                type="text" placeholder="문의 제목을 작성하세요"
+                                                                style="width:100%;">
+                                                        </td>
+                                                    </tr>
+                                                </thead>
+
+                                                <tbody>
+                                                    <tr>
+                                                        <td class="text-center align-middle">문의 내용</td>
+                                                        <td>
+                                                            <textarea name="content" id="inquiry_content"
+                                                                placeholder="문의 내용을 작성하세요" class="form-control"
+                                                                style="width:100%;" rows="10"></textarea>
+                                                        </td>
+                                                    </tr>
+
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary"
+                                                onclick="dismissModal()">취소</button>
+
+                                            <input type="button" class="btn btn-success" id="btn-write"
+                                                onclick="insertClassInquiry()" value="등록">
+                                        </div>
+
+                                        <th:block th:if="${user != null}">
+                                            <input name="member.id" type="hidden" th:value="${user.username}" />
+                                        </th:block>
+                                        <input name="classproduct.classcode" type="hidden"
+                                            th:value="${obj.classcode}" />
+                                        <input name="classproduct.member.id" type="hidden" th:value="${obj.memberid}" />
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+                    </article>
+                </div>
+
+                <div class="col-md-5">
+                    <div class="position-sticky" style="top: 2.5rem;">
+                        <div class="p-1 mb-3 bg-body-tertiary rounded">
+                            <h4 class="d-flex align-items-center mb-3 justify-content-center"><i
+                                    class="bi bi-calendar-event me-2"></i><span>클래스 일정</span></h4>
+
+                            <div id='calendar' class="mb-2"></div>
+
+                            <div id="unitbox" class="border mb-2"
+                                style="width: 100%; height: 150px; overflow-y: auto; display: none;">
+                                <table id="utable" class="table table-hover table-sm">
+                                    <thead class="table-success text-center">
+                                        <tr>
+                                            <th>날짜</th>
+                                            <th>시작</th>
+                                            <th>종료</th>
+                                            <th>할인율</th>
+                                            <th>추가금액</th>
+                                            <th>난이도</th>
+                                            <th>최대인원</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="unittable" class="table-group-divider text-center">
+
+                                        <!-- 동적 생성 -->
+
+                                    </tbody>
+
+                                </table>
+                            </div>
+
+                            <div id="applybox" class="border mb-2" style="height: 180px; display: none;">
+
+                                <!-- 동적 생성 -->
+
+                            </div>
+
+                            <div class="d-flex">
+                                <button class="classbtn w-50 me-2" style="height: 50px; background-color: #FDC708;"
+                                    th:onclick="basketAction()" type="button">
+                                    장바구니</button>
+                                <button class="classbtn w-50" style="height: 50px; background-color: #9AD98A;"
+                                    type="button" th:onclick="applyAction()">
+                                    신청하기</button>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </main>
+
+        <!--form 태그 (post->get)-->
+        <!--결제 신청(unitno, person) -->
+        <form id="form-apply" th:action="@{/apply/insert.do}" method="get" style="display: none;">
+            <input id="unitno" name="unitno[]" type="number">
+            <input id="person" name="person[]" type="number">
+        </form>
+
+        <!--장바구니 추가-->
+        <form id="form-basket" th:action="@{basket.do}" method="post" style="display: none;">
+            <input id="basket_unitno" name="unitno" type="number">
+            <input id="basket_cnt" name="cnt" type="number">
+            <input name="classcode" type="number" th:value="${obj.classcode}">
+        </form>
+    </div>
+
+
+    <!--footer 영역-->
+    <footer th:replace="~{footer :: footerFragment}"></footer>
+
+    <!--jQuery-->
+    <script th:src="@{/js/jquery-3.6.4.min.js}"></script>
+    <!--axios library-->
+    <script th:src="@{/js/axios.min.js}"></script>
+    <!--Bootstrap 용 js -->
+    <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+    <!--bxslider-->
+    <script th:src="@{/js/jquery.bxslider.min.js}"></script>
+    <!--fullcalendar-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/4.0.0-alpha.4/plugins/gcal.js"></script>
+    <script th:src="@{/js/index.global.js}"></script>
+    <!-- <script th:src="@{/js/gcal.js}"></script> -->
+    <!-- kakao map library -->
+    <script src="https://developers.kakao.com/sdk/js/kakao.min.js"></script>
+    <script type="text/javascript"
+        src="//dapi.kakao.com/v2/maps/sdk.js?appkey=4847ab83c2fe2a7607fbdad0614a758b"></script>
+    <script th:inline="javascript">
+
+        /*<![CDATA[*/
+
+        const contextPath = $('#contextPathHolder').attr('data-contextPath');
+        const classcode = /*[[${obj.classcode}]]*/'';
+        const price = /*[[${obj.price}]]*/'';
+        const list = /*[[${list}]]*/'';
+
+        var totalprice = 0;
+
+        $(function () {
+            $(".inner_anchor").on('click', function () {
+                // 헤더 높이 구하기. outerHeight()를 쓰는 것이 중요!
+                var headerHeight = $("header").outerHeight();
+                // 버튼의 링크 구하기
+                var href = $(this).attr("href");
+                // 링크대상 DOM 구하기
+                var target = $(href == "#" || href == "" ? "body" : href);
+                // 링크대상 DOM의 height위치 구하기
+                var position = target.offset().top - headerHeight - 75;
+                // 에니메이션 효과를 넣어서 그 DOM으로 이동시키기
+                $("html, body").animate({ scrollTop: position }, 250);
+
+            });
+
+        });
+
+
+        $(document).ready(function () {
+            $('.slider').bxSlider({
+                mode: 'fade',
+                height: 200
+            });
+
+        });
+
+        document.addEventListener('DOMContentLoaded', function () {
+            var calendarEl = document.getElementById('calendar');
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth',
+                // headerToolbar: {
+                //     left: 'prev,next today',
+                //     center: 'title',
+                //     right: 'dayGridMonth'
+                // },
+                // eventSources: // 한국 기념일 ko.south_korea 추가
+                //     [{
+                //         googleCalendarId: "ko.south_korea#holiday@group.v.calendar.google.com"
+                //         , className: "koHolidays"
+                //         , color: "#80ff00"
+                //         , textColor: "#FFFFFF"
+                //     }],
+                height: 400,
+                expandRows: true,
+
+                titleFormat: function (date) { // title 설정
+                    return date.date.year + "년 " + (date.date.month + 1) + "월";
+                }
+                , columnHeaderText: function (date) {
+                    return weekList[date.getDay()]; // 헤더 var weekList = ['일','월','화','수','목','금','토']; 
+                },
+                selectable: true, // 달력 일자 드래그 설정가능
+                events: createEventObjects(),
+
+                dateClick: async function (info) {
+
+                    //console.log(info.dateStr);
+
+                    const url = contextPath + '/api/class/selectunit.json?classdate=' + info.dateStr + '&classcode=' + classcode;
+                    const headers = { "Content-Type": "application/json" };
+                    const { data } = await axios.get(url, { headers });
+
+                    // console.log(data);
+
+                    const table = $("#unittable")[0];
+
+                    table.innerHTML = "";
+
+                    if (data.ret === 1) {
+
+                        $("#applybox").css("display", "none");
+
+                        for (let obj of data.list) {
+
+                            var classlevel = '';
+
+                            if (obj.classlevel === 1) {
+                                classlevel = '입문자';
+                            }
+                            else if (obj.classlevel === 2) {
+                                classlevel = '경험자';
+                            }
+                            else if (obj.classlevel === 3) {
+                                classlevel = '숙련자';
+                            }
+
+                            table.innerHTML +=
+                                '<tr onclick="unitSelect(' + obj.no + ')">' +
+                                '<td>' + obj.classdate + '</td>' +
+                                '<td>' + obj.classstart + '</td>' +
+                                '<td>' + obj.classend + '</td>' +
+                                '<td>' + obj.discount + '%' + '</td>' +
+                                '<td>' + obj.addprice + '원' + '</td>' +
+                                '<td>' + classlevel + '</td>' +
+                                '<td>' + obj.maximum + '명' + '</td>' +
+                                '</tr>'
+
+                            $("#unitbox").css("display", "block");
+                        }
+                    }
+
+                    else if (data.ret === 0) {
+
+                        $("#unitbox").css("display", "none");
+                        $("#applybox").css("display", "none");
+
+                    }
+
+                    //alert('Date: ' + info.dateStr);
+                    //alert('Resource ID: ' + info.resource.id);
+                },
+                eventClick: function (info) {
+
+                    //클릭시 구글캘린더 url로 가는것을 막는다.
+
+                    info.jsEvent.stopPropagation();
+                    info.jsEvent.preventDefault();
+                }
+
+            });
+
+            calendar.render();
+
+        });
+
+        function createEventObjects() {
+            return list.map(function (obj) {
+
+                return {
+                    title: obj.classstart,
+                    start: obj.classdate,
+                    backgroundColor: getBackgroundColor(obj.classlevel)
+                };
+            });
+        }
+
+        function getBackgroundColor(classlevel) {
+            switch (classlevel) {
+                case 1:
+                    return "#00C783";
+                case 2:
+                    return "#23946C";
+                case 3:
+                    return "#006F4A";
+            }
+        }
+
+        async function unitSelect(no) {
+
+            // console.log(no);
+
+            $("#unitno").attr("value", no);
+            $("#basket_unitno").attr("value", no);
+
+            const url = contextPath + '/api/class/selectunitone.json?no=' + no;
+            const headers = { "Content-Type": "application/json" };
+            const { data } = await axios.get(url, { headers });
+
+            const box = document.querySelector("#applybox");
+
+            box.innerHTML = "";
+
+            if (data.ret === 1) {
+
+                var remain = data.obj.maximum - data.obj.cnt;
+                totalprice = (price + data.obj.addprice) * (100 - data.obj.discount) / 100;
+
+                box.innerHTML +=
+                    '<div class="container mt-3"> ' +
+                    '<div class="d-flex justify-content-between">' +
+                    '<span>신청 가능 인원 : ' + remain + '명' + '</span>' +
+                    '신청 인원수 선택 : ' + '<select id="select-remain" onchange="selectperson(this.value)"></select>' + '</span>' +
+                    '</div>' +
+                    '<div class="my-3">' +
+                    '<span>가격(1인) : ' + priceToString(totalprice) + '</span>' +
+                    '</div>' +
+                    '<div>' +
+                    '<div>총 결제 금액 : ' + '<span id="payment"></span>' + '</div>'
+                '</div>';
+
+                var text = "";
+
+                text += '<option>인원수를 선택하세요.</option>';
+
+                for (let i = 1; i <= remain; i++) {
+
+                    text += '<option value="' + i + '">' + i + '</option>'
+
+                }
+
+                $("#select-remain")[0].innerHTML = text;
+
+                $("#applybox").css("display", "block");
+
+            }
+
+        }
+
+        function selectperson(person) {
+
+            //console.log(person);
+            $("#person").attr("value", person);
+            $("#basket_cnt").attr("value", person);
+
+            const payment = document.querySelector("#payment");
+            payment.innerHTML = "";
+
+            payment.innerHTML += priceToString(totalprice * person);
+        }
+
+        function priceToString(price) {
+            return price.toLocaleString() + '원'
+        }
+
+        const lat = /*[[${obj.latitude}]]*/"";
+        const lng = /*[[${obj.longitude}]]*/"";
+
+        //console.log(Number(lat));
+        //console.log(Number(lng));
+
+        var container = document.getElementById('map');
+        var options = {
+            center: new kakao.maps.LatLng(lat, lng), // 지도의 중심 위치, 경도
+            level: 5 //지도의 레벨
+        };
+
+        // 실제로 맵이 생성되는 시점
+        var map = new kakao.maps.Map(container, options);
+        // 지도를 클릭했을때 클릭한 위치에 마커를 추가하도록 지도에 클릭이벤트를 등록합니다
+        kakao.maps.event.addListener(map, 'click', function (mouseEvent) {
+            // 클릭한 위치에 마커를 표시합니다 
+            addMarker(mouseEvent.latLng);
+        });
+
+        // 지도에 표시된 마커 객체를 가지고 있을 배열입니다
+        var markers = [];
+
+        // 마커 하나를 지도위에 표시합니다 
+        addMarker(new kakao.maps.LatLng(lat, lng));
+
+        // 마커를 생성하고 지도위에 표시하는 함수입니다
+        function addMarker(position) {
+
+            // 마커를 생성합니다
+            var marker = new kakao.maps.Marker({
+                position: position
+            });
+
+            // 마커가 지도 위에 표시되도록 설정합니다
+            marker.setMap(map);
+
+            // 생성된 마커를 배열에 추가합니다
+            markers.push(marker);
+        }
+
+        function applyAction() {
+
+            if ($("#unitno").val() === '') {
+                alert("클래스 날짜를 선택해주세요.");
+                return false;
+            }
+
+            if ($("#person").val() === '') {
+                alert("신청 인원을 선택해주세요.");
+                return false;
+            }
+
+            $("#form-apply").submit();
+        }
+
+        function basketAction() {
+
+            if ($("#basket_unitno").val() === '') {
+                alert("클래스 날짜를 선택해주세요.");
+                return false;
+            }
+
+            if ($("#basket_cnt").val() === '') {
+                alert("신청 인원을 선택해주세요.");
+                return false;
+            }
+
+            $("#form-basket").submit();
+        }
+
+        function insertInquiryModal() {
+            const modal = new bootstrap.Modal(document.getElementById("inquiryModal"), {});
+            modal.show();
+        }
+
+        function dismissModal() {
+
+            $("#inquiryModal").modal('hide');
+
+            document.getElementById("inquiry_title").value = null;
+            document.getElementById("inquiry_content").value = null;
+
+        }
+
+        function insertClassInquiry() {
+
+            const title = document.getElementById("inquiry_title");
+            const content = document.getElementById("inquiry_content");
+
+            if (title.value.length < 1) {
+                alert("문의 제목을 입력해주세요");
+                return false;
+            }
+
+            if (content.value.length < 1) {
+                alert("문의 내용을 입력해주세요");
+                return false;
+            }
+
+            document.getElementById("form_inquiry").submit();
+
+        }
+
+        async function selectReviewList(page) {
+
+            const url = contextPath + '/api/review/selectlist.json?classcode=' + classcode + '&page=' + page;
+            const headers = { "Content-Type": "application/json" };
+            const { data } = await axios.get(url, { headers });
+
+            console.log(data);
+
+            const box = document.querySelector("#review_box");
+            $('#review_box').empty();
+            // box.innerHTML = "";
+
+            if (data.status === 200) {
+
+                data.list.forEach((obj, index) => {
+
+                    var card = document.createElement('div');
+                    card.className = "card mb-3";
+
+                    var row = document.createElement('div');
+                    row.className = "row g-0";
+
+                    var col1 = document.createElement('div');
+                    col1.className = "col-md-4";
+
+                    if (obj.imglist.length > 0) {
+
+                        var carousel = document.createElement('div');
+                        carousel.id = "carouselExample" + index;
+                        carousel.className = "carousel slide";
+
+                        var carousel_inner = document.createElement('div');
+                        carousel_inner.className = "carousel-inner";
+
+                        obj.imglist.forEach((tmp, index) => {
+
+                            if (index === 0) {
+                                var carousel_item = document.createElement('div');
+                                carousel_item.className = "carousel-item active";
+
+                                var img = document.createElement('img');
+                                img.src = `${contextPath}/review/image?no=${tmp.no}`;
+                                img.className = "d-block img-thumbnail w-100";
+                                img.style.width = "232px";
+                                img.style.height = "174px";
+
+                                carousel_item.appendChild(img);
+
+                                carousel_inner.appendChild(carousel_item);
+                            }
+
+                            else {
+
+                                var carousel_item = document.createElement('div');
+                                carousel_item.className = "carousel-item";
+
+                                var img = document.createElement('img');
+                                img.src = `${contextPath}/review/image?no=${tmp.no}`;
+                                img.className = "d-block img-thumbnail w-100";
+                                img.style.width = "232px";
+                                img.style.height = "174px";
+
+                                carousel_item.appendChild(img);
+
+                                carousel_inner.appendChild(carousel_item);
+
+                            }
+
+                        })
+
+                        carousel.appendChild(carousel_inner);
+
+                        var button_prev = document.createElement('button');
+                        button_prev.className = "carousel-control-prev";
+
+                        var span_icon_prev = document.createElement("span");
+                        span_icon_prev.className = "carousel-control-prev-icon";
+                        var span_hidden_prev = document.createElement("span");
+                        span_hidden_prev.className = "visually-hidden";
+                        span_hidden_prev.textContent = "Previous";
+
+                        button_prev.appendChild(span_icon_prev);
+                        button_prev.appendChild(span_hidden_prev);
+
+                        button_prev.addEventListener('click', event => {
+                            console.log(-1);
+                            new bootstrap.Carousel("#carouselExample" + index, {}).prev();
+                        })
+
+                        carousel.appendChild(button_prev);
+
+                        var button_next = document.createElement('button');
+                        button_next.className = "carousel-control-next";
+
+                        var span_icon_next = document.createElement("span");
+                        span_icon_next.className = "carousel-control-next-icon";
+                        var span_hidden_next = document.createElement("span");
+                        span_hidden_next.className = "visually-hidden";
+                        span_hidden_next.textContent = "Next";
+
+                        button_next.appendChild(span_icon_next);
+                        button_next.appendChild(span_hidden_next);
+
+                        button_next.addEventListener('click', event => {
+                            console.log(1);
+                            new bootstrap.Carousel(carousel, {}).next();
+                        })
+
+                        carousel.appendChild(button_next);
+
+                        // carousel.innerHTML += `<button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+                        //                       <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        //                       <span class="visually-hidden">Previous</span>
+                        //                     </button>
+                        //                     <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+                        //                       <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        //                       <span class="visually-hidden">Next</span>
+                        //                     </button>`;
+
+                        // `<div id="carouselExample" class="carousel slide">
+                        //                     <div class="carousel-inner">
+                        //                       <div class="carousel-item active">
+                        //                         <img th:src="@{/review/image(no=92)}" class="d-block img-thumbnail" alt="..." style="width: 220px; height: 165px;">
+                        //                       </div>
+                        //                       <div class="carousel-item">
+                        //                         <img th:src="@{/review/image(no=93)}" class="d-block img-thumbnail" alt="..." style="width: 220px; height: 165px;">
+                        //                       </div>
+                        //                     </div>
+                        //                     <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+                        //                       <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        //                       <span class="visually-hidden">Previous</span>
+                        //                     </button>
+                        //                     <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+                        //                       <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        //                       <span class="visually-hidden">Next</span>
+                        //                     </button>
+                        //                   </div>`
+
+                        col1.appendChild(carousel);
+                    }
+
+                    else {
+
+                        var img = document.createElement('img');
+
+                        img.src = `${contextPath}/image/logo.svg`;
+                        img.className = "d-block img-thumbnail w-100";
+                        img.style.width = "232px";
+                        img.style.height = "174px";
+
+                        col1.appendChild(img);
+                    }
+
+                    var col2 = document.createElement('div');
+                    col2.className = "col-md-8 d-flex flex-column";
+
+                    var card_body = document.createElement('div');
+                    card_body.className = "card-body d-flex flex-column flex-grow-1";
+
+                    var card_title = document.createElement('h6');
+                    card_title.className = "card-title card-id";
+                    card_title.textContent = obj.id;
+
+                    var card_text1 = document.createElement('div');
+                    card_text1.className = "card-text mt-3 small";
+                    card_text1.innerHTML = obj.content;
+
+                    var card_text2 = document.createElement('div');
+                    card_text2.className = "card-regdate small";
+                    var reviewdate = new Date(obj.regdate)
+                    var day = ['일', '월', '화', '수', '목', '금', '토', '일']
+                    var reviewDateFormat = reviewdate.getFullYear() + "년 "
+                        + (reviewdate.getMonth() + 1) + "월" + reviewdate.getDate() + "일" + "\u00A0" + '(' + day[reviewdate.getDay()] + '요일)'
+                    card_text2.textContent = reviewDateFormat;
+
+                    var card_text3 = document.createElement('button');
+                    card_text3.className = "btn btn-success btn-sm"
+                    card_text3.innerHTML = "추천해요!";
+                    card_text3.onclick = function () { hitReview(obj.no, obj.classcode) }
+
+                    var card_footer = document.createElement('div');
+                    card_footer.className = "card-footer d-flex justify-content-between align-items-center";
+
+                    var card_header = document.createElement('div');
+                    card_header.className = "d-flex justify-content-between align-items-center";
+
+                    card_footer.appendChild(card_text2);
+                    card_footer.appendChild(card_text3);
+
+                    var card_text4 = document.createElement('span');
+                    card_text4.className = "card-hit small";
+                    card_text4.textContent = "추천수 : " + obj.hit;
+
+                    card_header.appendChild(card_title);
+                    card_header.appendChild(card_text4);
+
+                    card_body.appendChild(card_header);
+                    card_body.appendChild(card_text1);
+                    // card_body.appendChild(card_text4);
+
+                    col2.appendChild(card_body);
+                    col2.appendChild(card_footer);
+
+                    row.appendChild(col1);
+                    row.appendChild(col2);
+
+                    card.appendChild(row);
+
+                    box.appendChild(card);
+
+                })
+            }
+
+            else {
+
+                var h5 = document.createElement('h5');
+
+                h5.className = "text-center";
+                h5.textContent = "작성된 리뷰가 없습니다.";
+
+                box.appendChild(h5);
+
+            }
+
+        }
+
+        selectReviewList(1);
+
+        async function hitReview(no, classcode) {
+
+            const url = contextPath + '/api/review/updatehit.json'
+            const headers = { "Content-Type": "application/json" };
+            const body = { no: Number(no) }
+            const { data } = await axios.put(url, body, { headers });
+
+            // window.location.href = "product.do?classcode=" +classcode;
+            if(data.ret === 1){
+                selectReviewList(1);
+            }
+            // console.log(data);
+            // console.log(no);
+            // console.log(classcode);
+            // console.log('오케이');
+        }
+
+        /*]]>*/
+    </script>
+    <!--Main js-->
+    <script th:src="@{/js/main.js}"></script>
+</body>
+
+</html>

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.mapper.ClassUnitMapper">
+
+<!--(1) ClassUnit 등록-->
+<insert id="insertUnitOne" parameterType="ClassUnit">
+    INSERT INTO CLASSUNIT(MINIMUM, MAXIMUM, CLASSDATE, CLASSDAY, CLASSSTART, CLASSEND, DISCOUNT, ADDPRICE, CLASSLEVEL, CLASSCODE) 
+    VALUES(#{minimum}, #{maximum}, #{classdate}, #{classday}, #{classstart}, #{classend}, #{discount}, #{addprice}, #{classlevel}, #{classcode})
+</insert>
+
+<!--(1-1) ClassProduct 가격 조회(Unit 등록 시, 추가 금액 설정에 필요) -->
+<select id="selectPriceOne" parameterType="long" resultType="long">
+    SELECT PRICE FROM CLASSPRODUCT WHERE CLASSCODE = #{classcode}
+</select>
+
+<!--(2) ClassUnit 전체 조회-->
+<select id="selectUnitList" parameterType="long" resultType="ClassUnit">
+    SELECT * FROM CLASSUNIT WHERE CLASSCODE = #{classcode} ORDER BY REGDATE DESC
+</select>
+
+<!--(2-1) ClassUnit 하나 조회-->
+<select id="selectUnitOne" parameterType="ClassUnit" resultType="ClassUnit">
+    SELECT * FROM CLASSUNIT WHERE CLASSCODE = #{classcode} AND NO = #{no}
+</select>
+
+<!--(3) ClassUnit 수정-->
+<update id="updateUnitOne" parameterType="ClassUnit">
+    UPDATE CLASSUNIT SET MINIMUM = #{minimum}, MAXIMUM = #{maximum}, CLASSDATE = #{classdate}, CLASSDAY = #{classday}, CLASSSTART = #{classstart}, 
+    CLASSEND = #{classend}, DISCOUNT = #{discount}, ADDPRICE = #{addprice}, CLASSLEVEL = #{classlevel} WHERE NO = #{no} AND CLASSCODE = #{classcode}
+</update>
+
+<!--(4) ClassUnit 삭제-->
+<update id="updateUnitOneInactive" parameterType="long">
+    UPDATE CLASSUNIT SET chk = 0 WHERE no = #{no}
+</update>
+
+<!--(4-1) ClassUnit 일괄 삭제-->
+<update id="updateUnitBatchInactive" parameterType="map">
+    UPDATE CLASSUNIT SET chk = 0 WHERE CLASSCODE = #{classcode} AND NO IN(
+        <foreach collection='chk' item='tmp' separator=','>
+            #{tmp}
+        </foreach>)
+</update>
+
+<!--(5) ClassUnitView 하나 조회-->
+<select id="selectClassUnitViewOne" parameterType="long" resultType="ClassUnitView">
+    SELECT u.* FROM classunitview u WHERE no = #{unitno}
+</select>
+
+<!--(6) ClassUnit 개설 일정 조회-->
+<select id="selectUnitListToCal" parameterType="long" resultType="ClassUnit">
+    SELECT * FROM CLASSUNIT WHERE CLASSCODE = #{classcode} AND CHK = 1
+</select>
+
+<!--(7) ClassUnit 페이징 조회 (by classcode)-->
+<select id="selectUnitListByClasscode" parameterType="map" resultType="ClassUnit">
+    SELECT u.* FROM 
+    (SELECT ROW_NUMBER() OVER(ORDER BY classdate DESC) AS rnum, 
+    * FROM CLASSUNIT WHERE CLASSCODE = #{classcode} AND CHK = 1 ORDER BY no DESC) u 
+    WHERE u.rnum <![CDATA[ >= ]]> ${first} AND u.rnum <![CDATA[ <= ]]> ${last} ORDER BY u.rnum ASC
+</select>
+
+<!--(8) ClassUnit 전체 개수 (by classcode)-->
+<select id="selectUnitListCountByClasscode" parameterType="long" resultType="long">
+    SELECT COUNT(*) FROM CLASSUNIT WHERE CLASSCODE = #{classcode} AND CHK = 1
+</select>
+
+<!--(9) ClassUnit 전체 조회 (chk = 1)-->
+<select id="selectClassUnitAll" resultType="ClassUnit">
+    SELECT c.* FROM CLASSUNIT c WHERE c.chk = 1
+</select>
+
+<!--(10) ClassUnit 완료 상태 변경(Scheduler에서 사용)-->
+<update id="updateClassUnitComplete" parameterType="long">
+    UPDATE CLASSUNIT SET chk = 2 WHERE no = #{no}
+</update>
+
+<!--(11) 클래스 타이틀 조회 (by classcode) -->
+<select id="selectClassProductTitleOne" parameterType="long" resultType="String">
+    SELECT TITLE FROM CLASSPRODUCT WHERE CLASSCODE = #{classcode}
+</select>
+
+<!--(12) ClassUnit 신청 인원 존재 유무 확인 (by memberid)-->
+
+<select id="selectUnitViewCntCheck" parameterType="string" resultType="int">
+    SELECT SUM(u.cnt) FROM unitview u WHERE u.memberid = #{memberid} AND u.unitchk = 1
+</select>
+
+</mapper>

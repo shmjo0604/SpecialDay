@@ -1,0 +1,91 @@
+<div th:fragment="menu_infoupdate" class="col-md-8" style="margin-left: 30px;">
+    <style>
+        .form-label { font-size: medium; color: gray;}
+        .form-control {float: left; width: 100%;}
+        .form-btn {margin-top: 50px; height: 35px; width: 100px; float: right; }
+        input::placeholder {font-size: small;}
+        #pwIncorrect > .modal-dialog > .modal-content > .modal-body > div {text-align: center;}
+        #pwNotInput > .modal-dialog > .modal-content > .modal-body > div {text-align: center;}
+    </style>
+    <p>| 나의 정보</p>
+
+    <div id="infoupdate1" class="container"  style="border: 1px solid gainsboro; padding-top: 20px; padding-bottom: 20px; padding-left: 30px; padding-right: 30px; display: inline-block;" >
+        <div class="row">
+            <div style="font-size: smaller; color: gray;">※ 개인정보에 접근하기 위해 가입하신 비밀번호를 입력해주세요.</div>
+            <div style="margin-top: 50px;">
+                <label class="form-label" style="font-weight: bold;">비밀번호</label>
+                <div style="display: inline-block; width: 100%;">
+                    <input id="infoupdate1_password" class="form-control" type ="password" placeholder ="비밀번호를 입력하세요."/><br />
+                </div>
+            </div>
+
+            <div style="display: inline-block;">
+                <!-- <input type="button" value="다음" class="btn btn-sm btn-success form-btn"/> -->
+                <!--비밀번호 불일치시 모달 창으로 안내 -->
+                <input type="button" value="다음" class="btn btn-sm btn-success form-btn" th:onclick="next([[${user.username}]])"/> 
+            </div>
+            
+        </div>
+    </div>
+
+
+    <!-- Modal  -->
+    <div class="modal fade" id="pwNotInput" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-body" style="display: inline-block;">
+                    <div style="margin-bottom: 10px;"><i class="fas fa-duotone fa-shield-check"></i></div><!-- 적절한 아이콘 추후 변경 -->
+                    <div style="margin-bottom: 10px;"><label>비밀번호를 입력하세요.</label></div>
+                    <div><button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="height: 35px; width: 80px;">확인</button></div> 
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="pwIncorrect" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-body" style="display: inline-block;">
+                    <div style="margin-bottom: 10px;"><i class="fas fa-duotone fa-shield-check"></i></div><!-- 적절한 아이콘 추후 변경 -->
+                    <div style="margin-bottom: 10px;"><label>비밀번호가 불일치합니다.</label></div>
+                    <div><button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="height: 35px; width: 80px;">확인</button></div> 
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div id="infoupdate2" class="container"  style="border: 1px solid gainsboro; padding-top: 50px; padding-bottom: 50px; padding-left: 30px; padding-right: 30px; display: none;" >
+        <th:block th:object="${obj}">
+            <div class="row">
+                <div>
+                    <label for="name" class="form-label" style="font-weight: bold;">이름</label>
+                    <div style="display: inline-block; width: 100%;">
+                        <input class="form-control" type ="text" placeholder ="변경할 이름을 입력하세요." th:field ="${obj.name}"/><br />
+                    </div>
+                </div>
+
+                <div style="margin-top: 50px;">
+                    <label for="name" class="form-label" style="font-weight: bold;">연락처</label>
+                    <div style="display: inline-block; width: 100%;">
+                        <input class="form-control" type ="text" placeholder ="변경할 연락처를 입력하세요." th:field="${obj.phone}"/><br />
+                    </div>
+                </div>
+
+                <div style="margin-top: 50px;">
+                    <label for="name" class="form-label" style="font-weight: bold;">이메일</label>
+                    <div style="display: inline-block; width: 100%;">
+                        <input class="form-control" type ="text" placeholder ="변경할 이메일을 입력하세요." th:field="${obj.email}"/><br />
+                    </div>
+                </div>
+
+                <div style="display: inline-block;">
+                    <input type="button" value="저장하기" class="btn btn-sm btn-success form-btn" onclick="updateInfoAction()"/>
+                </div>
+                
+            </div>
+        </th:block>
+    </div>
+
+</div>

@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>클래스 검색(목록)</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+</head>
+
+<body>
+    <main th:fragment="selectListFragment">
+        <!-- 검색 영역 -->
+
+        <section>
+            <div class="container">
+                <div class="row mb-2">
+                    <div class="col d-flex">
+                        <div>
+                            <div class="input-group">
+                                <input id="keyword" type="text" class="form-control" placeholder="검색어를 입력하세요."
+                                    aria-label="Text input with dropdown button"
+                                    onkeyup="if(window.event.keyCode==13){searchClassAction(1)}" />
+                                <button class="btn btn-success" type="button" onclick="searchClassAction(1)">
+                                    <i class="fas fa-search fa-sm"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="ms-auto">
+                            <a th:href="@{select.do?search=map}">
+                                <button class="btn btn-outline-success"><i class="bi bi-map-fill me-2"></i>지도
+                                    보기</button>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <hr class="divider">
+
+                <div class="row mb-4">
+                    <div class="col-2">
+                        <div class="searchhead">지역</div>
+                    </div>
+                    <div class="col-4">
+                        <select id="cityselect" class="form-select" aria-label="Default select example"
+                            onchange="getLocalcate(this.value)">
+                            <th:block th:each="obj : ${list2}">
+                                <option th:value="${obj.code}" th:text="${obj.cate}"></option>
+                            </th:block>
+                        </select>
+                    </div>
+                    <div class="col-2">
+                        <div class="searchhead">세부 지역</div>
+                    </div>
+                    <div class="col-4">
+                        <select id="localselect" class="form-select" aria-label="Default select example"
+                            onchange="setLocalcate(this.value)">
+                            <option value="">전체</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row mb-4">
+                    <div class="col-2">
+                        <div class="searchhead">클래스 카테고리</div>
+                    </div>
+                    <div class="col-4">
+                        <select id="activityselect" class="form-select" aria-label="Default select example"
+                            onchange="getClasscate(this.value)">
+                            <th:block th:each="obj : ${list1}">
+                                <option th:value="${obj.code}" th:text="${obj.cate}"></option>
+                            </th:block>
+                        </select>
+                    </div>
+                    <div class="col-2">
+                        <div class="searchhead">세부 카테고리</div>
+                    </div>
+                    <div class="col-4">
+                        <select id="actdetailselect" class="form-select" aria-label="Default select example"
+                            onchange="setActcate(this.value)">
+                            <option>전체</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row mb-4">
+                    <div class="col-2">
+                        <div class="searchhead">날짜</div>
+                    </div>
+                    <div class="col-4">
+                        <div>
+                            <input id="classdate" class="form-control datepicker" placeholder="날짜를 선택하세요"
+                                oninput="activeLevel()">
+                        </div>
+                    </div>
+                    <div class="col-2" style="display:none;">시간</div>
+                    <div class="col-4"></div>
+                </div>
+                <div class="row mb-4">
+                    <div class="col-2">
+                        <div class="searchhead">난이도</div>
+                    </div>
+                    <div class="col-4">
+                        <div>
+                            <button class="levelchk btn btn-outline-success disabled" value="1">입문자</button>
+                            <button class="levelchk btn btn-outline-success disabled" value="2">경험자</button>
+                            <button class="levelchk btn btn-outline-success disabled" value="3">숙련자</button>
+                        </div>
+                    </div>
+                    <div class="col-2">
+                        <div class="searchhead">가격</div>
+                    </div>
+                    <div class="col-2">
+                        <input id="minprice" class="form-control" type="number" placeholder="최소 가격" />
+                    </div>
+                    <div class="col-2">
+                        <input id="maxprice" class="form-control" type="number" placeholder="최대 가격" />
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="text-center">
+                        <button class="btn btn-outline-success" onclick="resetSearchOption()"><i
+                                class="bi bi-arrow-clockwise me-2"></i>검색 조건 초기화</button>
+                        <button class="btn btn-outline-primary" type="button" onclick="searchClassAction(1)"><i
+                                class="bi bi-search me-2"></i>검색</button>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-end">
+                    <select class="form-select" style="width: 100px;" onchange="selectoption(this.value)">
+
+                        <option value="1">최신순</option>
+                        <option value="2">조회순</option>
+
+                    </select>
+                </div>
+
+                <hr class="divider">
+            </div>
+        </section>
+
+        <!-- 리스트 영역 -->
+        <section>
+            <div class="container">
+                <div id="classlist" class="row row-cols-3 g-3 mb-3">
+                    <!-- 동적 생성 -->
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-center">
+                <ul id="pagination-demo" class="pagination-sm"></ul>
+            </div>
+        </section>
+
+
+
+        <!--jQuery-->
+        <script th:src="@{/js/jquery-3.6.4.min.js}"></script>
+        <!--axios library-->
+        <script th:src="@{/js/axios.min.js}"></script>
+        <!--twbsPagination js-->
+        <script th:src="@{/js/jquery.twbsPagination.min.js}"></script>
+        <script th:inline="javascript">
+
+            const contextPath = $('#contextPathHolder').attr('data-contextPath');
+
+            const selection = /*[[${selection}]]*/'';
+
+            // console.log("selection", selection);
+
+            var citycode = 0;
+            var localcode = 0;
+            var activitycode = 0;
+            var actcode = 0;
+            var classlevel = 0;
+            var minprice = 0;
+            var maxprice = 0;
+            var classdate = "";
+            var keyword = "";
+
+            var option = 1;
+
+            if (selection !== 0) {
+                $("#activityselect").val(selection).prop("selected", true);
+                activitycode = selection;
+            }
+
+            async function getLocalcate(code) {
+                //console.log(code);
+
+                //const localselect = $('#localselect')[0];
+
+                if (code == 1) {
+
+                    citycode = 0;
+
+                    $('#localselect').children('option').remove();
+                    $('#localselect').append('<option>전체</option>');
+
+                    //localselect.options.length = 0;
+                    //localselect.innerHTML += '<option>' + '전체' + '</option>';
+
+                }
+
+                else {
+
+                    citycode = code;
+
+                    const url = contextPath + '/api/class/selectcatelist.json?refcode=' + code + "&chk=citycate";
+                    const headers = { "Content-Type": "application/json" };
+                    //const body = {refcode : code};
+
+                    const { data } = await axios.get(url, { headers });
+                    //console.log(data);
+
+                    $('#localselect').children('option').remove();
+                    //localselect.options.length = 0;
+
+                    if (data.list.length == 0) {
+                        $('#localselect').append('<option>전체</option>');
+                    }
+
+                    else {
+                        var options = "";
+                        for (let obj of data.list) {
+                            options += "<option value=" + obj.code + ">" + obj.localcate + "</option>";
+                        }
+                        $('#localselect').append(options);
+                    }
+
+                }
+
+            }
+
+            async function getClasscate(code) {
+                //console.log(code);
+
+                if (code == 1) {
+
+                    activitycode = 0;
+
+                    $('#actdetailselect').children('option').remove();
+                    $('#actdetailselect').append('<option value="">전체</option>');
+                }
+
+                else {
+
+                    activitycode = code;
+
+                    const url = contextPath + '/api/class/selectcatelist.json?refcode=' + code + "&chk=classcate";
+                    const headers = { "Content-Type": "application/json" };
+                    //const body = {refcode = code, chk = 'classcate'};
+
+                    const { data } = await axios.get(url, { headers });
+                    //console.log(data);
+
+                    $('#actdetailselect').children('option').remove();
+
+                    if (data.list.length == 0) {
+                        $('#actdetailselect').append('<option value="">전체</option>');
+                    }
+                    else {
+                        var options = "";
+                        for (let obj of data.list) {
+                            options += "<option value=" + obj.code + ">" + obj.actcate + "</option>";
+                        }
+                        $('#actdetailselect').append(options);
+                    }
+
+                }
+
+            }
+
+            function setLocalcate(code) {
+                //console.log(code);
+
+                if (code % 100 == 1) {
+                    localcode = 0;
+                }
+                else {
+                    localcode = code;
+                }
+            }
+
+            function setActcate(code) {
+                //console.log(code);
+
+                if (code % 100 == 1) {
+                    actcode = 0;
+                }
+                else {
+                    actcode = code;
+                }
+
+            }
+
+            $(".levelchk").on("click", function () {
+                $(".levelchk").removeClass('active');
+                $(this).addClass('active');
+            })
+
+            $(".levelchk").on("click", function (e) {
+                //console.log(e.target.value);
+                classlevel = e.target.value;
+            })
+
+            var currentPage = 1;
+
+            function initPagination(pages) {
+
+                $('#pagination-demo').twbsPagination('destroy');	// 페이지 갱신
+
+                $('#pagination-demo').twbsPagination({
+                    startPage: currentPage,
+                    totalPages: pages,
+                    visiblePages: 5,
+                    first: '처음',
+                    last: '마지막',
+                    prev: '이전',
+                    next: '다음',
+                    initiateStartPageClick: false,
+                    onPageClick: function (event, page) {
+                        searchClassAction(page);
+                    }
+                });
+            };
+
+            async function searchClassAction(page) {
+
+                // console.log(option);
+
+                currentPage = page;
+
+                if ($('#classdate').val().length !== 0) {
+                    classdate = $("#classdate").val();
+                }
+                else {
+                    classdate = "";
+                }
+
+                if ($('#minprice').val().length !== 0) {
+                    minprice = $("#minprice").val();
+                }
+                else {
+                    minprice = 0;
+                }
+
+                if ($('#maxprice').val().length !== 0) {
+                    maxprice = $("#maxprice").val();
+                }
+                else {
+                    maxprice = 0;
+                }
+                if ($('#keyword').val().length !== 0) {
+                    keyword = $('#keyword').val();
+                }
+                else {
+                    keyword = "";
+                }
+
+                // console.log(page);
+                // console.log(keyword);
+
+                const url = contextPath + "/api/class/selectclasslist.json";
+                const headers = { "Content-Type": "application/json" };
+
+                await axios.get(url,
+                    {
+                        params:
+                        {
+                            citycode: citycode, activitycode: activitycode,
+                            localcode: localcode, actcode: actcode,
+                            classlevel: classlevel, classdate: classdate,
+                            minprice: minprice, maxprice: maxprice, keyword: keyword,
+                            page: page, option: option
+                        }
+                    },
+                    { headers }).then(function (response) {
+
+                        //console.log(response.data.pages)
+
+                        const classlist = $('#classlist')[0];
+
+                        classlist.innerHTML = '';
+
+                        initPagination(Number(response.data.pages));
+
+                        if (response.data.type === "A") {
+
+                            for (let obj of response.data.list) {
+
+                                if (obj.address3 === null) {
+                                    obj.address3 = "";
+                                }
+
+                                classlist.innerHTML +=
+
+                                    '<div class="col">' +
+                                    '<a style="cursor: pointer" class="nav-link" onclick=updatehit(' + obj.classcode + ')>' +
+                                    '<div class="card shadow-sm">' +
+                                    '<div class="card-header text-center">' + obj.title + '</div>' +
+                                    '<img class="card-img-top" height="269" style="object-fit:cover" src="' + contextPath + '/class/image?no=' + obj.mainImg + '">' +
+                                    '<div class="card-body">' +
+                                    '<div class="d-flex align-items-center justify-content-end mb-2">' +
+                                    '<div class="card-text nickname text-center me-2">' + obj.nickname + '</div>' +
+                                    '<img style="width: 30px; height: 30px; object-fit:cover; border-radius: 10px;" src="' +
+                                    contextPath + '/class/image?no=' + obj.profileImg + '">' +
+                                    '</div>' +
+                                    '<p class="card-text price fw-bold">' + priceToString(obj.price) + '원(1인)' + '</p>' +
+                                    '<p class="card-text local">' + obj.address1 + " " + obj.address2 + " " + obj.address3 + '</p>' +
+                                    '</div>' +
+                                    '</div>' +
+                                    '</a>' +
+                                    '</div>';
+                            }
+
+                        }
+
+                        else if (response.data.type === "B") {
+
+                            for (let obj of response.data.list) {
+
+                                if (obj.address3 === null) {
+                                    obj.address3 = "";
+                                }
+
+                                classlist.innerHTML +=
+
+                                    '<div class="col">' +
+                                    '<a style="cursor: pointer" class="nav-link" onclick=updatehit(' + obj.classcode + ')>' +
+                                    '<div class="card shadow-sm">' +
+                                    '<div class="card-header text-center">' + obj.title + '</div>' +
+                                    '<img class="card-img-top" height="269" style="object-fit:cover" src="' + contextPath + '/class/image?no=' + obj.mainImg + '">' +
+                                    '<div class="card-body">' +
+                                    '<div class="d-flex align-items-center justify-content-end mb-2">' +
+                                    '<div class="card-text nickname text-center me-2">' + obj.nickname + '</div>' +
+                                    '<img style="width: 30px; height: 30px; object-fit:cover; border-radius: 10px;" src="' +
+                                    contextPath + '/class/image?no=' + obj.profileImg + '">' +
+                                    '</div>' +
+                                    '<div class="d-flex align-items-center mb-2">' +
+                                    '<div class="card-text classdate flex-fill me-1">' + obj.classdate + '</div>' +
+                                    '<div class="card-text price fw-bold flex-fill">' + priceToString(obj.price) + '원(1인)' + '</div>' +
+                                    '</div>' +
+                                    '<p class="card-text local">' + obj.address1 + " " + obj.address2 + " " + obj.address3 + '</p>' +
+                                    '</div>' +
+                                    '</div>' +
+                                    '</a>' +
+                                    '</div>';
+                            }
+
+                        }
+
+                    })
+
+            };
+
+            searchClassAction(1);
+
+            function resetSearchOption() {
+
+                // 1. select box 초기화 -> value 값이 1인 option(전체)을 selected
+
+                $("#cityselect").val("1").prop("selected", true);
+                $("#activityselect").val("1").prop("selected", true);
+
+                // 2. 하위 카테고리의 경우, 초기화 시 모든 option 삭제 -> 디폴트 옵션 추가
+
+                $('#localselect').children('option').remove();
+                $('#localselect').append('<option>전체</option>');
+
+                $('#actdetailselect').children('option').remove();
+                $('#actdetailselect').append('<option value="">전체</option>');
+
+                // 3. 키워드, 날짜, 최소 가격, 최대 가격 input 태그 값 초기화
+
+                $('#keyword').val('');
+                $('#classdate').val('');
+                $('#minprice').val('');
+                $('#maxprice').val('');
+
+                // 4. 난이도 선택 초기화 -> active 상태 초기화
+                $(".levelchk").removeClass('active');
+
+                // 5. 검색 시 입력되는 변수 값 초기화
+                citycode = 0;
+                localcode = 0;
+                activitycode = 0;
+                actcode = 0;
+                classlevel = 0;
+                minprice = 0;
+                maxprice = 0;
+                classdate = "";
+                keyword = "";
+
+            };
+
+            async function updatehit(code) {
+
+                //console.log(code);
+
+                const url = contextPath + '/api/class/updatehit.json';
+                const headers = { "Content-Type": "application/json" };
+                const body = { classcode: code };
+
+                const { data } = await axios.put(url, body, { headers });
+
+                //console.log(data);
+
+                if (data.ret === 1) {
+                    window.location.href = contextPath + '/class/product.do?classcode=' + code;
+                }
+            }
+
+            function priceToString(price) {
+                return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+            }
+
+            function selectoption(value) {
+
+                // console.log("option", option);
+
+                option = value;
+
+                searchClassAction(1);
+
+            }
+
+            /* 날짜를 입력하지 않았을 때, 난이도 비활성화 (클래스 난이도 선택은 날짜 선택 시만) */
+
+            function activeLevel() {
+
+                const date = document.querySelector("#classdate");
+
+                if (date.value.length < 10) {
+                    const levelchk = $('.levelchk');
+
+                    levelchk.addClass('disabled');
+                }
+
+            }
+        </script>
+
+    </main>
+</body>
+
+</html>

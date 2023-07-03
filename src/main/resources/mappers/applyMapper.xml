@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.mapper.ApplyMapper">
+
+<!-- 1. 클래스 일괄 신청 -->    
+<insert id="insertApplyBatch" parameterType="list">
+    INSERT INTO APPLY(no, person, payment, unitno, memberid)
+    SELECT seq_apply_no.NEXTVAL, T1.* FROM(
+        <foreach item="obj" collection="list" separator=" UNION ALL ">
+            SELECT ${obj.person} person, ${obj.payment} payment, ${obj.unitno} unitno, '${obj.memberid}' memberid 
+            FROM DUAL
+        </foreach>
+    ) T1
+</insert>
+
+<!-- 2. 클래스 신청 상태 기록 -->
+<insert id="insertApplyStatusBatch" parameterType="list">
+    INSERT INTO applystatus(no, applyno, chk)
+    SELECT seq_applystatus_no.NEXTVAL, T1.* FROM(
+        <foreach item="obj" collection="list" separator=" UNION ALL ">
+            SELECT ${obj.applyno} applyno, ${obj.chk} chk FROM DUAL
+        </foreach>
+    ) T1
+</insert>
+
+<!-- 3. 클래스 신청 취소 -->
+<update id="updateApplyCancel" parameterType="Apply">
+    UPDATE APPLY SET chk = 2 WHERE no = #{no}
+</update>
+
+<!-- 4. 클래스 참여 완료 -->
+<update id="updateApplyComplete" parameterType="list">
+    UPDATE APPLY SET chk = 3 WHERE no In (
+        <foreach item="obj" collection="list" separator=" , ">
+            #{obj.no}
+        </foreach>
+    )
+</update>
+
+<!-- 5. 클래스 신청 성공 시, 인원수 변경 -->
+<update id="updateClassUnitApplySuccess" parameterType="list">
+    UPDATE classunit SET
+        cnt = (CASE 
+            <foreach item="obj" collection="list" separator=" ">
+                WHEN no = #{obj.unitno} THEN cnt + #{obj.person}
+            </foreach>
+        END)
+        WHERE no IN(
+            <foreach item="obj" collection="list" separator=" , ">
+                #{obj.unitno}
+            </foreach>
+        )
+</update>
+
+<!-- 6. 클래스 신청 취소 시, 인원수 변경 -->
+<update id="updateClassUnitApplyCancel" parameterType="Apply">
+    UPDATE classunit SET cnt = cnt - #{person} WHERE no = #{unitno}
+</update>
+
+<!-- 7. 클래스 신청 내역 조회 -->
+<select id="selectApplyListById" parameterType="map" resultType="com.example.dto.ApplyView">
+          SELECT * FROM(SELECT ROW_NUMBER() OVER(ORDER BY a.no DESC) AS rnum, * FROM applyview a WHERE a.memberid = #{id})
+         a WHERE a.rnum <![CDATA[ >= ]]> ${first} AND a.rnum <![CDATA[ <= ]]> ${last} ORDER BY a.no DESC
+</select>
+
+<!-- 8. 신청 전체 개수 조회 -->
+<select id="countApplyList" parameterType="String" resultType="long">
+    SELECT COUNT(*) FROM APPLY WHERE memberid = #{id}
+</select>
+
+<!--9. 클래스 신청 번호 조회 (등록한 개수만큼)-->
+<select id="selectInsertedApplyNoList" parameterType="map" resultType="long">
+    SELECT a.NO FROM (SELECT ROW_NUMBER() OVER(ORDER BY NO desc) rnum, * FROM apply a WHERE memberid = #{id} ORDER BY NO DESC) a WHERE rnum <![CDATA[ >= ]]> 1 AND rnum <![CDATA[ <= ]]> #{count};
+</select>
+
+<!-- 10. 신청상태 개수 조회 (chk=1) -->
+<select id="countApplyListOne" parameterType="String" resultType="long">
+    SELECT COUNT(*) FROM APPLY WHERE memberid = #{id} AND chk = 1
+</select>
+
+<!-- 11. 신청상태 개수 조회 (chk=2) -->
+<select id="countApplyListTwo" parameterType="String" resultType="long">
+    SELECT COUNT(*) FROM APPLY WHERE memberid = #{id} AND chk = 2
+</select>
+
+<!-- 12. 신청상태 개수 조회 (chk=3) -->
+<select id="countApplyListThree" parameterType="String" resultType="long">
+    SELECT COUNT(*) FROM APPLY WHERE memberid = #{id} AND chk IN(3,4)
+</select>
+
+<!-- 13. 신청상태에 따른 날짜 조회  -->
+<select id="selectApplyStatusListById" parameterType="map" resultType="com.example.dto.ApplyStatusView">
+         SELECT a.* FROM APPLYSTATUSVIEW a WHERE NO=#{no} AND MEMBERID =#{id}
+</select>
+
+<!-- 14. 클래스 신청 상태(chk = 1)인 것만 조회(목록별) -->
+<select id="selectApplyListByIdOne" parameterType="map" resultType="com.example.dto.ApplyView">
+         SELECT * FROM(SELECT ROW_NUMBER() OVER(ORDER BY a.no DESC ) AS rnum, * FROM ApplyView a WHERE chk=1 and a.memberid = #{id})
+         a WHERE a.rnum<![CDATA[ >= ]]> ${first} AND a.rnum <![CDATA[ <= ]]>${last}  AND a.chk = 1 ORDER BY a.no DESC;
+</select>
+
+<!-- 15. 클래스 신청 상태(chk = 2)인 것만 조회(목록별 ) -->
+<select id="selectApplyListByIdTwo" parameterType="map" resultType="com.example.dto.ApplyView">
+          SELECT * FROM(SELECT ROW_NUMBER() OVER(ORDER BY a.no DESC) AS rnum, * FROM applyview a WHERE chk=2 and a.memberid = #{id})
+         a WHERE a.rnum <![CDATA[ >= ]]> ${first} AND a.rnum <![CDATA[ <= ]]> ${last} AND a.chk = 2 ORDER BY a.no DESC
+</select>
+
+<!-- 16. 클래스 신청 상태(chk = 3)인 것만 조회(목록별 ) -->
+<select id="selectApplyListByIdThree" parameterType="map" resultType="com.example.dto.ApplyView">
+          SELECT * FROM(SELECT ROW_NUMBER() OVER(ORDER BY a.no DESC) AS rnum, * FROM applyview a WHERE chk IN(3,4) and a.memberid = #{id})
+         a WHERE a.rnum <![CDATA[ >= ]]> ${first} AND a.rnum <![CDATA[ <= ]]> ${last} AND a.chk IN(3,4) ORDER BY a.no DESC
+</select>
+
+<!-- 17. 클래스 유닛별 신청내역 조회(클래스 신청 상태(chk = 1,3)인 것만 조회) --> 
+<select id="selectApplyViewListByUnitno" parameterType="long" resultType="com.example.dto.ApplyView">
+    SELECT a.unitno, a.classdate, a.classday, a.classstart, a.classend, a.totalprice, a.chk, a.person, a.payment, a.memberid, a.phone, a.no, a.classcode, a.regdate FROM applyview a WHERE a.chk IN(1,3,4) AND a.unitno = #{unitno}
+</select>
+
+<!-- 18. 신청상태 수정(결제완료 : 1 => 참여완료 : 3) -->
+<update id="updateApplyChk" parameterType="com.example.dto.Apply">
+    UPDATE APPLY SET chk = 3 WHERE no = #{no}
+</update>
+
+<!-- 19. 신청 상태 기록 - 신청 상태 테이블 -->
+<insert id="insertApplyStatusOne" parameterType="com.example.dto.ApplyStatus">
+    INSERT INTO applystatus(applyno, chk) VALUES(#{applyno}, #{chk})
+</insert>
+
+
+</mapper>

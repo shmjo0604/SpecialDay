@@ -1,0 +1,140 @@
+<div th:fragment="menu_applymanage" style="margin-top: 10px;">
+    <!--google-font-->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@500&display=swap" rel="stylesheet">  
+    <link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic&display=swap" rel="stylesheet">
+ 
+    <!-- jquery -->
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
+    <style>
+        .completed {
+            background-color: unset;
+        }
+
+        .table.center,
+        .table.center thead tr th,
+        .table.center tbody tr td {
+            text-align: center;
+        }
+        
+        /* 페이지네이션 스타일 */
+        .pagination-sm .page-item:not(.disabled) .page-link {
+            background-color: #ffffff; /* 활성화된 페이지의 배경색 */
+            color: #000000; /* 활성화된 페이지의 텍스트 색상 */
+            border-color: #349634; /* 페이지 링크의 테두리 색상 */
+            transition: background-color 0.3s, color 0.3s; /* 효과의 속도 및 속성 지정 */
+        }
+        
+        .pagination-sm .page-item:not(.disabled) .page-link:hover {
+            background-color: #dddfdd; /* 마우스 호버 시 배경색 변경 */
+        }
+        
+        .pagination-sm .page-item.disabled .page-link {
+            color: #ffffff; /* 비활성화된 페이지의 텍스트 색상 */
+            border-color: #29a429;
+            background-color: rgb(32, 132, 62);
+        }
+
+    </style>
+
+    <span style="font-weight: bold; font-size: small; font-size: medium; font-family: 'Noto Sans KR', sans-serif;"><i class="fa-solid fa-square-pen"></i> 신청내역을 관리하세요.</span>
+    
+    <table class="table center table-hover" style="margin-bottom: 30px; margin-top: 10px;" >
+        <thead style="background-color: #ddeadd;  border-bottom: 1px solid #5d5b5b;" >
+            <tr>
+                <th style="border-right: 1px solid #000000; font-family: 'Nanum Gothic', sans-serif;">번호</th>
+                <th style="border-right: 1px solid #000000; font-family: 'Nanum Gothic', sans-serif;">일자</th>
+                <th style="border-right: 1px solid #000000; font-family: 'Nanum Gothic', sans-serif;">시간</th>
+                <th style="border-right: 1px solid #000000; font-family: 'Nanum Gothic', sans-serif;">난이도</th>
+                <th style="border-right: 1px solid #000000; font-family: 'Nanum Gothic', sans-serif;">신청인원</th>
+                <th style="font-family: 'Nanum Gothic', sans-serif;">신청내역</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="obj : ${list}">
+                <td style="font-family: 'Nanum Gothic', sans-serif;">
+                    <input type="hidden" th:value="${obj.no}" th:text="${obj.rnum}" disabled>
+                </td>
+                <td th:text="${obj.classdate}" style="font-family: 'Nanum Gothic', sans-serif;"></td>
+                <td style="font-family: 'Nanum Gothic', sans-serif;">
+                    <span th:text="${obj.classstart}"></span> ~ <span th:text="${obj.classend}"></span>
+                </td>
+                <td style="font-family: 'Nanum Gothic', sans-serif;"> 
+                    <span th:if="${obj.classlevel == 1}"><i class="fa-solid fa-user" style="color: #00C783;"></i> 입문자</span>
+                    <span th:if="${obj.classlevel == 2}"><i class="fa-solid fa-user" style="color: #23946C;"></i> 경험자</span>
+                    <span th:if="${obj.classlevel == 3}"><i class="fa-solid fa-user" style="color: #006F4A;"></i> 숙련자</span>
+                </td>
+                <td style="font-family: 'Nanum Gothic', sans-serif;">
+                    <span th:text="${obj.cnt}"></span> / <span th:text="|${obj.maximum}명|"></span>
+                </td>
+                <td>
+                    <button class="btn btn-sm" style="width: 100px; border:1px solid rgb(185, 186, 185);">
+                        <a class="nav-link" th:href="@{/classunit/applymanage_detail.do(classcode=${obj.classcode}, unitno=${obj.no})}">보기</a>
+                    </button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    
+    
+    
+    <div class="row justify-content-center pagination-container">
+        <div class="col-6 d-flex justify-content-center">
+            <ul id="pagination-demo" class="pagination-sm "></ul>
+        </div>
+    </div>
+
+    <!--jquery-->
+    <script th:src="@{/js/jquery-3.6.4.min.js}"></script>
+    <!--twbsPagination js-->
+    <script th:src="@{/js/jquery.twbsPagination.min.js}"></script>
+    <!--axios library-->
+    <script th:src="@{/js/axios.min.js}"></script>
+    <script type="text/javascript" th:inline="javascript">
+
+        const ccode = /*[[${classcode}]]*/"";
+
+        async function update(no, unitno, button) {
+            let url = /*[[@{/api/classunit/updatechk.json}]]*/"";
+            url += `?no=${no}`;
+            const body = { no: no };
+            const headers = { "Content-Type": "application/json" };
+            const { data } = await axios.put(url, body, { headers: headers });
+
+            if (data.status === 200) {
+                alert("승인이 완료되었습니다.");
+                const spanElement = $(button).siblings('span');
+                spanElement.text('참여완료');
+                spanElement.addClass('completed');
+                $(button).css('background', '');
+                $(button).prop('disabled', true);
+            } else {
+                alert("승인할 수 없습니다.");
+            }
+        }
+
+        var pages = /*[[${pages}]]*/'';
+
+        $(document).ready(function() {
+			$('#pagination-demo').twbsPagination({
+				totalPages : Number(pages),
+				visiblePages : 10,
+				first : '<i class="fa-solid fa-angles-left"></i>',
+				last : '<i class="fa-solid fa-angles-right"></i>',
+				prev : '<i class="fa-solid fa-angle-left"></i>',
+				next : '<i class="fa-solid fa-chevron-right"></i>',
+				initiateStartPageClick : false,
+				startPage : Number(/*[[${param.page}]]*/),
+				// 주소창에서 page 값을 받아옴 -> 그 값에 해당하는 목록 버튼이 활성
+				onPageClick : function(event, page) {
+					//$('#page-content').text('Page ' + page);
+					window.location.href=`myunit.do?classcode=${ccode}&menu=2&page=${page}`;
+					// 
+				}
+			});
+		});
+    </script>
+
+</div>

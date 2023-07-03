@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>마이페이지</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <!--웹 페이지 아이콘 변경-->
+  <link rel="icon" th:href="@{/image/logo.ico}">
+  <!-- Google Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" />
+  <link href="https://fonts.googleapis.com/css2?family=DynaPuff&family=Permanent+Marker&display=swap"
+    rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@500&display=swap" rel="stylesheet"> 
+  <!--Bootstrap 용 CSS-->
+  <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
+  <!--CSS-->
+  <link rel="stylesheet" th:href="@{/css/main.css}" />
+  <!--Bootstrap 용 Icon CDN-->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css" />
+  <!-- font awesome용 css CDN  -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <!--thymeleaf contextpath-->
+  <link id="contextPathHolder" th:data-contextPath="${#httpServletRequest.getContextPath()}" />
+  <!-- quill CSS -->
+  <link rel="stylesheet" th:href="@{/css/quill.snow.css}" />
+  <style>
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+    }
+
+    #body-wrapper {
+      min-height: 100%;
+      position: relative;
+    }
+
+    #body-content {
+      padding-bottom: 150px;
+      margin-top: 120px;
+    }
+
+    footer {
+      position: relative;
+    }
+
+    /* mypage css */
+    .sidevar>.sidevar-menu>ul>li {
+      list-style: none;
+    }
+
+    .sidevar>.sidevar-menu>ul>li>ul>li {
+      list-style: none;
+    }
+
+    .sidevar>.sidevar-menu>ul>li>a {
+      text-decoration: none;
+      color: black;
+    }
+
+    .sidevar>.sidevar-menu>ul>li>ul>li>a {
+      text-decoration: none;
+      color: black;
+    }
+
+    .side_one:hover{
+      background-color: honeydew;
+    }
+
+  </style>
+</head>
+
+<body>
+  <!--header 영역-->
+  <header th:replace="~{header :: headerFragment}"></header>
+
+  <!--main 영역-->
+  <div id="body-wrapper">
+    <div id="body-content"  class="container">
+      <div class="row">
+        <!--left-->
+        <div class="col-sm-3" style="width: 250px; left: 0; height: 800px; border: 1px solid rgba(199, 196, 196, 0.466);">
+          <div class="sidevar">
+              <div class="sidevar-menu">
+                  <ul style="padding-left : 5px; padding-right: 5px; padding-top: 20px;">
+                      <span>※ 마이페이지</span>
+                      <hr style="border: 0.5px solid rgb(0, 0, 0); margin-top: 10px;"/>
+                      <li style="list-style: none;" class="side_one"><a th:href="@{mypage.do(menu=1,page=1)}" style="text-decoration: none; color: black; font-weight: bold; font-size: medium;">신청 내역</a></li>
+                      <hr/>
+                      <li style="list-style: none;" class="side_one"><a th:href="@{mypage.do(menu=2,page=1)}" style="text-decoration: none; color: black; font-weight: bold; font-size: medium;">리뷰 내역</a></li>
+                      <hr/>
+                      <li style="list-style: none;" class="side_one"><a th:href="@{mypage.do(menu=3,page=1)}" style="text-decoration: none; color: black; font-weight: bold; font-size: medium;">문의 내역</a></li>
+                      <hr/>
+                      <li style="list-style: none;" class="side_one"><a class="opener" data-bs-toggle="collapse" href="#collapseExample" role="button"style= "text-decoration: none; color: black; font-weight: bold; font-size: medium;"
+                        aria-expanded="false" aria-controls="collapseExample">계정 설정<span
+                        style="margin-left: 115px; font-size: 1rem; font-weight: bold; color: rgba(0,0,0,0.4);">
+                        ∨</span></a></li>
+                        <ul class="collapse" id="collapseExample" style="list-style: none; padding-left: 10px;">
+                          <li><a th:href="@{mypage.do(menu=4)}" style=" font-size: 0.8rem; font-weight: bold; color: rgba(0,0,0,0.4);  text-decoration: none;">나의 정보</a></li>
+                          <li>
+                            <a th:href="@{mypage.do(menu=5)}" style=" font-size: 0.8rem; font-weight: bold; color: rgba(0,0,0,0.4);  text-decoration: none;">비밀번호 변경</a>
+                          </li>
+                          <li><a th:href="@{mypage.do(menu=6)}" style=" font-size: 0.8rem; font-weight: bold; color: rgba(0,0,0,0.4);  text-decoration: none;">회원 탈퇴</a></li>
+                        </ul>
+                    </ul>
+              </div>
+          </div>
+      </div> 
+        <!--right-->
+
+        <th:block th:if="${#strings.equals(param.menu, '1')}">
+          <div th:replace="~{/member/mypage/menu/menu_apply :: menu_apply}"></div>
+        </th:block>
+
+        <th:block th:if="${#strings.equals(param.menu, '2')}">
+          <div th:replace="~{/member/mypage/menu/menu_review :: menu_review}"></div>
+        </th:block>
+
+        <th:block th:if="${#strings.equals(param.menu, '3')}">
+          <div th:replace="~{/member/mypage/menu/menu_ask :: menu_ask}"></div>
+        </th:block>
+
+        <th:block th:if="${#strings.equals(param.menu, '4')}">
+          <!-- <div th:replace="~{/mypage/menu/menu_auth/menu_infoupdate1.html :: menu_infoupdate1}"></div> -->
+          <div th:replace="~{/member/mypage/menu/menu_auth/menu_infoupdate :: menu_infoupdate}"></div>
+        </th:block>
+
+        <th:block th:if="${#strings.equals(param.menu, '5')}">
+          <div th:replace="~{/member/mypage/menu/menu_auth/menu_pwupdate :: menu_pwupdate}"></div>
+        </th:block>
+
+        <th:block th:if="${#strings.equals(param.menu, '6')}">
+          <div th:replace="~{/member/mypage/menu/menu_auth/menu_signout :: menu_signout}"></div>
+        </th:block>
+
+        <!--/right-->
+      </div>
+      <!--/row-->
+    </div>
+  </div>
+
+  <!--footer 영역-->
+  <footer th:replace="~{footer :: footerFragment}"></footer>
+
+  <!--jQuery-->
+  <script th:src="@{/js/jquery-3.6.4.min.js}"></script>
+  <!--twbsPagination-->
+  <script th:src="@{/js/jquery.twbsPagination.min.js}"></script>
+  <!--axios library-->
+  <script th:src="@{/js/axios.min.js}"></script>
+  <!--Bootstrap 용 js -->
+  <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+  <!--SweetAlert2 JS-->
+  <script th:src="@{/js/sweetalert2@11.js}"></script>
+  <!-- font awesome용 스크립트 CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+
+  <script th:inline="javascript">
+    /*<![CDATA[*/
+
+    const contextPath = $("#contextPathHolder").attr("data-contextPath");
+    const userId = /*[[${user.username}]]*/ "";
+
+    /***** menu4. 회원정보 수정 *****/
+
+    async function next(id) {
+      const password = document.querySelector("#infoupdate1_password");
+
+      if (password.value.length < 1) {
+        //alert("비밀번호를 입력하세요.");
+
+        const modal1 = new bootstrap.Modal(
+          document.getElementById("pwNotInput"),
+          {}
+        );
+        modal1.show();
+
+        return false;
+      }
+
+      const url = contextPath + "/api/member/verifyPw.json";
+      const headers = { "Content-Type": "application/json" };
+      const body = { id: id, password: password.value };
+      const { data } = await axios.post(url, body, { headers });
+
+      if (data.ret === 1) {
+        $("#infoupdate1").css("display", "none");
+        $("#infoupdate2").css("display", "inline-block");
+      } else if (data.ret === 0) {
+        const modal = new bootstrap.Modal(
+          document.getElementById("pwIncorrect"),
+          {}
+        );
+        modal.show();
+      }
+    }
+
+    async function updateInfoAction() {
+      console.log(userId);
+
+      const name = document.querySelector("#name");
+      const phone = document.querySelector("#phone");
+      const email = document.querySelector("#email");
+
+      if (name.value.length < 1) {
+        alert("이름이 입력하세요.");
+        name.focus();
+        return false;
+      }
+      if (phone.value.length < 1) {
+        alert("연락처를 입력하세요.");
+        phone.focus();
+        return false;
+      }
+      if (email.value.length < 1) {
+        alert("이메일을 입력하세요.");
+        email.focus();
+        return false;
+      }
+
+      const url = contextPath + "/api/member/updateinfo.json";
+      const headers = { "Content-Type": "application/json" };
+      const body = {
+        id: userId,
+        name: name.value,
+        phone: phone.value,
+        email: email.value,
+      };
+      const { data } = await axios.put(url, body, { headers });
+
+      if (data.ret === 1) {
+        alert("정보 수정을 완료했습니다.");
+
+        name.value = data.member.name;
+        phone.value = data.member.phone;
+        email.value = data.member.email;
+      }
+    }
+
+    /***** menu5. 비밀번호 변경 *****/
+    async function updatePwAction() {
+      const password = document.querySelector("#pwupdate_password");
+      const newpassword1 = document.querySelector("#pwupdate_newpassword1");
+      const newpassword2 = document.querySelector("#pwupdate_newpassword2");
+
+      if (password.value.length < 1) {
+        alert("비밀번호를 입력해주세요.");
+        password.focus();
+        return false;
+      }
+      if (newpassword1.value.length < 1) {
+        alert("새 비밀번호를 입력해주세요.");
+        newpassword1.focus();
+        return false;
+      }
+      if (newpassword2.value.length < 1) {
+        alert("새 비밀번호를 한 번 더 입력해주세요.");
+        newpassword2.focus();
+        return false;
+      }
+      if (newpassword1.value !== newpassword2.value) {
+        alert("새 비밀번호가 서로 일치하지 않습니다.");
+        newpassword1.focus();
+        return false;
+      }
+
+      const url = contextPath + "/api/member/updatepw.json";
+      const headers = { "Content-Type": "application/json" };
+      const body = {
+        id: userId,
+        password: password.value,
+        newpassword: newpassword1.value,
+      };
+      const { data } = await axios.put(url, body, { headers });
+
+      if (data.status === 200) {
+        Swal.fire({
+          icon: "success",
+          title: "비밀번호를 변경했습니다.",
+          showConfirmButton: true,
+        }).then((result) => {
+          if (result.isConfirmed) {
+            window.location.href = contextPath + "/member/mypage.do?menu=5";
+          }
+        });
+      }
+
+      if (data.status === -1) {
+        Swal.fire({
+          icon: "error",
+          title: "현재 비밀번호가 일치하지 않습니다.",
+          showConfirmButton: true,
+        }).then((result) => {
+          if (result.isConfirmed) {
+            password.focus();
+          }
+        });
+      }
+    }
+
+    /***** menu6. 회원 탈퇴 *****/
+    $(document).ready(function () {
+      $("#signout-chk").change(function () {
+        if ($("#signout-chk").is(":checked")) {
+          $("#signout-button").removeAttr("disabled");
+        } else {
+          $("#signout-button").attr("disabled", true);
+        }
+      });
+    });
+
+    async function signout() {
+      const password = document.querySelector("#signout-password");
+
+      if (password.value.length < 1) {
+        alert("비밀번호를 입력해주세요.");
+        password.focus();
+        return false;
+      }
+
+      const url = contextPath + "/api/member/signout.json";
+      const headers = { "Content-Type": "application/json" };
+      const body = { id: userId, password: password.value };
+      const { data } = await axios.put(url, body, { headers });
+
+      console.log(data);
+
+      if (data.status === 200) {
+        const modal = new bootstrap.Modal(
+          document.getElementById("signoutPass"),
+          {}
+        );
+        modal.show();
+      } else if (data.status === -1) {
+
+        var failmessage = document.getElementById("singoutFailMessage");
+
+        failmessage.textContent = data.errormessage;
+
+        const modal = new bootstrap.Modal(
+          document.getElementById("signoutFail"),
+          {}
+        );
+        modal.show();
+      }
+    }
+
+    /*]]>*/
+
+  </script>
+  <!--Main js-->
+  <script th:src="@{/js/main.js}"></script>
+</body>
+
+</html>

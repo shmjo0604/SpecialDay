@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>내 클래스 관리</title>
+    <!--웹 페이지 아이콘 변경-->
+    <link rel="icon" th:href="@{/image/logo.ico}">
+    <!-- Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=DynaPuff&family=Permanent+Marker&display=swap"
+        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@500&display=swap" rel="stylesheet"> 
+    <!--Bootstrap 용 CSS-->
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <!--CSS-->
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+    <!--Bootstrap 용 Icon CDN-->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+    <!--font awesome 용-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <!-- 제이쿼리 적용 코드 -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <!-- <script type="text/javascript" src="./jquery.twbsPagination.min.js"></script> -->
+
+    <!--thymeleaf contextpath-->
+    <link id="contextPathHolder" th:data-contextPath="${#httpServletRequest.getContextPath()}" />
+
+<style>
+        html,
+        body {
+            height: auto;
+        }
+
+        .sidebar {
+            position: relative;
+            background-color: #bfdab8;
+            width: 230px;
+            text-align: center;
+            float: left;
+        }
+        
+        .side_one:hover{
+            background-color: honeydew;
+        }
+
+        #sidebarul {
+            list-style: none;
+            padding-left: 0px;
+        }
+
+        .menu:hover {
+            background-color: cadetblue;
+        }
+
+        .menu {
+            font-size: 20px;
+            width: 200px;
+            height: 50px;
+            margin: 10px 0;
+            border-radius: 20px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        table {
+            width: auto;
+            height: max-content;
+            border-top: 1px solid #444444;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            border-bottom: 1px solid #444444;
+            border-left: 1px solid #444444;
+            padding: 10px;
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        th:first-child,
+        td:first-child {
+            border-left: none;
+        }
+        
+        #classtitle:hover{
+            color: brown;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- header 영역 -->
+    <header th:replace="~{header :: headerFragment}"></header>
+
+    <div id="wrapper">
+        <div class="container border-top">
+            <div class="maincontent row">
+                <!-- left 영역 -->
+                <div class="col-sm-3" style="width: 250px; left: 0; height: 800px; border: 1px solid rgba(199, 196, 196, 0.466);">
+                    <div class="sidevar">
+                        <div class="sidevar-menu">
+                            <ul style="padding-left : 5px; padding-right: 5px; padding-top: 20px;">
+                                <span>※ 클래스 및 문의관리</span>
+                                <hr style="border: 0.5px solid rgb(0, 0, 0); margin-top: 10px;"/>
+                                <li style="list-style: none;" class="side_one"><a th:href="@{myclass.do(menu=1)}" style="text-decoration: none; color: black; font-weight: bold; font-size: medium;">클래스 조회</a></li>
+                                <hr/>
+                                <li style="list-style: none;" class="side_one"><a th:href="@{myclass.do(menu=2)}" style="text-decoration: none; color: black; font-weight: bold; font-size: medium;">문의내역 조회</a></li>
+                                <hr/>
+                                
+                              </ul>
+                        </div>
+                    </div>
+                </div>
+                <!-- <div class="sidebar col-3">
+                    <div class="left2 mt-5">
+                        <nav id="sidenav">
+                            <ul id='sidebarul'>
+                                <li class="menu">
+                                    <a th:href="@{myclass.do(menu=1)}"
+                                        style="text-decoration: none; font-weight: bold; color: cornsilk;">
+                                        <span class="material-symbols-outlined"
+                                            style="color: white; vertical-align: middle;">how_to_reg</span>
+                                        클래스 조회</a>
+                                </li>
+                                <li class="menu">
+                                    <a th:href="@{myclass.do(menu=2)}"
+                                        style="text-decoration: none; font-weight: bold; color: cornsilk;">
+                                        <span class="material-symbols-outlined"
+                                            style="color: white; vertical-align: middle;">quiz</span>
+                                        문의 내역 조회</a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div> -->
+
+                <!-- right 영역 -->
+                
+                <th:block th:if="${#strings.equals(param.menu, '1')}">
+                    <div th:replace="~{/member/myclass_menu1 :: menu_1}"></div>
+                </th:block>
+                
+                <th:block th:if="${#strings.equals(param.menu, '2')}">
+                    <div th:replace="~{/member/myclass_menu2 :: menu_2}"></div>
+                </th:block>
+                
+            </div>
+        </div>
+    </div>
+
+    <footer th:replace="~{footer :: footerFragment}"></footer>
+
+    
+    <!--Main js-->
+    <script th:src="@{/js/main.js}"></script>
+</body>
+
+</html>

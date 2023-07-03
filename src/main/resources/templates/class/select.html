@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>클래스 검색</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <!--웹 페이지 아이콘 변경-->
+    <link rel="icon" th:href="@{/image/logo.ico}">
+    <!-- Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=DynaPuff&family=Permanent+Marker&display=swap"
+        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@500&display=swap" rel="stylesheet"> 
+    <!--Bootstrap 용 CSS-->
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <!--Bootstrap 용 Icon CDN-->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+    <!--font awesome 용-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <!-- datepicker css -->
+    <link rel="stylesheet" th:href="@{/css/jquery-ui.min.css}">
+    <!-- CSS-->
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+    <link rel="stylesheet" th:href="@{/css/class/classselect.css}">
+    <!--thymeleaf contextpath-->
+    <link id="contextPathHolder" th:data-contextPath="${#httpServletRequest.getContextPath()}"/>
+</head>
+
+<body>
+    <!--header 영역-->
+    <header th:replace="~{header :: headerFragment}"></header>
+
+    <!--main 영역-->
+    <div id="wrapper">
+        <!-- search - List 영역 -->
+        <th:block th:if="${#strings.equals(param.search, 'list')}">
+            <div th:replace="~{/class/select_list :: selectListFragment}"></div>
+        </th:block>
+
+        <!-- search - Map 영역 -->
+        <th:block th:if="${#strings.equals(param.search, 'map')}">
+            <div th:replace="~{/class/select_map :: selectMapFragment}"></div>
+        </th:block>
+    </div>
+
+    <!--footer 영역-->
+    <footer th:replace="~{footer :: footerFragment}"></footer>
+    
+    
+    <!-- datepicker js -->
+    <script th:src="@{/js/jquery-ui.min.js}"></script>
+    <!--Bootstrap 용 js -->
+    <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+    <!--Main js-->
+    <script th:src="@{/js/main.js}"></script>
+    <script>
+
+        $.datepicker.setDefaults({
+            dateFormat: 'yy-mm-dd',
+            prevText: '이전 달',
+            nextText: '다음 달',
+            monthNames: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'],
+            monthNamesShort: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'],
+            dayNames: ['일', '월', '화', '수', '목', '금', '토'],
+            dayNamesShort: ['일', '월', '화', '수', '목', '금', '토'],
+            dayNamesMin: ['일', '월', '화', '수', '목', '금', '토'],
+            showMonthAfterYear: true,
+            yearSuffix: '년',
+            minDate: "-0D",
+            maxDate: "+2M"
+        });
+
+        $(function () {
+            $('.datepicker').datepicker({
+                onSelect: function (d) {
+                    var week = new Array('일요일', '월요일', '화요일', '수요일', '목요일', '금요일', '토요일');
+                    var today = new Date(d).getDay();
+                    var todaylabel = week[today];
+
+                    //console.log(todaylabel);
+                    const levelchk = $('.levelchk');
+                   
+                    levelchk.removeClass('disabled');
+                }
+            });
+        });
+
+    </script>
+</body>
+
+</html>

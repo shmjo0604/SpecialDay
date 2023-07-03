@@ -1,0 +1,202 @@
+@import url("https://fonts.googleapis.com/css?family=Nanum+Gothic:400,700,800&display=swap");
+
+/* 전체 콘테이너 */
+.container {
+  font-family: "Nanum Gothic";
+}
+
+/* 메인 이미지 */
+.images {
+  width: 510px;
+  height: 390px;
+  border: 1px solid rgba(0, 0, 0, 0.3);
+  border-radius: 5%;
+}
+
+.images1 {
+  width: 150px;
+  height: 100px;
+  border: 1px solid rgba(0, 0, 0, 0.3);
+  border-radius: 5%;
+}
+
+.bi-star-fill {
+  font-size: 20px;
+  line-height: 20px;
+  color: yellow;
+  text-shadow: -2px 0 black, 0 2px black, 2px 0 black, 0 -2px black;
+}
+.bi-heart-fill {
+  font-size: 20px;
+  line-height: 20px;
+  color: red;
+  text-shadow: -2px 0 black, 0 2px black, 2px 0 black, 0 -2px black;
+}
+
+/* 네비게이션 */
+.nav-tabs {
+  border-color: #009874;
+}
+
+.nav-tabs.active {
+  border-color: #009874;
+ 
+}
+
+.nav-tabs .nav-item .nav-link {
+  padding: 0.3rem;
+  font-size: 0.9rem;
+}
+
+.nav-tabs .nav-item .nav-link.active {
+  border-left: 2px solid #009874;
+  border-right: 2px solid #009874;
+  border-top: 2px solid #009874;
+  color: black;
+  background-color: #cbeca0;
+}
+
+.navclick{
+  text-decoration: none;
+}
+
+/* 클래스 소개 */
+
+.classcontent{
+  font-weight: lighter;
+  text-align: center;
+}
+
+.btn-light{
+  width: 47rem;
+  position: relative; 
+  left: -15px;
+  color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.card-body{
+  text-align: center;
+  border: 0px;
+}
+
+.images2 {
+  width: 150px;
+  height: 80px;
+}
+
+/* 커리큘럼 */
+.images3 {
+  width: 180px;
+  height: 180px;
+  border: 1px solid rgba(0, 0, 0, 0.3);
+  border-radius: 5%;
+}
+
+/* 스크롤 관련 */
+#scroll {
+  position: relative;
+  height: 400px;
+  overflow-x: hidden;
+  overflow-y: scroll;
+}
+#scroll::-webkit-scrollbar {
+  display: none;
+}
+
+#scroll2 {
+  position: relative;
+  height: 200px;
+  overflow-x: hidden;
+  overflow-y: scroll;
+}
+
+#scroll2::-webkit-scrollbar {
+  display: none;
+}
+
+#scroll3 {
+  position: relative;
+  height: 130px;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  border: 1px solid gray;
+  background-color: white;
+}
+
+#table1 {
+  table-layout: fixed;
+  font-size: 10px;
+  text-align: center;
+}
+
+#table2 {
+  text-align: center;
+  font-size: 10px;
+}
+
+
+.images4 {
+  width: 270px;
+  height: 200px;
+  background-color: white;
+  border: 2px solid gray;
+  border-radius: 5%;
+}
+
+#calendar {
+  width: 450px;
+  height: 730px;
+  border: 1px solid lightgray;
+}
+
+
+.classbtn{
+  border: 1px solid gray;
+  text-decoration: none;
+}
+
+.classbtn > a{
+  text-decoration: none;
+  color: rgba(0, 0, 0, 0.9);
+}
+.catagory{
+  text-decoration: none;
+  color: gray;
+}
+
+
+#star {
+  font-size: 20px;
+  line-height: 20px;
+  color: yellow;
+  text-shadow: -2px 0 black, 0 2px black, 2px 0 black, 0 -2px black;
+}
+
+.bi-geo-alt-fill {
+  font-size: 30px;
+  line-height: 30px;
+  color: black;
+}
+
+thead {
+  background-color: lightcyan;
+}
+
+.table_class {
+  border: 1px solid lightgray;
+  height: 400px;
+}
+
+.pagenation{
+  color: rgba(0, 0, 0, 0.5);
+}
+
+.logo1{
+  width: 5rem;
+  height: 5rem;
+  position: absolute;
+  right: -9rem;
+  top: -0.5rem;
+
+}

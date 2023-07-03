@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>클래스 등록</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <!--웹 페이지 아이콘 변경-->
+    <link rel="icon" th:href="@{/image/logo.ico}">
+    <!-- Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=DynaPuff&family=Permanent+Marker&display=swap"
+        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@500&display=swap" rel="stylesheet"> 
+    <!--Bootstrap 용 CSS-->
+    <link rel="stylesheet" th:href="@{/css/bootstrap.css}">
+    <!--Quill CSS-->
+    <link rel="stylesheet" th:href="@{/css/quill.snow.css}">
+    <!--CSS-->
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+    <link rel="stylesheet" th:href="@{/css/class/classinsert.css}">
+    <!--Bootstrap 용 Icon CDN-->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+    <!--font awesome 용-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <!--thymeleaf contextpath-->
+    <link id="contextPathHolder" th:data-contextPath="${#httpServletRequest.getContextPath()}" />
+</head>
+
+<body>
+    <!-- header 영역 -->
+    <header th:replace="~{header :: headerFragment}"></header>
+
+    <!-- main 영역 -->
+    <div id="wrapper">
+        <form id="form_insert" th:action="@{insert.do}" method="post" enctype="multipart/form-data">
+            <div class="container border-top">
+                <div class="maincontent row">
+                    <div class="leftside col-2" id="btn_cate">
+                        <div class="left2 mt-5">
+                            <button id="sidebar1" class="btn_c sidebar btn-outline-success m-3 active" type="button"
+                                onclick="pagecate()">카테고리</button>
+                            <br />
+                            <button id="sidebar2" class="btn_c sidebar btn-outline-success m-3" type="button"
+                                onclick="pageinstructor()">강사소개</button>
+                            <br />
+                            <button id="sidebar3" class="btn_c sidebar btn-outline-success m-3" type="button"
+                                onclick="pageintro()">클래스소개</button>
+                            <br />
+                            <button id="sidebar4" class="btn_c sidebar btn-outline-success m-3" type="button"
+                                onclick="pagecorri()">커리큘럼</button>
+                            <br />
+                            <button id="sidebar5" class="btn_c sidebar btn-outline-success m-3" type="button"
+                                onclick="pageprice()">가격</button>
+                            <br />
+                        </div>
+                    </div>
+
+                    <div class="rightside col-10">
+                        <!-- 메뉴 1 -->
+                        <div id="menu1" class="container" style="display: block;">
+                            <div class="mt-3"
+                                style="border-bottom:2px dotted #bcbcbc; height: 40px; font-size: large; font-weight: bold;">
+                                Step 1. 카테고리 및 주소 입력</div>
+                            <div class="mt-3 d-flex flex-column">
+                                <div class="row mt-3 justify-content-center">
+                                    <div class="col-5">
+                                        <label class="mb-2 ms-1" for="cate1" style="font-weight:bold;">지역
+                                            <h6 style="display:inline; color: #FF8E8E">(필수)</h6>
+                                        </label>
+                                        <select id="cate1" class="form-select" onchange="getLocalcate(this.value)">
+                                            <option value="">지역을 선택하세요</option>
+                                            <th:block th:each="obj : ${citylist}">
+                                                <th:block th:if="${obj.code != 1}">
+                                                    <option th:value="${obj.code}" th:text="${obj.cate}" th:selected="${obj.code == 2}"></option>
+                                                </th:block>
+                                            </th:block>
+                                        </select>
+                                    </div>
+                                    <div class="col-5">
+                                        <label class="mb-2 ms-1" for="cate2" style="font-weight:bold;">세부 지역
+                                            <h6 style="display:inline; color: #FF8E8E">(필수)</h6>
+                                        </label>
+                                        <select id="localselect" class="form-select"
+                                            onchange="setLocalcate(this.value)">
+                                            <option value="">세부 지역을 선택하세요</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="row mt-4 justify-content-center">
+                                    <div class="col-5">
+                                        <label class="mb-2 ms-1" for="cate3" style="font-weight:bold;">종류
+                                            <h6 style="display:inline; padding-right:50px; color: #FF8E8E">(필수)</h6>
+                                        </label>
+                                        <select id="cate3" class="form-select" onchange="getActivitycate(this.value)">
+                                            <option value="">종류를 선택하세요</option>
+                                            <th:block th:each="obj : ${actlist}">
+                                                <th:block th:if="${obj.code != 1}">
+                                                    <option th:value="${obj.code}" th:text="${obj.cate}" th:selected="${obj.code == 2}"></option>
+                                                </th:block>
+                                            </th:block>
+                                        </select>
+                                    </div>
+                                    <div class="col-5">
+                                        <label class="mb-2 ms-1" for="cate4" style="font-weight:bold;">세부 종류
+                                            <h6 style="display:inline; padding-right:50px; color: #FF8E8E">(필수)</h6>
+                                        </label>
+                                        <select id="actdetailselect" class="form-select"
+                                            onchange="setActcate(this.value)">
+                                            <option value="">세부 종류를 선택하세요</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="row mt-4 justify-content-center">
+                                    <div class="col-5">
+                                        <div class="post">
+                                            <input type="text" id="sample6_postcode" placeholder="우편번호" value="04039">
+                                            <button type="button" class="btn btn-primary m-2"
+                                                onclick="sample6_execDaumPostcode()">우편번호 찾기</button>
+                                            <h6 style="display:inline; color: #FF8E8E">(필수)</h6>
+
+                                            <input type="text" class="my-3 w-100" id="sample6_address" placeholder="주소" value="서울 마포구 서교동 355-29">
+                                            <div class="d-flex justify-content-between mt-2">
+                                                <input type="text" class="" id="sample6_detailAddress"
+                                                    placeholder="상세주소" value="홍익로5길 31">
+                                                <input type="text" class="" id="sample6_extraAddress"
+                                                    placeholder="참고항목" value="서교빌딩 201호">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-5"></div>
+
+                                </div>
+                                <div class="changepage">
+                                    <div class="btn_1">
+                                        <button class="btn_after non-click btn" type="button"
+                                            onclick="nextMenu1()">다음&raquo;</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 메뉴2 -->
+                        <div id="menu2" class="container" style="display: none;">
+                            <div class="mt-3"
+                                style="border-bottom:2px dotted #bcbcbc; min-height: 40px; font-size: large; font-weight: bold;">
+                                Step 2. 강사 소개</div>
+                            <div class="mt-3 d-flex flex-column">
+                                <div class="row justify-content-center mt-3">
+                                    <div class="col-10">
+                                        <h6 style="display:inline; font-weight:bold;">프로필 이미지
+                                            <h6 style="display:inline; padding-right:50px; color: #FF8E8E">(필수)</h6>
+                                        </h6>
+                                        <div id="input-image" class="my-3">
+                                            <img id="insert-img" th:src="@{/image/default.png}"
+                                                style="width: 200px; height: 150px; cursor: pointer;" class="mb-3"
+                                                onclick="clickItemImage()" />
+                                            <input type="file" name="profile" id="file" class="form-control w-50"
+                                                onchange="changeItemImage(this)">
+                                        </div>
+
+                                        <div>
+                                            <input type="button" value="등록" class="btn_image"
+                                                onclick="insertItemImage()" style="display:none;" />
+                                        </div>
+
+                                        <div class="my-5">
+                                            <h6 style="display:inline; font-weight:bold;">상호명 및 닉네임
+                                                <h6 style="display:inline; padding-right:50px; color: #FF8E8E">(필수)</h6>
+                                            </h6>
+
+                                            <br>
+                                            <input id="nickname" class="form-control w-50 my-3" type="text"
+                                                maxlength="50" placeholder="ex)나무이야기" value="파티드" autofocus required>
+                                        </div>
+
+                                        <div>
+                                            <h6 style="display:inline; font-weight: bold;">강사 소개
+                                                <h6 style="display:inline; padding-right:50px; color: #FF8E8E">(필수)</h6>
+                                            </h6>
+                                            <!-- Create the editor container -->
+                                            <div class="tool">
+                                                <span> <img id="insert-img" th:src="@{/image/물음표.png}"
+                                                        style="width: 20px; height: 20px; cursor: pointer;"> 도움말
+                                                </span>
+                                                <div class="tooltip-content">
+                                                    <p>• 최소 30자이상 작성해주세요.</p>
+                                                </div>
+                                            </div>
+                                            <div style="margin-top: 10px; background-color: white;">
+                                                <div id="editor1" style="height: 300px;">
+                                                    <p>- 파티드 대표
+                                                        - 도자기/유리공예 작업을 하는 공방입니다 •‿•<br>
+                                                        -초보자들도 쉽게 도자공예에 도전할 수 있어요<br>
+                                                        -홈카페, 홈인테리어 소품에 활용하기 좋아요<br>
+                                                        -하나뿐인 나만의 도자기를 만들 수 있어요<br>
+                                                        -집중할 수 있는 시간이기에 스트레스를 잠시나마 날릴 수 있어요
+                                                        </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="sns my-3">
+                                            <p class="sns_2" style="font-weight:bold;">SNS 링크 (선택)</p>
+                                            <!-- 가이드 라인 작성 -->
+                                            <div class="tool">
+                                                <span> <img id="insert-img" th:src="@{/image/물음표.png}"
+                                                        style="width: 20px; height: 20px; cursor: pointer;"> 도움말
+                                                </span>
+                                                <div class="tooltip-content">
+                                                    <p>• 강사님의 SNS 링크를 작성해 주세요.</p>
+                                                    <p>• 클래스 홍보와 정보제공에 도움이 됩니다.</p>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <input placeholder="https://instagram.com/sample" type="text" id="sns"
+                                            class="form-control w-50" style="width: 350px; height: 35px;"
+                                            value="potted01@naver.com"><br>
+                                        <!-- <input placeholder="https://blog.com/sample" type="text"
+                                            class="form-control w-50" style="width: 350px; height: 35px;"> -->
+
+                                        <div class="changepage">
+                                            <div class="btn_1">
+                                                <button class="btn_before btn non-click" type="button"
+                                                    onclick="prevMenu2()">&laquo;이전</button>
+                                                <button class="btn_after btn non-click" type="button"
+                                                    onclick="nextMenu2()">다음&raquo;</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 메뉴3 -->
+                        <div id="menu3" class="container" style="display: none;">
+                            <div class="mt-3"
+                                style="border-bottom:2px dotted #bcbcbc; min-height: 40px; font-size: large; font-weight: bold;">
+                                Step 3. 클래스 소개</div>
+                            <div class="mt-3 d-flex flex-column">
+                                <div class="row mt-3 justify-content-center">
+                                    <div class="col-10">
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <h6 style="display:inline; font-weight:bold;">클래스 대표 이미지</h6>
+                                                <h6 style="display:inline; padding-right:50px; color: #FF8E8E">(필수)</h6>
+                                                <div id="input-image" class="my-3">
+                                                    <img id="insert_classMain" th:src="@{/image/default.png}"
+                                                        style="width: 300px; height: 200px; cursor: pointer;"
+                                                        class="mb-3" onclick="clickClassMain()" />
+                                                    <input type="file" name="classMain" id="file_classMain"
+                                                        class="form-control w-100" onchange="changeClassMain(this)">
+                                                </div>
+
+                                                <div>
+                                                    <input type="button" value="등록" class="btn_image"
+                                                        onclick="insertItemImage()" style="display:none;" />
+                                                </div>
+                                            </div>
+                                            <div class="col-6">
+                                                <h6 style="display:inline; font-weight:bold;">추가 클래스 이미지</h6>
+                                                <h6 style="display:inline; padding-right:50px; color: blue">(선택)</h6>
+                                                <div class="my-3">
+                                                    <!-- <img id="insert_classSub"
+                                                        th:src="@{/image/default.png}"
+                                                        style="width: 200px; height: 150px; cursor: pointer;"
+                                                        class="mb-3" onclick="clickClassSub()" />  -->
+                                                    <div id="input-addimage" style="height: 200px;"
+                                                        class="mb-3 border rounded w-100 d-flex flex-wrap"></div>
+                                                    <input type="file" multiple name="classSub" id="file_classSub"
+                                                        class="form-control w-100" onchange="changeClassSub(event)">
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div>
+                                            <p style="display:inline; font-weight:bold;">클래스 제목</p>
+                                            <h6 style="display:inline; padding-right:50px; color: #FF8E8E">(필수)</h6>
+
+                                            <input type="text" id="title" class="form-control w-50 my-3" maxlength="50"
+                                                placeholder="ex)원데이 목공 클래스" value="소규모 도자기 전사지 클래스" autofocus required>
+                                        </div>
+
+                                        <div class="my-3">
+                                            <h6 style="display:inline; font-weight:bold;">클래스 소개글
+                                                <h6 style="display:inline; padding-right:50px; color: #FF8E8E">(필수)</h6>
+                                            </h6>
+                                            <div class="tool my-3">
+                                                <span> <img id="insert-img" th:src="@{/image/물음표.png}"
+                                                        style="width: 20px; height: 20px; cursor: pointer;"> 도움말
+                                                </span>
+                                                <div class="tooltip-content">
+                                                    <p>• 최소 30자이상 작성해주세요.</p>
+                                                    <p>•작성 tip : 인사말 /본인 클래스만의 특징 /<br>
+                                                        클래스의 장점 및 효과 / 클래스 난이도</p>
+                                                </div>
+                                            </div>
+                                            <!-- Create the editor container -->
+                                            <div style="margin-top: 10px; background-color: white;">
+                                                <div id="editor2" style="height: 300px;">
+                                                    <p>-	전사지 클래스는 재벌된 도자기에 색전사지를 이용해 완성시키는 클래스입니다.<br>
+                                                        초보자들도 쉽게 따라하실 수 있는 작업이고 손재주가 없다 해도 옆에서 도와드리니 걱정 안 하셔도되요.<br>
+                                                        프리이빗 클래스로 다른 일행분과 겹치지 않습니다.<br>
+                                                        -	소요시간: 1시간 30분 <br>
+                                                        * 완성 후 수령방법<br>
+                                                        클래스 후 가마소성이 진행되므로 평균 3주정도 추가 소요됩니다. (직접수령, 택배 택1)<br>
+                                                        - 직접수령 : 소성완료 후 최대 한달까지 보관 가능합니다.<br>
+                                                        - 택배 : 추가비용(3000)이 발생되며, 최대한 꼼꼼히 포장해드리지만 배송 중 파손은 책임지지않으니 양해바랍니다.<br>
+                                                        <br>
+                                                        -	이런 분들이 들으면 좋아요<br>
+                                                        • 연인과 색다른 데이트로 추억을 만들고 싶은 분들<br>
+                                                        • 친구들과 함께 우정 쌓으며 재미난 시간을 보내고 싶은 분들<br>
+                                                        • 홈카페, 식기류, 인테리어에 관심있는 분들<br>
+                                                        </p>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="changepage">
+                                            <div class="btn_1">
+                                                <button class="btn_before btn non-click" type="button"
+                                                    onclick="prevMenu3()">&laquo;이전</button>
+                                                <button class="btn_after btn non-click" type="button"
+                                                    onclick="nextMenu3()">다음&raquo;</button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 메뉴4 -->
+                        <div id="menu4" class="container" style="display: none;">
+                            <div class="mt-3"
+                                style="border-bottom:2px dotted #bcbcbc; min-height: 40px; font-size: large; font-weight: bold;">
+                                Step 4. 커리큘럼 작성</div>
+                            <div class="mt-3 d-flex flex-column">
+                                <div class="row justify-content-center mt-3">
+                                    <div class="col-10">
+                                        <div class="mb-3">
+                                            <h6 style="display:inline; font-weight:bold;">커리큘럼 내용
+                                                <h6 style="display:inline; padding-right:50px; color: #FF8E8E">(필수)</h6>
+                                            </h6>
+                                            <div class="tool">
+                                                <span> <img id="insert-img" th:src="@{/image/물음표.png}"
+                                                        style="width: 20px; height: 20px; cursor: pointer;"> 도움말
+                                                </span>
+                                                <div class="tooltip-content">
+                                                    <p>• 최소 20자이상 작성해주세요.</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- Create the editor container -->
+                                        <div style="margin-top: 10px; background-color: white;">
+                                            <div id="editor3" style="height: 300px;">
+                                                <p>
+                                                    ① 도자기, 전사지 안내 <br>② 재단작업 <br>③ 도자기에 붙이기 <br>④ 마무리 후 포토타임
+                                                </p>
+                                                <br>
+                                            </div>
+                                        </div>
+                                        <div class="changepage">
+                                            <div class="btn_1">
+                                                <button class="btn_before non-click btn" type="button"
+                                                    onclick="prevMenu4()">&laquo;이전</button>
+                                                <button class="btn_after non-click btn" type="button"
+                                                    onclick="nextMenu4()">다음&raquo;</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 메뉴5 -->
+                        <div id="menu5" class="container" style="display: none;">
+                            <div class="mt-3"
+                                style="border-bottom:2px dotted #bcbcbc; min-height: 40px; font-size: large; font-weight: bold;">
+                                Step 5. 기본 가격 입력</div>
+                            <div class="mt-3 d-flex flex-column">
+                                <div class="row justify-content-center mt-3">
+                                    <div class="col-10">
+                                        <div class="mb-3">
+                                            <h6 style="display:inline; font-weight:bold;">가격
+                                                <h6 style="display:inline; padding-right:50px; color: #FF8E8E">(필수)</h6>
+                                            </h6>
+                                            <div class="tool">
+                                                <span> <img id="insert-img" th:src="@{/image/물음표.png}"
+                                                        style="width: 20px; height: 20px; cursor: pointer;"> 도움말
+                                                </span>
+                                                <div class="tooltip-content">
+                                                    <p>• 입문자를 기준으로 초기값을 입력하세요.</p>
+                                                    <p>• 이후 추가금액 설정이 가능합니다.</p>
+                                                </div>
+                                            </div><br>
+
+                                            <input id="price" type="text" class="my-3" placeholder="금액을 입력하세요"
+                                                maxlength="10" onkeyup="addCommas(this)" value="30000" autofocus>
+                                            <span style="font-size: 20px; margin-left: 2px;">원</span>
+                                        </div>
+                                        <div class="changepage">
+                                            <div class="btn_1">
+                                                <button class="btn_before btn non-click" type="button"
+                                                    onclick="prevMenu5()">&laquo;
+                                                    이전</button>
+                                                <button class="btn_after btn" type="button"
+                                                    onclick="insertClass()">등록</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="display:none;">
+                            <input id="form_title" type="text" name="title">
+                            <input id="form_postcode" type="text" name="postcode">
+                            <input id="form_address1" type="text" name="address1">
+                            <input id="form_address2" type="text" name="address2">
+                            <input id="form_address3" type="text" name="address3">
+                            <input id="form_price" type="number" name="price">
+                            <input id="form_localcode" type="number" name="localcode">
+                            <input id="form_actdetailcode" type="number" name="actdetailcode">
+                            <input id="form_instructor" name="instructor">
+                            <input id="form_intro" name="intro">
+                            <input id="form_curriculum" name="curriculum">
+                            <input id="form_nickname" type="text" name="nickname">
+                            <input id="form_sns" type="text" name="sns">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!--footer 영역-->
+    <footer th:replace="~{footer :: footerFragment}"></footer>
+
+    <!--jQuery-->
+    <script th:src="@{/js/jquery-3.6.4.min.js}"></script>
+    <!--axios library-->
+    <script th:src="@{/js/axios.min.js}"></script>
+    <!-- daum post bundle -->
+    <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+    <!-- Include the Quill library -->
+    <script th:src="@{/js/quill.js}"></script>
+    <!--Bootstrap 용 js -->
+    <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+    <!--classinsert js-->
+    <script th:src="@{/js/class/classinsert.js}"></script>
+    <!--Main js-->
+    <script th:src="@{/js/main.js}"></script>
+</body>
+
+</html>

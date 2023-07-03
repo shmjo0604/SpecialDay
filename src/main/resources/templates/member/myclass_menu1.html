@@ -1,0 +1,269 @@
+<div th:fragment="menu_1" class="col-9" style="min-height: 100vh;">
+
+    <!--jQuery-->
+    <script th:src="@{/js/jquery-3.6.4.min.js}"></script>
+    <!--axios library-->
+    <script th:src="@{/js/axios.min.js}"></script>
+    <!--Bootstrap 용 js -->
+    <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+    <script>
+
+        const contextPath = $("#contextPathHolder").attr("data-contextPath");
+
+        // Close the dropdown if the user clicks outside of it
+        window.onclick = function (event) {
+            if (!event.target.matches('.dropbtn')) {
+                var dropdowns = document.getElementsByClassName("dropdown-content");
+                var i;
+                for (i = 0; i < dropdowns.length; i++) {
+                    var openDropdown = dropdowns[i];
+                    if (openDropdown.classList.contains('show')) {
+                        openDropdown.classList.remove('show');
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        .icons img {
+            height: 20px;
+            width: 20px;
+            margin-top: 0.5px;
+            vertical-align: top;
+            pointer-events: none;
+            cursor: pointer;
+        }
+
+        .dropbtn {
+            cursor: pointer;
+        }
+
+        .dropbtn:hover img {
+            transform: scale(1.12);
+        }
+        
+        .dropdown-item {
+            text-align: center;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: relative;
+            background-color: rgb(255, 255, 255);
+            min-width: 130px;
+            overflow: auto;
+            box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+            z-index: 1;
+            border-radius: 8%;
+        }
+
+        .dropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+
+        .dropdown a:hover {
+            background-color: #f1f1f1;
+        }
+
+        .show {
+            display: block;
+        }
+
+    </style>
+
+    <div class="container">
+        <div class="m-3"
+            style="border-bottom:2px dotted #bcbcbc; min-height: 40px; font-size: large; font-weight: bold;">클래스 조회
+        </div>
+
+        <div class="row row-cols-1 row-cols-md-3 g-4 m-1">
+            <th:block th:each="obj : ${list}" th:if="${obj.chk == 0 || obj.chk== 1 ||obj.chk == 3}">
+                <div class="col">
+                    <div class="card h-100">
+                        <div class="card shadow-sm h-100">
+                            <fieldset class="h-100" id="btn_fieldset" style="border:0">
+                                <div class="card-header" style="display: inline-block;">
+                                    <div style="float: left; width: 80%; height:auto;">
+
+                                        <span style="float: left;">등록일자 :</span>
+                                        <!-- <input name="date" th:value="${obj.regdate}" readonly /> -->
+                                        <div th:text="${#dates.format(obj.regdate, 'yyyy.MM.dd HH:mm:ss')}"
+                                            style="float: left;"></div>
+
+                                    </div>
+
+                                    <!-- dropdowm -->
+                                    <!-- dropdowm 활성화 -->
+                                    <th:block th:if="${obj.chk == 0 || obj.chk == 1}">
+                                    <div class="dropdown" style="float: left; width: auto; height: auto;">
+                                        <button class="btn btn-outline-success dropdown-toggle" type="button"
+                                            id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false"
+                                            style="padding: 10%;">
+                                            <img th:src="@{/image/icon-zoom.png}" width="24" alt="더보기">
+                                        </button>
+                                        <!-- menu -->
+                                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                            <li><a class="dropdown-item" id="imput_btn"
+                                                    th:href="@{/classunit/myunit.do( classcode=${obj.classcode}, menu=1)}">관리</a></li>
+                                            <li> <a class="dropdown-item" id="modify_btn"
+                                                    th:href="@{/class/update.do( classcode=${obj.classcode} )}">수정</a>
+                                            </li>
+                                            <li>
+                                                <form method="post" class="dropdown-item" id="deleteForm"
+                                                    th:action="@{/class/delete.do(classcode=${obj.classcode} )}">
+                                                    <button onclick="deletePost()" type="button"
+                                                        style="border: 0; background-color: transparent;">삭제</button>
+                                                </form>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </th:block>
+                                    <!-- dropdowm 비활성화 -->
+                                    <th:block th:if="${obj.chk == 3}">
+                                    <div class="dropdown" style="float: left; width: auto; height: auto;">
+                                        <button class="btn btn-outline-success dropdown-toggle" type="button"
+                                            id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false"
+                                            style="padding: 10%;" disabled>
+                                            <img th:src="@{/image/icon-zoom.png}" width="24" alt="더보기">
+                                        </button>
+                                        <!-- menu -->
+                                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                            <li><a class="dropdown-item" id="imput_btn"
+                                                    th:href="@{/classunit/myunit.do( classcode=${obj.classcode} )}">관리</a></li>
+                                            <li> <a class="dropdown-item" id="modify_btn"
+                                                    th:href="@{/class/update.do( classcode=${obj.classcode} )}">수정</a>
+                                            </li>
+                                            <li>
+                                                <form method="post" class="dropdown-item" id="deleteForm"
+                                                    th:action="@{/class/delete.do(classcode=${obj.classcode} )}">
+                                                    <button onclick="deletePost()" type="button"
+                                                        style="border: 0; background-color: transparent;">삭제</button>
+                                                </form>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </th:block>
+
+                                </div>
+                                <!-- card 이미지 -->
+                                <div class="card-image">
+                                    <img th:src="@{/class/image(no=${obj.mainImg})}"
+                                        style="width: 100%; height: 200px; object-fit:cover; background-color: darkgray;" />
+                                </div>
+                                <!-- card 내용 -->
+                                <div class="card-body">
+                                    <p class="card-title" style="font-weight: bold; font-size: '15px';"
+                                        th:text="${obj.title}"></p>
+                                    상호명 : 
+                                    <img th:src="@{/class/image(no=${obj.profileImg} )}" style="width: 25px; height: 25px; object-fit:cover; float: right; border-radius: 10px;" />
+                                    <p class="card-nickname"
+                                        style="font-weight: normal; font-size: medium; float: right;"
+                                        th:text="${obj.nickname}"></p>
+                                    <!-- 소개글: <p class="card-text" style="font-weight: normal; font-size: medium;" th:utext="${obj.intro}"></p> -->
+                                </div>
+                                <!-- 클래스 상세보기 -->
+                                <div class="card-footer bg-transparent">
+                                    <!-- 클래스 상세보기 활성화 -->
+                                    <th:block th:if="${obj.chk == 0 || obj.chk == 1}">
+                                        <button id="target_btn" class="btn btn-sm btn-success" style="width: 100%;">
+                                            <a th:href="@{/class/product.do(classcode=${obj.classcode} )}" class="nav-link">클래스 상세보기</a>
+                                        </button>
+                                    </th:block>
+
+                                    <!-- 클래스 상세보기 비활성화 -->
+                                    <th:block th:if="${obj.chk ==3}">
+                                        <button id="target_btn" class="btn btn-sm btn-success" style="width: 100%;" disabled>
+                                            <a th:href="@{/class/product.do(classcode=${obj.classcode} )}"class="nav-link">클래스 상세보기</a>
+                                        </button>
+                                    </th:block>
+
+                                    <!-- 활성화 버튼 -->
+                                    <th:block th:if="${obj.chk == 0 || obj.chk== 1 }">
+                                        <input type="hidden" th:value="${obj.classcode}" name="classcode" >
+                                        <input type="hidden" th:value="${obj.chk}" name="chk" >
+                                        <button type="button" class="btn btn-sm" th:onclick="nonactive([[${obj.classcode}]], [[${obj.chk}]])"
+                                            style="margin-top: 10px; text-decoration: underline; background-color: transparent; float: right;">비활성화 하기</button>
+
+                                    </th:block>
+
+                                    <!-- 비활성화 버튼 -->
+                                    <th:block th:if="${obj.chk == 3}">
+                                        <input type="hidden" th:value="${obj.classcode}" name="classcode" >
+                                        <input type="hidden" th:value="${obj.chk}" name="chk" >
+                                        <button type="button" class="btn btn-sm" th:onclick="active([[${obj.classcode}]], [[${obj.chk}]])"
+                                        style="margin-top: 10px; text-decoration: underline; background-color: transparent; float: right;">활성화 하기</button>
+                                        
+                                    </th:block>
+
+                                </div>
+                            </fieldset>
+                        </div>
+                    </div>
+                </div>
+            </th:block>
+            <form method="post" id="noactiveForm"
+                th:action="@{/member/myclass.do(menu=1)}" style="display:none;">
+                <input type="text" name="classcode" id="nonclasscode">
+                <input type="text" name="chk" id="nonchk">
+            </form>
+
+            <form method="post" id="activeForm"
+                th:action="@{/member/myclass.do(menu=1)}" style="display:none;">
+                <input type="text" name="classcode" id="aclasscode">
+                 <input type="text" name="chk" id="achk">
+            </form>
+        </div>
+    </div>
+
+    <script>
+
+        /* 삭제 버튼 */
+        function deletePost() {
+            if (confirm('삭제하시겠습니까?')) {
+                document.getElementById('deleteForm').submit();
+                alert("삭제되었습니다. 홈화면으로 이동합니다.");
+            } else {
+                alert("취소하였습니다.");
+                return false;
+            }
+        }
+
+        /* 비활성화 버튼 */
+        function nonactive(classcode, chk) {
+
+            // console.log(classcode);
+            // console.log(chk);
+            
+            if ( confirm('비활성화 하시겠습니까?') == true ) {
+                document.getElementById('nonclasscode').value=classcode;
+                document.getElementById('nonchk').value=chk;
+                document.getElementById('noactiveForm').submit();
+            }
+            else {
+                alert('활성화 상태입니다.');
+            }
+        }
+
+        /* 활성화 버튼 */
+        function active(classcode, chk) {
+
+            // console.log(chk);
+
+            if ( confirm('활성화 하시겠습니까?') == true ) {
+                document.getElementById('aclasscode').value=classcode;
+                document.getElementById('achk').value=chk;
+                document.getElementById('activeForm').submit();
+            }
+            else {
+                alert('비활성화 상태입니다.');
+                $('#target_btn').prop('disabled', true);
+                $('#dropdownMenuButton1').prop('disabled', true);
+            }
+        }
+        
+    </script>
+</div>

@@ -1,0 +1,301 @@
+<div th:fragment="menu_2" class="col-9" style="min-height: 100vh;">
+
+    <div id="main">
+        <div class="container">
+            <div class="m-3"
+                style="border-bottom:2px dotted #bcbcbc; min-height: 40px; font-size: large; font-weight: bold;">문의 내역
+                조회</div>
+
+            <table style="margin-left: auto; margin-top: 3px; margin-bottom: 3px; border:none;">
+                <tr>
+                    <td style="padding-left: 5px; border:none;">
+                        <select class="form-select" style="width: 120px;" onchange="selectoption(this.value)">
+
+                            <option value="2" selected>전체</option>
+                            <option value="0" th:selected="${#strings.equals(param.chk, '0')}">답변대기</option>
+                            <option value="1" th:selected="${#strings.equals(param.chk, '1')}">답변완료</option>
+
+                        </select></td>
+                </tr>
+            </table>
+
+            <!-- 문의 내역없음 표시하기 -->
+            <th:block th:if="${#lists.isEmpty(list)}">
+                        
+                <h3 class='mt-5 text-center'>문의내역이 존재하지 않습니다.</h6>
+            
+            </th:block>
+
+            <th:block th:if="${!#lists.isEmpty(list)}">
+                <table class="table table-lg table-hover m-3" style="white-space:nowrap;">
+                    <thead>
+                        <tr class="table-success">
+                            <th scope="col">NO</th>
+                            <th scope="col">클래스명</th>
+                            <th scope="col">문의제목</th>
+                            <!-- <th scope="col">문의내용</th> -->
+                            <th scope="col">문의날짜</th>
+                            <th scope="col">작성자</th>
+                            <th scope="col">작성</th>
+                            <th scope="col">처리상태</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="emp_rows">
+                        
+                        <!-- 처리상태(0) : 답변대기 -->
+                        
+                            <th:block th:each="obj, objStat : ${list}">
+                            <tr>
+                                <td th:text="${obj.rnum}"></td>
+                                <td><a th:text="${obj.classtitle}" th:href="@{/class/product.do(classcode=${obj.classcode} )}"
+                                    style="text-decoration: none;" id="classtitle"></a></td>
+                                <td th:text="${obj.title}"></td>
+                                <!-- <td class="txt" th:text="${obj.content}"><label id="modal"></label></td> -->
+                                <td th:text="${#dates.format(obj.regdate, 'yyyy.MM.dd')}"></td>
+                                <td th:text="${obj.memberid}"></td>
+                                <td>
+                                    <th:block th:if="${obj.chk == 0}">
+                                        <button type="button" id="myModal" class="createBtn btn btn-danger"
+                                            th:onclick="answerModal([[${obj.no}]])">
+                                            작성</button>
+                                    </th:block>
+                                    <th:block th:if="${obj.chk == 1}">
+                                        <button type="button" id="myModal" class="btn btn-success"
+                                            th:onclick="answerModal([[${obj.no}]])">
+                                            수정</button>
+                                    </th:block>
+                                </td>
+                                <td>
+                                    <th:block th:if="${obj.chk == 0}">
+                                        <div style="color: red;">답변대기</div>
+                                    </th:block>
+                                    <th:block th:if="${obj.chk == 1}">
+                                        <div style="color: blue;">답변완료</div>
+                                    </th:block>
+                                </td>
+                            </tr>
+                            </th:block>
+                        
+                    </tbody>
+                </table>
+
+                <div class="row justify-content-center">
+                    <div class="col-4">
+                        <ul id="pagination-demo" class="pagination-sm "></ul>
+                    </div>
+                </div>
+
+            </th:block>
+
+            <!-- 모달 창 -->
+            <div class="modal modal-center fade" id="classAnswerModal" data-bs-backdrop="static" tabindex="-1"
+                aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header" style="background-color: ghostwhite">
+                            <div class="me-auto"></div>
+                            <label class="modal-title" id="modal-title">클래스 문의</label>
+                            <button type="button" class="btn-close" onclick="closeModal()" aria-label="Close">
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="answer_form" th:action="@{/member/myclass.do?menu=2}" method="post">
+                                <div style="margin-bottom: 10px; font-weight: bold;">| 질문</div>
+                                <div style="margin-top: 10px; margin-left: 5px;">
+                                    <div class="mb-2 row">
+                                        <label for="inquiry_title" class="col-sm-2 col-form-label">제목 : </label>
+                                        <div class="col-sm-6">
+                                            <input id="inquiry_title" type="text" class="form-control-plaintext"
+                                                readonly>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3 row">
+                                        <label for="inquiry_writer" class="col-sm-2 col-form-label">작성자 : </label>
+                                        <div class="col-sm-6">
+                                            <input id="inquiry_writer" type="text" class="form-control-plaintext"
+                                                readonly>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <textarea id="inquiry_content" class="form-control" placeholder="Leave a comment here"
+                                    style="height: 250px" readonly></textarea>
+
+                                <div style="margin-bottom: 10px; font-weight: bold; margin-top: 30px;">| 답변</div>
+                                <div style="margin-top: 10px; margin-left: 5px;">
+                                    <div class="mb-3 row">
+                                        <label for="answer_title" class="col-sm-2 col-form-label">제목 : </label>
+                                        <div class="col-sm-6">
+                                            <input id="answer_title" type="text" class="form-control" name="title">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <textarea class="form-control" placeholder="답변을 입력하세요" id="answer_content"
+                                    style="height: 250px" name="content"></textarea>
+
+                                <input id="inquiryno" type="hidden" name="no">
+                            </form>
+                        </div>
+
+                        <!-- 버튼영역 -->
+                        <div style="text-align: center;">
+                            <button type="button" class="btn btn-success" onclick="answerinsertAction()"
+                                style="margin-bottom: 20px; margin-top: 10px; height: 35px; width: 100px; display: inline-block;">등록</button>
+                            <button type="button" class="btn btn-secondary" onclick="closeModal()"
+                                style="margin-bottom: 20px; margin-top: 10px; height: 35px; width: 100px; display: inline-block;">닫기</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--jQuery-->
+    <script th:src="@{/js/jquery-3.6.4.min.js}"></script>
+    <!--twbsPagination js-->
+    <script th:src="@{/js/jquery.twbsPagination.min.js}"></script>
+    <!--axios library-->
+    <script th:src="@{/js/axios.min.js}"></script>
+    <!--Bootstrap 용 js -->
+    <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+    <script th:inline="javascript">
+
+        const contextPath = $('#contextPathHolder').attr('data-contextPath');
+
+        var pages = /*[[${pages}]]*/'';
+        var chk = /*[[${param.chk}]]*/'';
+
+        function selectoption(chk) {
+      
+        console.log(chk);
+
+        if(chk === 0) {
+            window.location.href = "myclass.do?menu=2&page=1";
+        }
+        else {
+            window.location.href = `myclass.do?menu=2&page=1&chk=${chk}`;
+        }
+        
+        }
+
+        $(document).ready(function() {
+			$('#pagination-demo').twbsPagination({
+				totalPages : Number(pages),
+				visiblePages : 10,
+				first : '처음',
+				last : '마지막',
+				prev : '이전',
+				next : '다음',
+				initiateStartPageClick : false,
+				startPage : Number(/*[[${param.page}]]*/),
+				// 주소창에서 page 값을 받아옴 -> 그 값에 해당하는 목록 버튼이 활성
+				onPageClick : function(event, page) {
+					//$('#page-content').text('Page ' + page);
+					window.location.href="myclass.do?menu=2&page="+page+"&chk="+chk;
+					// 
+				}
+			});
+		});
+
+        async function answerModal(no) {
+
+            // console.log(no);
+
+            const url = contextPath + '/api/inquiry/selectoneinquiry.json?no=' + no;
+            const headers = { "Content-Type": "application/json" };
+            const { data } = await axios.get(url, { headers });
+
+            console.log(data);
+
+            document.querySelector("#inquiryno").value = no;
+
+            if (data.status === 200) {
+
+                const title = document.querySelector("#inquiry_title");
+                const content = document.querySelector("#inquiry_content");
+                const writer = document.querySelector("#inquiry_writer");
+
+                title.value = data.obj.title;
+                content.textContent = data.obj.content;
+                writer.value = data.obj.memberid;
+
+                if(data.answer !== null) {
+
+                    const title = document.querySelector("#answer_title");
+                    const content = document.querySelector("#answer_content");
+
+                    title.value = data.answer.title;
+                    content.textContent = data.answer.content;
+
+                }
+
+
+            }
+
+            const modal = new bootstrap.Modal(document.getElementById("classAnswerModal"), {});
+            modal.show();
+        }
+
+        function closeModal() {
+
+            $("#classAnswerModal").modal('hide');
+
+            document.querySelector("#answer_title").value = null;
+            document.querySelector("#answer_content").value = null;
+
+        }
+
+        function answerinsertAction() {
+
+            const title = document.querySelector("#answer_title");
+            const content = document.querySelector("#answer_content");
+
+            if (title.value.length < 1) {
+                alert("제목을 입력해주세요.");
+                return false;
+            }
+            if (content.value.length < 1) {
+                alert("답변 내용을 입력해주세요.");
+                return false;
+            }
+
+            $("#answer_form").submit();
+        }
+
+        function insertClass() {
+            const content = document.getElementById("content");
+            const answer = document.getElementById("answer");
+
+            input.type = "text";
+            input.name = "answer";
+            input.id = "answer";
+            input.value = content;
+            form.appendChild(input);
+
+            if (answer.value.length <= 0) {
+                alert('답변을 작성하세요');
+                answer.focus();
+                return false;
+            }
+
+            form.submit();
+
+        }
+
+        // 20글자 이상시 글자수 자동조절
+        function textLengthOverCut(txt, len, lastTxt) {
+            if (len == "" || len == null) { // 기본값
+                len = 20;
+            }
+            if (lastTxt == "" || lastTxt == null) { // 기본값
+                lastTxt = "...";
+            }
+            if (txt.length > len) {
+                txt = txt.substr(0, len) + lastTxt;
+            }
+            return txt;
+        }
+
+    </script>
+</div>

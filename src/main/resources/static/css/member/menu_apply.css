@@ -1,0 +1,98 @@
+/* 별점 */
+
+#myform fieldset {
+  display: inline-block;
+  direction: rtl;
+  border: 0;
+  position: relative;
+  left: -10px;
+}
+#myform fieldset legend {
+  text-align: right;
+}
+#myform input[type="radio"] {
+  display: none;
+}
+#myform label {
+  font-size: 4em;
+  color: transparent;
+  text-shadow: 0 0 0 #f0f0f0;
+}
+#myform label:hover {
+  text-shadow: 0 0 0 rgba(250, 208, 0, 0.99);
+}
+#myform label:hover ~ label {
+  text-shadow: 0 0 0 rgba(250, 208, 0, 0.99);
+}
+#myform input[type="radio"]:hover ~ label {
+  text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.5);
+  color: rgba(250, 208, 0, 0.99);
+}
+
+#myform input[type="radio"]:checked ~ label {
+  text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.5);
+  color: rgba(250, 208, 0, 0.99);
+}
+
+/* 클래스 간략 정보 */
+
+.reviewcontent {
+  font-size: small;
+  line-height: 30%;
+}
+
+.summary {
+  font-size: smaller;
+  width: 200px;
+  height: 18px;
+}
+
+.summary > input {
+  border: 0px;
+}
+
+form input::file-selector-button {
+  display: none;
+}
+
+#contentstyle {
+  display: none;
+}
+
+.bi-images {
+  font-size: 40px;
+  line-height: 40px;
+  color: rgba(0, 0, 0, 0.5);
+  position: relative;
+  left: 40%;
+  top: 35%;
+}
+
+.carousel-control-next-icon {
+  color: gray;
+}
+
+.page-link {
+  color: black;
+}
+
+.a_underline:link {
+  text-decoration: none;
+  color: black;
+}
+
+.a_underline:visited {
+  text-decoration: none;
+  color: black;
+}
+
+.a_underline:hover {
+  text-decoration: underline;
+  color: blue;
+}
+
+.a_underline:active {
+  text-decoration: underline;
+  color: blue;
+}
+

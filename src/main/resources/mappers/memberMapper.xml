@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.mapper.MemberMapper">
+
+    <!-- 1. 회원 가입 -->
+    <insert id="insertMemberOne" parameterType="com.example.dto.Member">
+        INSERT INTO member (id, password, name, email, phone, gender, birth)
+        VALUES (#{id}, #{password}, #{name}, #{email}, #{phone}, #{gender}, #{birth})
+    </insert>
+
+    <!-- 2. 아이디 중복 확인 -->
+    <select id="selectMemberIDCheck" parameterType="string" resultType="int">
+        SELECT count(*) cnt from member m where id = #{id}
+    </select>
+
+    <!-- 3. 로그인 (not Security) -->
+    <select id="selectMemberLogin" parameterType="com.example.dto.Member">
+        SELECT * from member where id = #{id} and password = #{password} and chk = 1
+    </select>
+
+    <!-- 4. 회원 정보 조회 -->
+    <select id="selectMemberOne" parameterType="string" resultType="Member">
+        SELECT m.* FROM member m where id = #{id}
+    </select>
+
+    <!-- 5. 아이디 찾기 -->
+    <select id="selectFindMemberId" parameterType="Member" resultType="Member">
+        SELECT m.id from member m where name = #{name} and phone =#{phone} and email = #{email} and chk = 1
+    </select>
+
+    <!-- 6. 회원 정보 수정 -->
+    <update id="updateMemberOne" parameterType="Member">
+        UPDATE member set name = #{name}, email = #{email}, phone = #{phone} WHERE id = #{id}
+    </update>
+
+    <!-- 7. 비밀번호 변경 -->
+    <update id="updateMemberPassword" parameterType="Member">
+        UPDATE member set password = #{password} where id = #{id}
+    </update>
+
+    <!-- 8. 회원 탈퇴 -->
+    <update id="deleteMemberOne" parameterType="Member">
+        UPDATE member set chk = 0 where id = #{id}
+    </update>
+
+</mapper>

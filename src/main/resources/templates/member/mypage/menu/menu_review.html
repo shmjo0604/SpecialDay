@@ -1,0 +1,455 @@
+<div th:fragment="menu_review" class="col-md-8" style="margin-left: 30px;">
+  <!--********************************************************************************************************************************************************************-->
+  <!--********************************************************************** 1. 통계 박스 ********************************************************************************-->
+  <!--********************************************************************************************************************************************************************-->
+
+  <head>
+    <link rel="stylesheet" th:href="@{/css/member/menu_review.css}" />
+
+  </head>
+  <style>
+    .box {
+      width: 80%;
+      height: 150px;
+      background: #FFF;
+      border-radius: 15px;
+      margin: 20px;
+
+    }
+
+    .box h3 {
+      padding-top: 10px;
+      text-align: center;
+      font-weight: bold;
+      font-size: large;
+    }
+
+    .box h1 {
+      padding-top: 12px;
+      text-align: center;
+      font-size: 50px
+    }
+
+    .effect {
+      -webkit-box-shadow: 0 5px 6px -6px #777;
+      -moz-box-shadow: 0 5px 6px -6px #777;
+      box-shadow: 0 5px 6px -6px #777;
+    }
+
+    .title {
+      text-decoration: none;
+      color: black;
+    }
+
+    .title:link {
+      text-decoration: none;
+      color: black;
+    }
+
+    .title:visited {
+      text-decoration: none;
+      color: black;
+    }
+
+    .title:hover {
+      text-decoration: underline;
+      color: blue;
+    }
+
+    .title:active {
+      text-decoration: underline;
+      color: blue;
+    }
+
+    .content1 p {
+      width: 170px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      font-size: smaller;
+    }
+
+    #content2 {
+      width: 720px;
+      height: 260px;
+      border: 0;
+      background-color: white;
+    }
+
+    .reviewrating{
+      position: relative;
+     
+    }
+  </style>
+  <div class="row-md-3">
+    <p style="font-weight: bolder; font-size: large;">리뷰내역</p>
+    <div class="row" style="background-color: honeydew; border-radius: 15px;">
+      <div class="col-sm-6">
+        <div class="box effect">
+          <h3>작성수</h3>
+          <h1 th:text="${total}"></h1>
+        </div>
+      </div>
+      
+      <div class="col-sm-6">
+        <div class="box effect">
+          <h3>평균별점</h3>
+         
+          <a th:if="${avg} >= 1 and ${avg} < 2" style="color: darkgreen; margin-left: 32px; font-size: 2.8rem;">★☆☆☆☆</a>
+          <a th:if="${avg} >=2  and ${avg} < 3 " style="color: darkgreen; margin-left: 32px; font-size: 2.8rem;">★★☆☆☆</a>
+          <a th:if="${avg} >=3  and ${avg} < 4" style="color: darkgreen; margin-left: 32px; font-size: 2.8rem;">★★★☆☆</a>
+          <a th:if="${avg} >=4 and ${avg} < 5" style="color: darkgreen; margin-left: 32px; font-size: 2.8rem;">★★★★☆</a>
+          <a th:if="${avg} >=5  and ${avg} < 6" style="color: darkgreen; margin-left: 32px; font-size: 2.8rem;">★★★★★</a>
+
+          <h3 reviewrating th:if="${avg > 0} " th:text="'('+${avg}+')'"></h3>
+          <h3 reviewrating th:if="${avg == -1 }">(0)</h3>
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row-md-9" style="margin-top: 50px;">
+    <hr />
+    <div style="display: inline-block; margin-top: 40px; width: 100%;">
+      <div style="float: left; font-weight: bold;">| 리뷰 작성 내역</div>
+      <div style="float: right;">
+        <div class="btn-group" role="group" style="margin-bottom: 10px;">
+
+          <select class="form-select" style="width: 120px;" onchange="selectoption(this.value)">
+            <option value="1" th:selected="${#strings.equals(param.date, '1')}">최신순</option>
+            <option value="2" th:selected="${#strings.equals(param.date, '2')}">오래된순</option>
+          </select>
+
+        </div>
+      </div>
+    </div>
+
+    <!--*****************************************************************************************************************************************************************-->
+    <!--********************************************************************** 2. 테이블 ********************************************************************************-->
+    <!--*****************************************************************************************************************************************************************-->
+    <style>
+      .center {
+        text-align: center;
+      }
+    </style>
+
+    <th:block th:if="${#lists.isEmpty(list1)}">
+
+      <h3 class="mt-5 text-center">리뷰 작성 내역이 없습니다.</h3>
+
+    </th:block>
+
+    <th:block th:if="${!#lists.isEmpty(list1)}">
+      <table class="table table-bordered center">
+        <thead>
+          <tr style="background-color: floralwhite;">
+            <th>No.</th>
+            <th>참여일자</th>
+            <th>클래스정보</th>
+            <th>작성내용</th>
+            <th>별점</th>
+          </tr>
+        </thead>
+        <tbody style="vertical-align: middle;">
+          <tr th:each="obj : ${list1}">
+            <td th:text="|&nbsp;&nbsp;&nbsp;${obj.no}&nbsp;&nbsp;&nbsp;|"></td>
+            <td>
+              <p th:text="${#dates.format(obj.regdate,'yyyy.MM.dd')}"></p>
+              <button class="btn btn-sm btn-outline-primary" style="height: 30px; width: 90px;"
+                th:onclick="modalAction2([[${obj.no}]])">리뷰보기</button>
+            <td>
+              <img th:src="@{/member/image(classcode=${obj.classcode})}" style=" width: 100px; height: 100px;">
+              <a class="title" th:href="@{/class/product.do(classcode=${obj.classcode})}">
+                <p class="mt-1" th:text="'['+ ${obj.title} +']'" style="margin-top: 10px;"></p>
+              </a>
+            </td>
+            <td>
+
+              <div th:utext="|${obj.content}|" class="area content1">
+                <div>
+
+            </td>
+            <td th:if="${obj.rating} == 1" style="color: darkgreen;">★</td>
+            <td th:if="${obj.rating} == 2" style="color: darkgreen;">★★</td>
+            <td th:if="${obj.rating} == 3" style="color: darkgreen;">★★★</td>
+            <td th:if="${obj.rating} == 4" style="color: darkgreen;">★★★★</td>
+            <td th:if="${obj.rating} == 5" style="color: darkgreen;">★★★★★</td>
+
+            <form action=""> <input type="hidden" name="pages1" th:value="${pages1}"></form>
+          </tr>
+        </tbody>
+
+      </table>
+
+      <ul id="pagination-demo1" class="col pagination" style="position: relative; left: 280px;"></ul>
+      <div class="page"></div>
+    </th:block>
+
+    <!-- 리뷰 모달 -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header" style="background-color: #008000; height: 50px">
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <form th:action="@{/review/insert.do}" id="myform" method="post" enctype="multipart/form-data">
+            <div class="modal-body">
+              <div class="container-fluid">
+                <div class="row d-flex flex-nowrap" style="height: 110px">
+                  <div class="row col-md-6 mx-3" style="border: 1px solid #d3d3d3">
+                    <img class="mt-2" name="mainimage" id="mainimage1" style="
+                        width: 110px;
+                        height: 90px;
+                        position: relative;
+                        left: -15px;
+                      " />
+
+                    <!-- 클래스 간략한 정보 -->
+                    <div class="reviewcontent col-8 mt-1" style="height: 90px; position: relative; left: -15px">
+                      <div class="classinfo"><input class="classinfo1" id="title1" /></div>
+                      <div class="classinfo"><input class="classinfo1" id="classtime1" /></div>
+                      <div class="classinfo"><input class="classinfo1" id="classdate1" /></div>
+                      <div class="classinfo"><input class="classinfo1" id="classlevel1" /></div>
+                      <div class="classinfo"><input class="classinfo1" id="price1" /></div>
+                    </div>
+                  </div>
+
+                  <!-- 별점 레이팅 -->
+                  <div class="col-md-6">
+                    <input type="text" id="rating1" />
+                  </div>
+                </div>
+
+                <!-- 리뷰내용 -->
+                <div class="mt-2">
+                  <div>
+                    <div style="
+                        margin-top: 10px;
+                        background-color: white;
+                        border: 1px solid gray;
+                      ">
+                      <div class="p-2" id="content1" style="height: 300px"></div>
+                    </div>
+                  </div>
+
+                  <!-- 리뷰 이미지 슬라이드(image) -->
+                  <div class="d-flex justify-content-center mb-4" style="
+                      margin-top: 10px;
+                      height: 300px;
+                      border: 1px solid gray;
+                    ">
+                    <div id="carouselExampleControls" class="carousel carousel-dark slide" data-bs-ride="true">
+                      <div class="carousel-inner">
+                        <div class="carousel-item active">
+                          <div>
+                            <img class="d-block mt-1" id="rimage0" style="height: 290px; width: 500px" />
+                          </div>
+                        </div>
+                        <div class="carousel-item">
+                          <div>
+                            <img class="d-block mt-1" id="rimage1" style="height: 290px; width: 500px" />
+                          </div>
+                        </div>
+                        <div class="carousel-item">
+                          <div>
+                            <img class="d-block mt-1" id="rimage2" style="height: 290px; width: 500px" />
+                          </div>
+                        </div>
+                        <div class="carousel-item">
+                          <div>
+                            <img class="d-block mt-1" id="rimage3" style="height: 290px; width: 500px" />
+                          </div>
+                        </div>
+                      </div>
+                      <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls"
+                        data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                      </button>
+                      <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls"
+                        data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+
+    </div>
+  </div>
+  <script th:src="@{/js/jquery-3.6.4.min.js}"></script>
+  <script th:inline="javascript">
+
+    var pages = /*[[${pages}]]*/'';
+    var chk = /*[[${param.date}]]*/'';
+
+    function selectoption(date) {
+
+      console.log(date);
+
+      if (date === 0) {
+        window.location.href = "mypage.do?menu=2&page=1";
+      }
+      else {
+        window.location.href = `mypage.do?menu=2&page=1&date=${date}`;
+      }
+
+    }
+
+
+
+
+    $(function () {
+      var totalpages = $("input[name=pages1]").val();
+      let query = window.location.search;
+      let param = new URLSearchParams(query);
+      let startpage = param.get("page");
+      let paramdate = param.get("date")
+
+      $('#pagination-demo1').twbsPagination({
+
+        totalPages: totalpages,
+        visiblePages: 5,
+        first: '≪',
+        last: '≫',
+        prev: '<',
+        next: '>',
+        initiateStartPageClick: false,
+        startPage: Number(/*[[${param.page}]]*/),
+        nextClass: "page-item next",   // 이전 페이지 CSS class
+        prevClass: "page-item prev",   // 다음 페이지 CSS class
+        lastClass: "page-item last",   // 마지막 페이지 CSS calss
+        firstClass: "page-item first",   // 첫 페이지 CSS class
+        pageClass: "page-item",   // 페이지 버튼의 CSS class
+        activeClass: "active",   // 클릭된 페이지 버튼의 CSS class
+        disabledClass: "disabled",   // 클릭 안된 페이지 버튼의 CSS class
+        anchorClass: "page-link",   //버튼 안의 앵커에 대한 CSS class   
+        onPageClick: function (event, page, date) {
+          if (paramdate != null) {
+            window.location.href = "mypage.do?menu=2&page=" + page + "&date=" + paramdate;
+          }
+          else if (paramdate == null) {
+            window.location.href = "mypage.do?menu=2&page=" + page;
+          }
+
+        }
+      });
+
+    });
+
+    async function modalAction2(no) {
+      const modal = new bootstrap.Modal(
+        document.getElementById("exampleModal"),
+        {}
+      );
+
+      const url = '/specialday/api/review/selectreviewOne.json?no=' + no;
+      const headers = { "Content-Type": "application/json" };
+      const { data } = await axios.get(url, { headers });
+
+      console.log(data);
+
+      let title = document.getElementById('title1');
+      let classlevel = document.getElementById('classlevel1');
+      let mainimage1 = document.getElementById('mainimage1');
+      let classtime = document.getElementById('classtime1');
+      let classdate = document.getElementById('classdate1');
+      let price = document.getElementById('price1');
+      let rating = document.getElementById('rating1');
+      let content = document.getElementById('content1');
+
+      // 리뷰이미지 슬라이드
+      let rimage0 = document.getElementById('rimage0');
+      let rimage1 = document.getElementById('rimage1');
+      let rimage2 = document.getElementById('rimage2');
+      let rimage3 = document.getElementById('rimage3');
+
+      let ritem = document.getElementById('ritem');
+
+      let levelname = "";
+      let ratingif = "";
+
+      // 문자 변환 <p> 태그 제거
+      let contentreplace = data.review.content.replace('<p>', "");
+      let contentreplace1 = contentreplace.replace('</p>', "");
+
+      // 리뷰 이미지 번호 리스트
+      let reviewNolist = [];
+      reviewNolist = data.reviewNolist;
+
+
+      // 클래스 난이도
+      if (data.review.classlevel === 1) {
+        levelname = "입문자";
+      }
+      if (data.review.classlevel === 2) {
+        levelname = "경험자";
+      }
+      if (data.review.classlevel === 3) {
+        levelname = "숙련자";
+      }
+
+      // 레이팅에 따른 별 표시
+      if (data.review.rating === 1) {
+        ratingif = "★★";
+      }
+      if (data.review.rating === 2) {
+        ratingif = "★★";
+      }
+      if (data.review.rating === 3) {
+        ratingif = "★★★";
+      }
+      if (data.review.rating === 4) {
+        ratingif = "★★★★";
+      }
+      if (data.review.rating === 5) {
+        ratingif = "★★★★★";
+      }
+
+
+
+      // 리뷰 이미지 조회
+      mainimage1.src = "/specialday/member/image?classcode=" + data.review.classcode;
+
+      if (typeof reviewNolist[0] != "undefined") {
+        rimage0.src = "/specialday/review/image?no=" + reviewNolist[0];
+      }
+      else {
+        rimage0.src = "/specialday/review/image?no=0";
+      }
+      if (typeof reviewNolist[1] != "undefined") {
+        rimage1.src = "/specialday/review/image?no=" + reviewNolist[1];
+      }
+      else {
+        rimage1.src = "/specialday/review/image?no=0";
+      }
+      if (typeof reviewNolist[2] != "undefined") {
+        rimage2.src = "/specialday/review/image?no=" + reviewNolist[2];
+      }
+      else {
+        rimage2.src = "/specialday/review/image?no=0";
+      }
+      if (typeof reviewNolist[3] != "undefined") {
+        rimage3.src = "/specialday/review/image?no=" + reviewNolist[3];
+      }
+      else {
+        rimage3.src = "/specialday/review/image?no=0";
+      }
+
+      title.value = "이름: " + data.review.title;
+      classlevel.value = "난이도: " + levelname;
+      classtime.value = "시간: " + data.review.classstart + "~" + data.review.classend;
+      classdate.value = "날짜: " + data.review.classdate;
+      price.value = "가격: " + data.review.price;
+      rating.value = ratingif;
+      content.textContent = contentreplace1;
+
+      modal.show();
+    }
+  </script>
+</div>

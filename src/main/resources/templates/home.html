@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>SPECIAL DAY</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <!--웹 페이지 아이콘 변경-->
+    <link rel="icon" th:href="@{/image/logo.ico}">
+    <!-- Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=DynaPuff&family=Permanent+Marker&display=swap"
+        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@500&display=swap" rel="stylesheet"> 
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cantora+One&family=Do+Hyeon&display=swap" rel="stylesheet">
+    <!--Bootstrap 용 CSS-->
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <!--CSS-->
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+    <link rel="stylesheet" th:href="@{/css/home.css}">
+    <!--Bootstrap 용 Icon CDN-->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+    <!--font awesome 용-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <!--thymeleaf contextpath-->
+    <link id="contextPathHolder" th:data-contextPath="${#httpServletRequest.getContextPath()}" />
+
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+
+<body>
+    <header th:replace="~{header :: headerFragment}"></header>
+
+    <div id="container" role="main" style="position: relative; min-height: 100%;">
+        <div id="main">
+            <!-- 광고 슬라이드 영역 -->
+            <div id="main_01">
+                <div class="banner">
+                    <div class="prev btnmove" id="prev" style="width: 10px;" >
+                        <a href="#" class="prev1" title="이전"><i class="fas fa-chevron-left"></i></a>
+                    </div>
+                    <div class="next btnmove" id="next" style="width: 10px;">
+                        <a href="#" class="next1" title="다음"><i class="fas fa-chevron-right"></i></a>
+                    </div>
+
+                    <div class="controlBox">
+                        <div class="btns">
+                            <a href="#" class="playBtn"><i class="fa fa-play"></i></a>
+                            <a href="#" class="stopBtn"><i class="fa fa-pause"></i></a>
+                        </div>
+                    </div>
+                    <div class="rolling">
+                        <ul class="slide">
+                            <li><a href="#"><img th:src="@{/image/Design.png}" alt="슬라이드1" class="banner-img"></a></li>
+                            <li><a href="#"><img th:src="@{/image/flower.png}" alt="슬라이드2" class="banner-img"></a></li>
+                            <li><a href="#"><img th:src="@{/image/향수배너.png}" alt="슬라이드3" class="banner-img"></a></li>
+                            <li><a href="#"><img th:src="@{/image/가정.png}" alt="슬라이드4" class="banner-img"></a></li>
+                            <li><a href="#"><img th:src="@{/image/ring.png}" alt="슬라이드5" class="banner-img"></a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 아이콘 영역-->
+            <div class="icon row">
+                <ul class="icon-list">
+                    <li>
+                        <a th:href="@{/class/select.do(search=list, selection=2)}" class="cate-a">
+                            <div class="cate" style="width: 300px; height: 340px; padding: 20px; margin-right: 70px;">
+                                <img th:src="@{/image/공예.png}" id="cate-icon" alt="공예" style="width: 250px; height: 250px; margin-bottom: 20px;">
+                                <span>
+                                    <p class="icon-name" style="font-family: 'Do Hyeon', sans-serif; color: gray; font-size: x-large; font-weight: lighter;">공예</p>
+                                </span>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a th:href="@{/class/select.do(search=list, selection=3)}" class="cate-a">
+                            <div class="cate" style="width: 300px; height: 340px; padding: 20px; margin-right: 70px;">
+                                <img th:src="@{/image/스포츠.png}" id="cate-icon" alt="스포츠/건강" style="width: 250px; height: 250px; margin-bottom: 20px;">
+                                <span>
+                                    <p class="icon-name" style="font-family: 'Do Hyeon', sans-serif; color: gray; font-size: x-large; font-weight: lighter;">스포츠/건강</p>
+                                </span>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a th:href="@{/class/select.do(search=list, selection=4)}" class="cate-a">
+                            <div class="cate" style="width: 300px; height: 340px; padding: 20px;">
+                                <img th:src="@{/image/미술.png}" id="cate-icon" alt="미술" style="width: 250px; height: 250px; margin-bottom: 20px;">
+                                <span>
+                                    <p class="icon-name" style="font-family: 'Do Hyeon', sans-serif; color: gray; font-size: x-large; font-weight: lighter;">미술</p>
+                                </span>
+                            </div>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="icon row">
+                <ul class="icon-list">
+                    <li>
+                        <a th:href="@{/class/select.do(search=list, selection=5)}" class="cate-a">
+                            <div class="cate" style="width: 300px; height: 340px; padding: 20px; margin-right: 70px;">
+                                <img th:src="@{/image/쿠킹.png}" id="cate-icon" alt="도자기" style="width: 250px; height: 250px; margin-bottom: 20px;">
+                                <span>
+                                    <p class="icon-name" style="font-family: 'Do Hyeon', sans-serif; color: gray; font-size: x-large; font-weight: lighter;">쿠킹</p>
+                                </span>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a th:href="@{/class/select.do(search=list, selection=6)}" class="cate-a">
+                            <div class="cate" style="width: 300px; height: 340px; padding: 20px; margin-right: 70px;">
+                                <img th:src="@{/image/음악.png}" id="cate-icon" alt="스포츠/건강" style="width: 250px; height: 250px; margin-bottom: 20px;">
+                                <span>
+                                    <p class="icon-name" style="font-family: 'Do Hyeon', sans-serif; color: gray; font-size: x-large; font-weight: lighter;">음악/영상</p>
+                                </span>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a th:href="@{/class/select.do(search=list, selection=7)}" class="cate-a">
+                            <div class="cate" style="width: 300px; height: 340px; padding: 20px;">
+                                <img th:src="@{/image/뷰티.png}" id="cate-icon" alt="미술" style="width: 250px; height: 250px; margin-bottom: 20px;">
+                                <span>
+                                    <p class="icon-name" style="font-family: 'Do Hyeon', sans-serif; color: gray; font-size: x-large; font-weight: lighter;">뷰티</p>
+                                </span>
+                            </div>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- 새로운 클래스 소개 영역 -->
+            <div style="background-color: rgb(246, 243, 243); padding: 30px; margin-top: 50px; margin-bottom: 50px;">
+                <div class="main-newclass">
+                    <h3 class="seb-title"><i class="fa-solid fa-star" style="color: #ffe26f;"></i><i class="fa-solid fa-star" style="color: #ffe26f;"></i><i class="fa-solid fa-star" style="color: #ffe26f;"></i> 신규 클래스 <i class="fa-solid fa-star" style="color: #ffe26f;"></i><i class="fa-solid fa-star" style="color: #ffe26f;"></i><i class="fa-solid fa-star" style="color: #ffe26f;"></i></h2>
+                        <div class="newclass">
+                            <div class="row row-cols-1 row-cols-md-3">
+                                <th:block th:each="obj : ${list}" th:if="${obj.chk == 1}">
+                                    <div class="col">
+                                        <div class="class">
+                                            <a href="#" th:onclick="updatehit([[${obj.classcode}]])"
+                                                class="new-c1">
+                                                <div class="new-c2" style="padding-left: 20px; padding-top: 15px; padding-bottom: 15px; border-radius: 3%; background-color: white;  box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);">
+                                                    <div class="class-image">
+                                                        <img th:src="@{/class/image(no=${obj.mainImg})}" alt="클래스 메인 이미지"
+                                                            width="300" height="225" style="object-fit:cover" />
+                                                    </div>
+                                                    <span>
+                                                        <p class="class-name" th:text="${obj.title}"></p>
+                                                        <img th:src="@{/class/image(no=${obj.profileImg} )}"
+                                                            style="width: 25px; height: 25px; object-fit:cover; float: right; border-radius: 10px; margin-right: 15px;" />
+                                                        <p class="price col-8" th:text="${obj.nickname}"></p>
+                                                        <p class="local" th:text="${obj.address1}"></p>
+                                                        <div class="row">
+                                                            <p class="price col-10" th:text="${obj.price}"></p>
+                                                            <span class="col-2"
+                                                                style="font-size: 15px; color: rgb(31, 40, 61); padding: 0%;">원</span>
+                                                        </div>
+                                                    </span>
+                                                </div>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </th:block>
+                            </div>
+                        </div>
+                    </h3>
+                </div>
+            </div>
+            
+            
+            <!-- 커뮤니티 영역 -->
+            <div class="main-commu" style="padding:30px; margin-bottom: 120px;">
+                <h3 class="seb-title">커뮤니티 최신글</h2>
+                    <div class="community">
+                        <div class="row row-cols-1 row-cols-md-3">
+                            <div class="container">
+                                <table class="table teble-hover text-striped text-center"
+                                    style="border: 1px rgb(184, 181, 181);">
+                                    <br />
+                                    <thead>
+                                        <tr> 
+                                            <th scope="cate" name="cate">글 분류</th>
+                                            <th scope="title">제목</th>
+                                            <th scope="id">작성자ID</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr th:each="obj : ${list1}">
+                                            
+                                            <td th:text="${obj.cate}"></td>
+                                            <td><a class="nav-link hover-event" th:href="@{/community/selectone.do(no=${obj.no})}" th:text="|${obj.title} (${obj.replycnt})|"></a></td>
+                                            <td th:text="${obj.member.id}"></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+            </div>
+            <!-- <h3 class="seb-title">커뮤니티</h2>
+            <div class="main-cumu">
+                    <table class="table teble-hover text-striped" style="border: 1px rgb(184, 181, 181) ;">
+                        <br />
+                        <thead>
+                            <tr>
+                                <th scope="content">글내용</th>
+                                <th scope="id">작성자ID</th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <td style="margin: 100%;">
+                                <li><a href="./community/selectone.do?no=68"
+                                        style="text-decoration:none;color: black ;">제주도에 가족들이 다같이 할만한 클래스 있을까요?</a></li>
+                            <td style="margin: 100%;">
+                                <li><a>test8</a></li>
+                            </td>
+                        </tbody>
+                        <tbody>
+                            <td style="margin: 100%;">
+                                <li><a href="./community/selectone.do?no=69"
+                                        style="text-decoration:none;color: black ;">서울 뚜벅이 여행자입니다</a></li>
+                            <td style="margin: 100%;">
+                                <li><a>test8</a></li>
+                            </td>
+                        </tbody>
+                        <tbody>
+                            <td style="margin: 100%;">
+                                <li><a href="./community/selectone.do?no=70"
+                                        style="text-decoration:none;color: black ;">부산 패들보트 클래스 추천해요!</a></li>
+                            <td style="margin: 100%;">
+                                <li><a>test8</a></li>
+                            </td>
+                        </tbody>
+                    </table>
+            </div> -->
+
+            <!-- 안내 영역 -->
+            <!-- <div class="main-service">
+                <h3 class="seb-title">안내게시판</h2>
+                    <div id="tabMenu">
+                        <input type="radio" id="tab1" name="tabs" checked>
+                        <label for="tab1">공지사항</label>
+                        <input type="radio" id="tab2" name="tabs">
+                        <label for="tab2">갤러리</label>
+
+                        <div id="notice" class="tabContent">
+                            <h2>공지사항 내용입니다.</h2>
+                            <ul class="notice1">
+                                <li><a href="#">클래스 이용 안내사항입니다.</a></li>
+                                <li><a href="#">[참가모집] 카약 체험에 초대합니다.</a></li>
+                                <li><a href="#">[참가모집] 여름 방학 기간, 오름 체험단을 모집합니다.</a></li>
+                                <li><a href="#">[이벤트]가정의 달을 맞이하여 이벤트를 진행합니다.</a></li>
+                                <li><a href="#">[홍보]이번주 인기 클래스를 소개합니다.</a></li>
+                            </ul>
+                        </div>
+                        <div id="gallery" class="tabContent">
+                            <h2>갤러리 내용입니다.</h2>
+                            <ul>
+
+                            </ul>
+                        </div>
+                    </div>
+            </div> -->
+
+            
+            
+
+        </div>
+    </div>
+    </div>
+    </div>
+
+    <!--footer 영역-->
+    <footer th:replace="~{footer :: footerFragment}"></footer>
+
+    <!--jQuery-->
+    <script th:src="@{/js/jquery-3.6.4.min.js}"></script>
+    <!--axios library-->
+    <script th:src="@{/js/axios.min.js}"></script>
+    <!--Bootstrap 용 js -->
+    <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+    <script type="text/javascript">
+
+        const contextPath = $('#contextPathHolder').attr('data-contextPath');
+
+        $(document).ready(function () {
+            var nowNum = 0;
+            var bannerObj = $('.slide li');
+            var maxLength = bannerObj.length;
+            var timer = 3000; // 자동 롤링되는 타임 설정
+            var autoRun = setInterval(function () { rollingFn('right'); }, timer);
+            var stopBtn = $('.stopBtn');
+            var playBtn = $('.playBtn');
+            bannerObj.eq(nowNum).fadeIn();
+            $('.nextBtn').bind('click', function () {
+                rollingFn('right');
+            });
+            $('.prevBtn').bind('click', function () {
+                rollingFn('left');
+            });
+            stopBtn.bind('click', function () {
+                stopAndGoFn(true);
+            });
+            playBtn.bind('click', function () {
+                stopAndGoFn(false);
+            });
+            function rollingFn(direction) {
+                if (direction == 'right') {
+                    nowNum = nowNum + 1;
+                    if (nowNum > maxLength - 1) {
+                        nowNum = 0;
+                    }
+                } else {
+                    nowNum = nowNum - 1;
+                    if (nowNum < 0) {
+                        nowNum = maxLength - 1;
+                    }
+                }
+                bannerObj.hide().eq(nowNum).fadeIn();
+            }
+            function stopAndGoFn(bool) {
+                if (bool == true) {
+                    clearInterval(autoRun);
+                } else if (bool == false) {
+                    clearInterval(autoRun);
+                    autoRun = setInterval(function () { rollingFn('right'); }, timer);
+                }
+            }
+        });
+
+
+        // 페이지 좌우로 넘기기
+        $(document).ready(function () {
+
+            var nowNum = 0;
+            var maxLength = $('.slide li').length;
+            $('.slide li').eq(nowNum).show();
+            $('.next').bind('click', function () {
+                nowNum = nowNum + 1;
+                if (nowNum > maxLength - 1) {
+                    nowNum = 0;
+                }
+                console.log(nowNum);
+                $('.slide li').hide();
+                $('.slide li').eq(nowNum).show();
+            });
+
+            $('.prev').bind('click', function () {
+                nowNum = nowNum - 1;
+                if (nowNum > maxLength + 1) {
+                    nowNum = 0;
+                }
+                console.log(nowNum);
+                $('.slide li').hide();
+                $('.slide li').eq(nowNum).show();
+            });
+        });
+
+        async function updatehit(code) {
+
+            //console.log(code);
+
+            const url = contextPath + '/api/class/updatehit.json';
+            const headers = { "Content-Type": "application/json" };
+            const body = { classcode: code };
+
+            const { data } = await axios.put(url, body, { headers });
+
+            //console.log(data);
+
+            if (data.ret === 1) {
+                window.location.href = contextPath + '/class/product.do?classcode=' + code;
+            }
+        }
+
+    </script>
+
+
+    <!--Main js-->
+    <script th:src="@{/js/main.js}"></script>
+</body>
+
+
+
+</html>

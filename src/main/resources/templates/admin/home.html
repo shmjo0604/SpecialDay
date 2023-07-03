@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <meta name="author" content="eunee">
+    <meta name="description" content="웹솔루션 관리자화면으로 가장 많이 사용되는 웹템플릿입니다">
+    <title>관리자</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <!-- Bootstrap용 css CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-aFq/bzH65dt+w6FI2ooMVUpc+21e0SRygnTpmBvdBgSdnuTN7QbdgL+OapgHtvPp" crossorigin="anonymous">
+    <!-- font-awesome Icon용 CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+        integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- Simple DataTable용 CSS CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css" rel="stylesheet" type="text/css">
+    <!-- 부트스트랩 Icon용 CDN -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+    <!-- 내가만든 css -->
+    <link rel="stylesheet" th:href="@{/css/admin/main.css}">
+    <!-- 윈도우창 아이콘 변경 -->
+    <link rel="icon" href="assets/images/ui.ico">
+    <!-- jQuery 추가 -->
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"
+        integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
+    <!-- font awesone용 스크립트 CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"
+        integrity="sha512-fD9DI5bZwQxOi7MhYWnnNPlvXdp/2Pj3XSTRrFs5FQa4mizyGLnJcN6tuvUS6LbmgN1ut+XGSABKvjN0H6Aoow=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <!--google-font-->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@500&display=swap" rel="stylesheet">  
+    <link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic&display=swap" rel="stylesheet">
+
+</head>
+
+<body class="sb-nav-fixed">
+
+    <!-- 내비게이션 영역 -->
+    <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
+        <!-- Navbar Brand -->
+        <a class="navbar-brand ps-3" href="./home.do">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-tools"
+                viewBox="0 0 16 16">
+                <path
+                    d="M1 0 0 1l2.2 3.081a1 1 0 0 0 .815.419h.07a1 1 0 0 1 .708.293l2.675 2.675-2.617 2.654A3.003 3.003 0 0 0 0 13a3 3 0 1 0 5.878-.851l2.654-2.617.968.968-.305.914a1 1 0 0 0 .242 1.023l3.27 3.27a.997.997 0 0 0 1.414 0l1.586-1.586a.997.997 0 0 0 0-1.414l-3.27-3.27a1 1 0 0 0-1.023-.242L10.5 9.5l-.96-.96 2.68-2.643A3.005 3.005 0 0 0 16 3c0-.269-.035-.53-.102-.777l-2.14 2.141L12 4l-.364-1.757L13.777.102a3 3 0 0 0-3.675 3.68L7.462 6.46 4.793 3.793a1 1 0 0 1-.293-.707v-.071a1 1 0 0 0-.419-.814L1 0Zm9.646 10.646a.5.5 0 0 1 .708 0l2.914 2.915a.5.5 0 0 1-.707.707l-2.915-2.914a.5.5 0 0 1 0-.708ZM3 11l.471.242.529.026.287.445.445.287.026.529L5 13l-.242.471-.026.529-.445.287-.287.445-.529.026L3 15l-.471-.242L2 14.732l-.287-.445L1.268 14l-.026-.529L1 13l.242-.471.026-.529.445-.287.287-.445.529-.026L3 11Z" />
+            </svg> <!-- 벡터 아이콘 추가 -->
+            <b> &nbsp; 관리자 화면</b>
+        </a> <!-- ps == padding space-->
+        <!-- Sidebar Toggle -->
+        <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" type="button">
+            <i class="fa-solid fa-square-caret-left"></i>
+        </button>
+        <!-- Searchbar -->
+        <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
+            <!-- <div class="input-group">
+                <input class="form-control" type="text" placeholder="검색어 입력..." aria-label="검색어 입력..."
+                    aria-describedby="btnSearch">
+                <button class="btn btn-primary" id="btnSearch" type="submit">
+                    <i class="bi bi-search"></i>
+                </button>
+            </div> -->
+        </form>
+        <!-- Profile -->
+        <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" id="profile" href="#" role="button" data-bs-toggle="dropdown"
+                    aria-expanded="false">
+                    <i class="bi bi-person-lines-fill"></i>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="profile">
+                    <li><a class="dropdown-item" th:href="@{/login.do}">메인홈</a></li>
+                    <li>
+                        <hr class="dropdown-divider">
+                    </li>
+                    <li><a class="dropdown-item" th:href="@{/admin/login.do}">로그아웃</a></li>
+                </ul>
+            </li>
+        </ul>
+    </nav>
+
+    <!-- 전체화면 영역 -->
+    <div id="layoutTotal">
+        <!-- 전체화면 > 왼쪽메뉴 영역 -->
+        <div id="layoutLeftSide">
+            <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
+                <div class="sb-sidenav-menu">
+                    <div class="nav">
+                        <div class="sb-sidenav-menu-heading">메인</div>
+                        <a class="nav-link" href="./home.do">
+                            <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                            대시보드
+                        </a>
+                        <div class="sb-sidenav-menu-heading">관리</div>
+                        <a class="nav-link" href="./home.do">
+                            <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
+                            통계
+                        </a>
+                        <a class="nav-link" href="./home.do">
+                            <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
+                            승인
+                        </a>
+                    </div>
+                </div>
+                <div class="sb-sidenav-footer">
+                    <div>Logged in as adminId8080</div>
+                </div>
+            </nav>
+        </div>
+        <!-- 전체화면 > 오른쪽메인화면 영역 -->
+        <div id="layoutContent">
+            <main>
+                <div class="container-fluid px-4">
+                    <h3 class="mt-4" style="font-family: 'Noto Sans KR', sans-serif; font-weight: bold;">대시보드</h3>
+                    <ol class="breadcrumb mb-4">
+                        <li class="breadcrumb-item active" style="margin: 5px;"><span class="date"></span></li>
+                    </ol>
+                    
+                    <!-- 카드 -->
+                    <!-- <div class="row">
+                        <div class="col-lg-3 col-md-6">
+                            <div class="card bg-primary text-white mb-4">
+                                <div class="card-body">회원</div>
+                                <div class="card-footer d-flex justify-content-end align-items-center">
+                                    <div class="small text-white text-right">xxx 명</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-6">
+                            <div class="card bg-success text-white mb-4">
+                                <div class="card-body">클래스 신청 건수</div>
+                                <div class="card-footer d-flex justify-content-end align-items-center">
+                                    <div class="small text-white text-right">xxx 명</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-6">
+                            <div class="card bg-warning text-white mb-4">
+                                <div class="card-body">클래스 등록 대기 건수</div>
+                                <div class="card-footer d-flex justify-content-end align-items-center">
+                                    <div class="small text-white text-right">x 건</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-6">
+                            <div class="card bg-danger text-white mb-4">
+                                <div class="card-body">문의 대기 건수</div>
+                                <div class="card-footer d-flex justify-content-end align-items-center">
+                                    <div class="small text-white text-right">xx 건</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div> -->
+
+                    <!-- 테이블(보드) -->
+                    <div class="row" style="margin: 10px;">
+                        <div class="col">
+                            <div class="card mb-4">
+                                <div class="card-header">
+                                    <i class="fa-solid fa-user-pen"></i>
+                                    클래스 등록 관리
+                                </div>
+                                <div class="card-body">
+                                    
+                                    <!-- 테이블 -->
+                                    <style>
+                                        #datatablesSimple1 th {text-align: center;}
+                                        #datatablesSimple1 td {text-align: center;}
+                                        #datatablesSimple2 th {text-align: center;}
+                                        #datatablesSimple2 td {text-align: center;}
+                                    </style>
+                                    <table id="datatablesSimple1" class="table table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>번호</th>
+                                                <th>신청일자</th>
+                                                <th>아이디</th>
+                                                <th>SNS</th>
+                                                <th>클래스명</th>
+                                                <th>처리상태</th>
+                                                <th>승인</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr th:each="obj, index : ${list}">
+                                                <td th:text="${index.index + 1}"></td>
+                                                <td th:text="${#dates.format(obj.regdate, 'yyyy.MM.dd')}"></td>
+                                                <td th:text="${obj.memberid}"></td>
+                                                <td th:text="${obj.sns}"></td>
+                                                <td th:text="${obj.title}"></td>
+                                                <td>
+                                                    <span th:if="${obj.chk == 0}" th:classappend="${obj.chk == 1} ? 'completed' : ''">대기</span>
+                                                    <span th:if="${obj.chk == 1}">완료</span>
+                                                </td>
+                                                <td>
+                                                    <div th:if="${obj.chk == 0}">
+                                                        <button class="btn btn-success btn-sm" style="border: 1px solid gray; width: 70px; height: 30px;" th:onclick="'confirmFunc(\'' + ${obj.classcode} + '\', this)'">확인</button>
+                                                    </div>
+                                                    <div th:if="${obj.chk == 1}">
+                                                        <button class="btn btn-danger btn-sm" style="border: 1px solid gray; width: 70px; height: 30px;" th:onclick="'cancelFunc(\'' + ${obj.classcode} + '\', this)'">취소</button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+            </main>
+        </div>
+    </div>
+
+
+    <!-- Bootstrap용 js는 body에 위치(필수) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-qKXV1j0HvMUeCBQ+QVp7JcfGl760yU08IQ+GpUo5hlbpg51QRiuqHAJz8+BrxE/N"
+        crossorigin="anonymous"></script>
+    <!-- Chart.js용 cdn 구버전에서 신버전으로 컨버전 작업 필요 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
+    <!-- Simple DataTable용 js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest" type="text/javascript"></script>
+
+    <script th:src="@{/js/jquery-3.6.4.min.js}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.3.5/axios.min.js"></script>
+    <script type="text/javascript" th:inline="javascript">
+        // 왼쪽 사이드바
+        $(document).ready(function () {
+            const sidebarToggle = $('#sidebarToggle');
+            if (sidebarToggle) {
+                sidebarToggle.click(function () {
+                    console.log('버튼클릭');
+                    event.preventDefault(); // 아래쪽 요소로 이벤트가 전파 안되도록
+                    document.body.classList.toggle('sb-sidenav-toggled'); // toggle은 클래스의 유무를 체크해서 없으면 add, 있으면 remove를 자동으로 시켜준다.
+                    localStorage.setItem('sb|sidebar-toggle', document.body.classList.contains('sb-sidenav-toggled'));
+                    //sb|sidebar-toggle : sb로 시작하고 sidebar-toggle로 끝나는 단어가 있으면  sb-sidenav-toggled로 바꿔라
+                });
+            }
+        });
+
+        // simpleDatatables
+        $(document).ready(function () {
+            const dataTable = new simpleDatatables.DataTable("#datatablesSimple1", {
+                searchable: false,
+                fixedHeight: true
+            })
+        });
+        $(document).ready(function () {
+            const dataTable = new simpleDatatables.DataTable("#datatablesSimple2", {
+                searchable: false,
+                fixedHeight: true
+            })
+        });
+
+        // 당일날짜
+        window.addEventListener('DOMContentLoaded', function() {
+        var dateElements = document.querySelectorAll('.date');
+        var today = new Date();
+        var year = today.getFullYear();
+        var month = today.getMonth() + 1;
+        var day = today.getDate();
+        var formattedDate = year + '-' + month + '-' + day;
+        
+        for (var i = 0; i < dateElements.length; i++) {
+            dateElements[i].textContent = formattedDate;
+        }
+        });
+    
+        async function confirmFunc(classcode, button) {
+            console.log(classcode);
+            // PUT호출
+            const url = /*[[@{/api/admin/updatechkToConfirm.json}]]*/"";
+            const headers = { "Content-Type": "application/json" };
+            const body = { classcode: classcode };
+            console.log(body);
+            const { data } = await axios.put(url, body, { headers: headers });
+        
+            console.log('반환되는 결과', data);
+            if (data.status === 200) {
+                alert("클래스 승인완료")
+                const spanElement = $(button).closest('td').find('span');
+                spanElement.text('완료');
+                spanElement.addClass('completed');
+        
+                // 처리상태 변경(대기 => 완료)
+                const statusElement = $(button).closest('tr').find('td:nth-child(6)');
+                statusElement.find('span').text('완료');
+                statusElement.find('span').addClass('completed');
+                
+                // "취소" 버튼으로 변경
+                $(button).text('취소');
+                $(button).attr('onclick', 'cancelFunc(\'' + classcode + '\', this)');
+                $(button).removeClass('btn-success').addClass('btn-danger');
+            } else {
+                alert("클래스 승인실패");
+            }
+        }
+
+
+        async function cancelFunc(classcode, button) {
+            console.log(classcode);
+            // PUT호출
+            const url = /*[[@{/api/admin/updatechkToCancle.json}]]*/"";
+            const headers = { "Content-Type": "application/json" };
+            const body = { classcode : classcode };
+            console.log(body);
+            const { data } = await axios.put(url, body, { headers: headers });
+            
+            console.log('반환되는 결과', data);
+            if (data.status === 200) {
+                alert("클래스 승인취소 완료")
+                const spanElement = $(button).closest('td').find('span');
+                spanElement.text('완료');
+                spanElement.addClass('completed');
+        
+                // 처리상태 변경(완료 => 대기)
+                const statusElement = $(button).closest('tr').find('td:nth-child(6)');
+                statusElement.find('span').text('대기');
+                statusElement.find('span').addClass('completed');
+
+                // "확인" 버튼으로 변경
+                $(button).text('확인');
+                $(button).attr('onclick', 'confirmFunc(\'' + classcode + '\', this)');
+                $(button).removeClass('btn-danger').addClass('btn-success');
+            }
+            else {
+                alert("클래스 승인취소 실패");
+            }
+        }
+    
+    </script>
+</body>
+
+</html>

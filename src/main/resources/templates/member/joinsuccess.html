@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>회원가입 완료</title>
+    <!--웹 페이지 아이콘 변경-->
+    <link rel="icon" th:href="@{/image/logo.ico}">
+    <!-- Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=DynaPuff&family=Permanent+Marker&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@500&display=swap" rel="stylesheet"> 
+    <!--Bootstrap 용 CSS-->
+    <link rel="stylesheet" th:href="@{/css/bootstrap.css}">
+    <!--CSS-->
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+    <!--Bootstrap 용 Icon CDN-->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+    <!--font awesome 용-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <style>
+        .card {
+            width: 850px;
+            height: 500px;
+            padding-top: 20px;
+            border-radius: 25px;
+
+        }
+        .container {
+            padding-top: 150px;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- header 영역 -->
+    <header th:replace="~{header :: headerFragment}"></header>
+
+    <main>
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="card">
+                    <div class="logo-wrap" style="text-align: center;">
+                        <img th:src="@{/image/logo.svg}" alt="로고 이미지"
+                            style="width: 300px; height: 300px;" />
+                        <h3 style=" font-weight: bolder; color: rgb(103, 179, 103) ;">원데이클래스 플랫폼 SPECIAL DAY
+                            회원가입이 완료되었습니다.
+                        </h3>
+                        
+                        
+                        <footer style="padding-top: 30px;">
+                            <a type ="button" th:href="@{/login.do}" class="btn btn-primary">로그인으로</a>
+                            <a type ="button" th:href="@{/home.do}" class="btn btn-success">홈으로</a>
+                        </footer>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+            
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+</body>
+
+</html>

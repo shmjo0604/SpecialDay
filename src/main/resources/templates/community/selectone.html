@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>게시글 상세화면</title>
+    <!--웹 페이지 아이콘 변경-->
+    <link rel="icon" th:href="@{/image/logo.ico}">
+    <!-- Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=DynaPuff&family=Permanent+Marker&display=swap"
+        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@500&display=swap" rel="stylesheet"> 
+    <!--Bootstrap 용 CSS-->
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <!--CSS-->
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+    <!--Bootstrap 용 Icon CDN-->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+    <!--font awesome 용-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <!--thymeleaf contextpath-->
+    <link id="contextPathHolder" th:data-contextPath="${#httpServletRequest.getContextPath()}" />
+    <style>
+        html,
+        body {
+            height: 100%;
+        }
+
+        #wrapper {
+            min-height: 100%;
+            position: relative;
+            /* padding-bottom: 60px; */
+        }
+
+        footer {
+            position: relative;
+            /* transform: translateY(-30%); */
+        }
+
+        .selectone {
+            padding-top: 150px;
+        }
+
+        .container>.h4 {
+            padding-bottom: 40px;
+        }
+
+        .container>.title {
+            font-weight: 700;
+            font-size: 22px;
+            margin-bottom: 20px;
+        }
+
+        .container>.content {
+            margin-top: 40px;
+
+            font-size: 18px;
+        }
+
+        .card {
+            background-color: rgb(231, 243, 251);
+            height: 230px;
+            padding-top: 10px;
+            border: 1px solid;
+        }
+    </style>
+</head>
+
+<body>
+    <!--header 영역-->
+    <header th:replace="~{header :: headerFragment}"></header>
+
+    <article id="wrapper">
+
+        <div class="container selectone" role="main">
+
+            <!-- <form id="form" method="get" th:action="@{/community/update.do}"  style="display: inline-block;"> -->
+            <label class="title" name="title" th:text="${community.title}" style="font-size: 28px;"></label><br />
+            <!-- <label class="no" name="no" th:text="${community.no}"></label> -->
+            <label class="cate" name="cate" th:text="${community.cate}"></label>
+            | <label class="writer" th:text="${community.member.id}"></label>
+            | <label class="date" th:text="${community.regdate}"></label>
+            | 조회수 <label class="date" th:text="${community.hit}"></label><br />
+            <hr />
+            <label class="content" name="content" th:utext="${community.content}"
+                style="padding-bottom:80px;font-size: 18px;"></label><br />
+            
+            <div style="display: inline-block; width: 100%;">
+                <th:block th:if="${user != null}">
+                <div class="buttons" th:if="${community.member.id == user.username}" style="float:left;">
+                    <button class="btn btn-sm btn-primary"> <a class="nav-link"
+                            th:href="@{update.do(no=${community.no})}">수정</a></button>
+                    <input type="hidden" name="no" th:value="${community.no}" />
+                    <form method="post" class="community_delete" id="form-delete" th:action="@{/community/delete.do}"
+                        style="display: inline-block;">
+                        <input type="hidden" name="no" th:value="${community.no}" />
+                        <button type="button" class="btn btn-sm btn-primary" th:onclick="formAction1(2)">삭제</button>
+                    </form>
+                </div>
+                </th:block>
+                <div style="float:right;" > 
+                    <button class="btn btn-sm btn-primary" >
+                        <a class="nav-link" th:href="@{selectlist.do}">목록</a>
+                    </button>
+                </div>
+            </div>
+
+            <!--댓글-->
+            <form class="mb-3" name="replybox" style="padding-top: 100px;" id="reply_form"
+                th:action="@{/community/replyinsert.do}" method="post">
+                <input type="hidden" name="community.no" th:value="${community.no}" />
+                <th:block th:if="${user != null}">
+                <input type="hidden" class="form-control" id="memberid" th:value="${user.username}" name="member.id"
+                    readonly />
+                </th:block>
+                <textarea id="reply_content" class="form-control mb-2" rows="4" name="content"
+                    placeholder="욕설과 비방은 형사처벌의 대상이 될 수 있습니다"></textarea>
+                <th:block th:if="${user != null}">
+                <button type="button" class="btn btn-success" onclick="insertreply()">댓글 입력</button>
+                </th:block>
+                <th:block th:if="${user == null}">
+                <button type="button" class="btn btn-success"><a class="nav-link" th:href="@{/login.do}">댓글 입력</a></button>
+                </th:block>
+            </form>
+
+
+            <!--댓글 목록-->
+            <hr />
+            <h5>댓글</h5>
+            <div class="mb-3" style="background-color: rgb(234, 234, 234);">
+                <tr th:each="tmp : ${list}">
+                    <div style="padding: 10px; margin-left: 20px; margin-right: 20px;">
+                        <div style="font-weight: bold;">
+                            <td th:text="${tmp.member.id}">&nbsp;</td>
+                        </div>
+
+                        <div>
+                            <td th:text="${tmp.content}"></td>
+                        </div>
+                        <div style="font-size:small; margin-top: 10px;">
+                            <td th:text="${tmp.regdate}"></td>
+                        </div>
+                        <hr />
+                    </div>
+                </tr>
+            </div>
+
+
+
+
+        </div>
+    </article>
+
+    <!--footer 영역-->
+    <footer th:replace="~{footer :: footerFragment}"></footer>
+
+    <!--jQuery-->
+    <script th:src="@{/js/jquery-3.6.4.min.js}"></script>
+    <!--axios library-->
+    <script th:src="@{/js/axios.min.js}"></script>
+    <!--Bootstrap 용 js -->
+    <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+    <script th:inline="javascript" type="text/javascript">
+
+        const contextPath = $('#contextPathHolder').attr('data-contextPath');
+
+        function formAction1(code) {
+
+            const form = document.getElementById('form');
+
+            if (code === 1) {
+
+                form.action = /*[[@{/community/update.do}]]*/ '';
+
+                form.submit();
+            }
+            else if (code === 2) {
+                const delete1 = document.getElementById('form-delete');
+
+                if (!confirm('삭제하시겠습니까?')) {
+                    alert("취소하였습니다");
+                    return false;
+
+                } else {
+                    delete1.submit();
+                }
+
+            }
+
+        }
+        function insertreply() {
+            const reply_content = document.getElementById("reply_content");
+
+            if (reply_content.value <= 0) {
+                alert('댓글을 입력해주세요')
+                reply_content.focus();
+                return false;
+            }
+            document.getElementById('reply_form').submit();
+        }
+        
+    </script>
+
+    <!--Main js-->
+    <script th:src="@{/js/main.js}"></script>
+</body>
+
+</html>

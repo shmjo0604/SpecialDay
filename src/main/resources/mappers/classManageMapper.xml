@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.mapper.ClassManageMapper">
+
+    <!-- 1. 내 클래스 전체 조회 -->
+    <select id="selectMyClassList" parameterType="string" resultType="ClassProduct">
+        SELECT c.* FROM classproduct c WHERE memberid = #{id}
+    </select>
+
+    <!-- 2. 클래스 1개 조회 -->
+    <select id="selectClassOne" parameterType="long" resultType="ClassProduct">
+        SELECT c.* FROM classproductview c WHERE classcode = #{classcode}
+    </select>
+
+    <!-- 3. 클래스 삭제 -->
+    <update id="updateClassInactive" parameterType="ClassProduct">
+        UPDATE classproduct SET chk = 2 WHERE classcode=#{classcode}
+    </update>
+
+    <!-- 3-2. 클래스 비활성화 -->
+    <update id="updateClassNonactive" parameterType="ClassProduct">
+        UPDATE classproduct SET chk = 3 WHERE classcode=#{classcode}
+    </update>
+
+    <!-- 3-3. 클래스 활성화 -->
+    <update id="updateClassActive" parameterType="ClassProduct">
+        UPDATE classproduct SET chk = 1 WHERE classcode=#{classcode}
+    </update>
+    
+    <!-- 4. 클래스 내용 수정 --> 
+    <update id="updateClassOne" parameterType="ClassProduct">
+        UPDATE classproduct SET title = #{title}, postcode = #{postcode}, address1 = #{address1}, address2 = #{address2}, address3 = #{address3}, 
+            latitude = #{latitude}, longitude = #{longitude}, price = #{price}, nickname = #{nickname}, sns = #{sns}, intro=#{intro}, instructor = #{instructor}, 
+            curriculum = #{curriculum} WHERE classcode = #{classcode}
+    </update>
+
+    <!-- 5-1. 클래스 프로필 이미지 번호 조회 -->
+    <select id="selectClassProfileImageNo" parameterType="long" resultType="long">
+        SELECT i.no FROM classimage i WHERE i.classcode = #{classcode} AND i.typechk = 1
+    </select>
+
+    <!-- 5-2. 클래스 메인 이미지 번호 조회 -->
+    <select id="selectClassMainImageNo" parameterType="long" resultType="long">
+        SELECT i.no FROM classimage i WHERE i.classcode = #{classcode} AND i.typechk = 2
+    </select>
+
+    <!-- 5-3. 클래스 서브 이미지 번호 리스트 조회 -->
+    <select id="selectClassSubImageNoList" parameterType="long" resultType="long">
+        SELECT i.no FROM classimage i WHERE i.classcode = #{classcode} AND i.typechk = 3
+    </select>
+
+    <!-- 6. 클래스 이미지 1개 불러오기 -->
+    <select id="selectClassImageOne" parameterType="long" resultType="ClassImage">
+        SELECT i.* FROM classimage i WHERE i.no = #{no}
+    </select>
+
+    <!-- 7. 클래스 이미지 수정 -->
+    <update id="updateClassImage" parameterType="ClassImage">
+        UPDATE classimage SET filename = #{filename}, filetype = #{filetype}, filesize = #{filesize}, filedata = #{filedata}, filetype = #{filetype}, typechk = #{typechk} WHERE no = #{no}
+    </update>
+
+    <!-- 8. 클래스 이미지 삭제 -->
+    <delete id="deleteClassImageOne" parameterType="long">
+        DELETE FROM classimage WHERE no = #{no}
+    </delete>
+
+    <!-- 9. 클래스 답변완료 -->
+    <update id="updateClassAnswer" parameterType="ClassInquiry">
+        UPDATE classinquiry SET chk = 1 WHERE no = #{no}
+    </update>
+</mapper>

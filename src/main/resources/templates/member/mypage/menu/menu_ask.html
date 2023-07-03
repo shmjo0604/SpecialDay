@@ -1,0 +1,301 @@
+<div th:fragment="menu_ask" class="col-md-8" style="margin-left: 30px;">
+    <!--*****************************************************************************************************************************************************************-->
+    <!--*************************************************************************** 통계보드 ****************************************************************************-->
+    <!--*****************************************************************************************************************************************************************-->
+    <style>
+        .box {
+            width: 80%;
+            height: 150px;
+            background: #FFF;
+            border-radius: 15px;
+            margin: 20px;
+
+        }
+
+        .box h3 {
+            padding-top: 10px;
+            text-align: center;
+            font-weight: bold;
+            font-size: large;
+        }
+
+        .box h1 {
+            padding-top: 12px;
+            text-align: center;
+            font-size: 50px
+        }
+
+        .effect {
+            -webkit-box-shadow: 0 5px 6px -6px #777;
+            -moz-box-shadow: 0 5px 6px -6px #777;
+            box-shadow: 0 5px 6px -6px #777;
+        }
+    </style>
+
+
+    <!--**************** 문의내역 ******************-->
+
+
+    <div class="row-md-4">
+        <p style="font-weight: bolder; font-size: large;">문의내역</p>
+        <div class="row" style="background-color: honeydew; border-radius: 15px;">
+            <div class="col-sm-4">
+                <div class="box effect">
+                    <h3>문의수</h3>
+                    <h1 th:text="${count}"></h1>
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="box effect">
+                    <h3>답변대기</h3>
+                    <h1 th:text="${count0}"></h1>
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="box effect">
+                    <h3>답변완료</h3>
+                    <h1 th:text="${count1}"></h1>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <style>
+        /* 제목 클릭 효과 */
+        .title:hover {
+            text-decoration: underline;
+        }
+    </style>
+
+    <div class="row-md-4" style="margin-top: 50px;">
+        <div style="display: inline-block; margin-top: 40px; width: 100%;">
+            <div style="float: left; font-weight: bold;">| 문의 내역 확인</div>
+            <div style="float: right;">
+                <!-- <div class="btn-group" role="group" style="margin-bottom: 10px;">
+                    <button type="button" class="btn btn-outline-secondary btn-sm dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">전체문의</button>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="#">서비스문의</a></li>
+                        <li><a class="dropdown-item" href="#">클래스문의</a></li>
+                    </ul>
+                </div> -->
+                <div class="btn-group" role="group" style="margin-bottom: 10px;">
+                    <select class="form-select" style="width: 120px;" onchange="selectoption(this.value)">
+
+                        <option value="0" selected>처리상태</option>
+                        <option value="1" th:selected="${#strings.equals(param.chk, '1')}">답변대기</option>
+                        <option value="2" th:selected="${#strings.equals(param.chk, '2')}">답변완료</option>
+
+                    </select>
+                </div>
+                <div class="btn-group" role="group" style="margin-bottom: 10px;">
+                    <select class="form-select" style="width: 120px;" onchange="selectorder(this.value)">
+
+                        <option value="1">최신순</option>
+                        <option value="2">오래된순</option>
+
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <style>
+            .center {
+                text-align: center;
+            }
+        </style>
+
+
+        <th:block th:if="${#lists.isEmpty(list)}">
+            <h3 class="mt-5 text-center">문의내역이 존재하지 않습니다.</h3>
+        </th:block>
+
+        <th:block th:if="${!#lists.isEmpty(list)}">
+            <div>
+                <table class="table table-bordered center">
+                    <thead>
+                        <tr>
+                            <th>번호</th>
+                            <th>문의날짜</th>
+                            <th>클래스 명칭</th>
+                            <th>제목</th>
+                            <th>처리상태</th>
+                        </tr>
+                    </thead>
+                    <tbody style="vertical-align: middle;">
+                        <!-- 처리상태(1) : 답변대기 -->
+
+
+                        <tr th:each="obj : ${list}">
+                            <td th:text="${obj.rnum}"> </td>
+                            <td th:text="${#dates.format(obj.regdate,'yyyy-MM-dd')}"></td>
+                            <td>
+                                <p th:text="${obj.classtitle}"></p>
+                                <a style="text-decoration-line: none;"
+                                    th:href="@{/class/product.do(classcode=${obj.classcode})}">[클래스 보러가기]</a>
+                            </td>
+                            <td>
+                                <label class="title" th:onclick="openModal([[${obj.no}]])"
+                                    th:text="${obj.title}"></label>
+                            </td>
+                            <!-- 답변확인을 위해 문의 모달 창 뜨도록 -->
+                            <th:block th:if="${obj.chk == 1}">
+                                <td style="color: blue">답변완료</td>
+                            </th:block>
+                            <th:block th:if="${obj.chk == 0}">
+                                <td style="color: red">답변대기</td>
+                            </th:block>
+                        </tr>
+
+                    </tbody>
+                </table>
+
+
+                <div class="row justify-content-center">
+                    <div class="col-6 d-flex justify-content-center">
+                        <ul id="pagination-demo" class="pagination-sm "></ul>
+                    </div>
+                </div>
+            </div>
+        </th:block>
+    </div>
+
+    <!-- 모달 창 -->
+    <div class="modal modal-center fade" id="modal" tabindex="-1" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header justify-content-center" style="background-color: ghostwhite">
+                    <label class="modal-title" id="modal-title">서비스 문의</label>
+                </div>
+                <div class="modal-body">
+                    <div style="margin-bottom: 10px; font-weight: bold;">| 질문</div>
+                    <div style="margin-top: 10px; margin-left: 5px;">
+                        <div class="mb-2 row">
+                            <label for="inquiry_title" class="col-sm-1 col-form-label">제목 : </label>
+                            <div class="col-sm-6">
+                                <input id="inquiry_title" type="text" class="form-control-plaintext" readonly>
+                            </div>
+                        </div>
+                        <textarea id="inquiry_content" class="form-control" placeholder="Leave a comment here"
+                            style="height: 250px" readonly></textarea>
+                    </div>
+
+                    <div id="answer_box">
+                        <div style="margin-bottom: 10px; font-weight: bold; margin-top: 30px;">| 답변</div>
+                        <div style="margin-top: 10px; margin-left: 5px;">
+                            <div class="mb-3 row">
+                                <label for="answer_title" class="col-sm-1 col-form-label">제목 : </label>
+                                <div class="col-sm-6">
+                                    <input id="answer_title" type="text" class="form-control-plaintext" name="title">
+                                </div>
+                            </div>
+                        </div>
+
+                        <textarea class="form-control" id="answer_content" style="height: 250px" name="content"
+                            readonly></textarea>
+                    </div>
+
+                </div>
+
+                <!-- 버튼영역 -->
+                <div style="text-align: center;">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="closeModal()"
+                        style="margin-bottom: 20px; margin-top: 10px; height: 35px; width: 100px; display: inline-block;">닫기</button>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+
+    <script th:src="@{/js/jquery-3.6.4.min.js}"></script>
+    <script th:inline="javascript">
+
+        var pages = /*[[${pages}]]*/'';
+        var chk = /*[[${param.chk}]]*/'';
+
+        $(document).ready(function () {
+            $('#pagination-demo').twbsPagination({
+                totalPages: Number(pages),
+                visiblePages: 10,
+                first: '처음',
+                last: '마지막',
+                prev: '이전',
+                next: '다음',
+                initiateStartPageClick: false,
+                startPage: Number(/*[[${param.page}]]*/),
+
+                // 주소창에서 page 값을 받아옴 -> 그 값에 해당하는 목록 버튼이 활성
+
+                onPageClick: function (event, page) {
+
+                    window.location.href = `mypage.do?menu=3&page=${page}&chk=${chk}`;
+
+                }
+            });
+        });
+
+        function selectoption(chk) {
+
+            if (chk === 0) {
+                window.location.href = "mypage.do?menu=3&page=1";
+            }
+            else {
+                window.location.href = `mypage.do?menu=3&page=1&chk=${chk}`;
+            }
+
+        }
+
+        // Modal
+        async function openModal(no) {
+
+            const box = document.querySelector("#answer_box");
+
+            box.style.display = "none";
+
+            const url = contextPath + '/api/inquiry/selectoneinquiry.json?no=' + no;
+            const headers = { "Content-Type": "application/json" };
+            const { data } = await axios.get(url, { headers });
+
+            //console.log(data);
+
+            if (data.status === 200) {
+
+                const title = document.querySelector("#inquiry_title");
+                const content = document.querySelector("#inquiry_content");
+
+                title.value = data.obj.title;
+                content.textContent = data.obj.content;
+
+                if (data.answer !== null) {
+
+                    const title = document.querySelector("#answer_title");
+                    const content = document.querySelector("#answer_content");
+
+                    box.style.display = "block";
+
+                    title.value = data.answer.title;
+                    content.textContent = data.answer.content;
+
+                }
+
+            }
+
+            var modal = document.getElementById("modal");
+            modal.classList.add("show");
+            modal.style.display = "block";
+            modal.setAttribute("aria-modal", "true");
+        }
+
+        function closeModal() {
+
+            var modal = document.getElementById("modal");
+            modal.classList.remove("show");
+            modal.style.display = "none";
+            modal.setAttribute("aria-modal", "false");
+
+        }
+    </script>
+</div>

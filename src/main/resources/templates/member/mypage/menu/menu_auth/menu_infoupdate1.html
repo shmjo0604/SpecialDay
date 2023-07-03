@@ -1,0 +1,52 @@
+<div th:fragment="menu_infoupdate1" class="col-md-8" style="margin-left: 30px;">
+    <style>
+        .form-label { font-size: medium; color: gray;}
+        .form-control {float: left; width: 100%;}
+        .form-btn {margin-top: 50px; height: 35px; width: 100px; float: right; }
+        input::placeholder{font-size: small;}
+        .modal-body > div {text-align: center;}
+    </style>
+    <p>| 나의 정보</p>
+    <div class="container"  style="border: 1px solid gainsboro; padding-top: 20px; padding-bottom: 20px; padding-left: 30px; padding-right: 30px; display: inline-block;" >
+        <div class="row">
+            <div style="font-size: smaller; color: gray;">※ 개인정보에 접근하기 위해 가입하신 비밀번호를 입력해주세요.</div>
+            <div style="margin-top: 50px;">
+                <label class="form-label" style="font-weight: bold;">비밀번호</label>
+                <div style="display: inline-block; width: 100%;">
+                    <input id="password" class="form-control" type ="text" placeholder ="비밀번호를 입력하세요." name ="password" value ="pw2"/><br />
+                </div>
+            </div>
+
+            <div style="display: inline-block;">
+                <!-- <input type="button" value="다음" class="btn btn-sm btn-success form-btn"/> -->
+                <input type="button" value="다음" class="btn btn-sm btn-success form-btn" onclick="next()"/>
+                <!--비밀번호 불일치시 모달 창으로 안내 -->
+            </div>
+            
+        </div>
+    </div>
+
+
+    <!-- Modal  -->
+    <div class="modal fade" id="pwIncorrect" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-body" style="display: inline-block;">
+                    <div style="margin-bottom: 10px;"><i class="fas fa-duotone fa-shield-check"></i></div><!-- 적절한 아이콘 추후 변경 -->
+                    <div style="margin-bottom: 10px;"><label>비밀번호가 불일치합니다.</label></div>
+                    <!-- <div><label style="color: gray; font-weight: bold; font-size: small;">회원 탈퇴 신청이 완료되었습니다.</label></div><br/> -->
+                    <div><a href=""><button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="height: 35px; width: 80px;">확인</button></a></div> 
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function next() {
+         const modal = new bootstrap.Modal(document.getElementById("pwIncorrect"), {});
+         modal.show();
+      }
+
+    </script>
+
+</div>

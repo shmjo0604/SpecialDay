@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>Page Title</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <!--thymeleaf contextpath-->
+    <link id="contextPathHolder" th:data-contextPath="${#httpServletRequest.getContextPath()}" />
+</head>
+<body>
+    <!--jQuery-->
+    <script th:src="@{/js/jquery-3.6.4.min.js}"></script>
+    <!--SweetAlert2 JS-->
+    <script th:src="@{/js/sweetalert2@11.js}"></script>
+    <script>
+        const contextPath = $('#contextPathHolder').attr('data-contextPath');
+       
+        Swal.fire({
+            icon: 'success',
+            text: '[[${alertMessage}]]',
+            showConfirmButton: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = (contextPath + '[[${alertUrl}]]').replace(/&amp;/gi, '&');
+        }})
+    </script>
+</body>
+</html>

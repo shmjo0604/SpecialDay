@@ -1,0 +1,68 @@
+<div th:fragment="menu_signout" class="col-md-8" style="margin-left: 30px;">
+    <style>
+        .form-label { font-size: medium; color: gray;}
+        .form-control {float: left; width: 100%;}
+        input::placeholder{font-size: small;}
+        .form-btn {margin-top: 40px; height: 35px; width: 100px; float: right; }
+        .form-chk{float: left; margin-top: 50px;}
+        .modal-body > div {text-align: center;}
+    </style>
+    
+    <p>| 회원탈퇴</p>
+    <div class="container" style="border: 1px solid gainsboro; padding-top: 50px; padding-bottom: 50px; padding-left: 30px; padding-right: 30px; display: inline-block;" >
+        <div class="row">
+            <div>
+                <label class="form-label" style="font-weight: bold;"> 비밀번호</label>
+                <div style="display: inline-block; width: 100%;">
+                    <input id="signout-password" class="form-control" type ="password" placeholder ="가입하신 비밀번호를 입력해주세요." name ="password" value =""/><br />
+                </div>
+            </div>
+
+            <div style="background-color: rgb(245, 244, 244); font-size: smaller; padding: 20px; margin-top: 50px; width: 97%; margin-left: 10px;">
+                <li>현재 사용중인 계정 정보는 회원 탈퇴 후 복구가 불가합니다.</li>
+                <li>진행 중인 신청건이 있거나 페널티 조치 중인 경우 탈퇴 신청이 불가합니다.</li>
+                <li>탈퇴 후 회원님의 정보는 전자상거래 소비자보호법에 의거한 크몽 개인정보처리방침에 따라 관리됩니다.</li>
+                <li>탈퇴 후에는 계정 정보가 삭제되어 본인 확인이 불가하므로, 탈퇴 신청 전에 게시글 삭제를 요청해 주시기 바랍니다.</li>
+                <li>수익금이 있을 경우, 수익금 출금을 통해 정산이 완료된 이후 탈퇴를 신청하셔야 합니다.</li>
+            </div>
+
+            <div style="display: inline-block;">
+                <input id="signout-chk" type="checkbox" class="form-chk" name="chk">
+                <label for="checkbox" style="font-size: small; float: left; margin-top: 46px; margin-left: 10px;">주의사항을 모두 확인하였습니다.</label> <!-- 체크했을 때 탈퇴하기 버튼 활성화되도록 -->
+                <!-- <input type="button" value="탈퇴하기" class="btn btn-sm btn-success form-btn" data-bs-toggle="modal" data-bs-target="#signout"/> -->
+                <input id="signout-button" type="button" value="탈퇴하기" class="btn btn-sm btn-success form-btn" onclick="signout()" disabled/>
+            </div>
+        </div>
+    </div>   
+
+
+    <!-- Modal(1) 회원탈퇴 성공시  -->
+    <div class="modal fade" id="signoutPass" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-body" style="display: inline-block;">
+                    <div style="margin-bottom: 10px;"><i class="fas fa-duotone fa-shield-check"></i></div><!-- 적절한 아이콘 추후 변경 -->
+                    <div><label>회원 탈퇴 완료</label></div>
+                    <div><label style="color: gray; font-weight: bold; font-size: small;">회원 탈퇴 신청이 완료되었습니다.</label></div><br/>
+                    <div><a th:href="@{/logout.do}"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="height: 35px; width: 80px;">확인</button></a></div> <!-- 홈으로 이동 -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal(2) 회원탈퇴 실패시 -->
+    <div class="modal fade" id="signoutFail" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-body" style="display: inline-block;">
+                    <div style="margin-bottom: 10px;"><i class="fas fa-duotone fa-shield-check"></i></div><!-- 적절한 아이콘 추후 변경 -->
+                    <div><label>회원 탈퇴 실패</label></div>
+                    <div><label id="singoutFailMessage" style="color: gray; font-weight: bold; font-size: small;"></label></div><br/>
+                    <div><button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="height: 35px; width: 80px;">확인</button></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

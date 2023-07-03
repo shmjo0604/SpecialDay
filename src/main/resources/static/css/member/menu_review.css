@@ -1,0 +1,42 @@
+
+.page {
+    position: relative;
+    left: 350px;
+}
+.tatle{
+    text-decoration: none;
+}
+
+.classinfo1{
+    font-size: 0.4rem;
+    background-color: white;
+    border: 0px;
+    height: 20px;
+    width: 200px;
+}
+
+.classinfo{
+    height: 18px;
+}
+
+.ratingdiv{
+    width: 330px;
+}
+
+#rating1{
+    background-color: white;
+    border: 0px;
+    position: relative;
+    left: -10px;
+    font-size: 4.1rem;
+    text-shadow: 0px 0px 2px black;
+    color: yellow;
+    width: 330px;
+}
+
+#content1{
+    border: 0;
+    width: auto;
+    height: auto;
+    text-overflow: ellipsis;
+}

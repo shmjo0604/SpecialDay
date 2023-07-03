@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>일정 관리</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <!--웹 페이지 아이콘 변경-->
+    <link rel="icon" th:href="@{/image/logo.ico}">
+    <!-- Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@500&display=swap" rel="stylesheet">  
+    <link href="https://fonts.googleapis.com/css2?family=Do+Hyeon&display=swap" rel="stylesheet">
+    <!--Bootstrap 용 CSS-->
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <!--CSS-->
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+    <!--Bootstrap 용 Icon CDN-->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+    <!-- font awesome용 css CDN  -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <!--thymeleaf contextpath-->
+    <link id="contextPathHolder" th:data-contextPath="${#httpServletRequest.getContextPath()}" />
+    <style>
+         /* 사이드바 메뉴 hover */
+        .menu {
+            display: inline-block;
+            width: 100%;
+            box-sizing: border-box;
+            padding: 7px;
+        }
+
+        .menu:hover { background-color: rgb(245, 241, 241);}
+
+        .btn:hover{background-color: rgb(245, 241, 241);}
+    
+    </style>
+</head>
+<body>
+    <!--Bootstrap 용 js -->
+    <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+
+    <!--header 영역-->
+    <header th:replace="~{header :: headerFragment}"></header>
+
+    <!--main 영역-->
+    <div id="body-wrapper">
+        <div id="body-content" class="container">
+            <div class="row">
+               <!-- left -->
+                <div class="col-sm-3" style="width: 250px; left: 0; height: 800px; border: 1px solid rgba(199, 196, 196, 0.466);">
+                    <div class="sidevar">
+                        <div class="sidevar-menu">
+                            <ul style="padding-left : 5px; padding-right: 5px; padding-top: 20px;">
+                                <label style="font-size: medium; font-family: 'Do Hyeon', sans-serif; color: gray;"><i class="fa-solid fa-list" style="color: gray;"></i> 일정 및 신청 관리</label>
+                                <hr style="border: 0.5px solid rgb(0, 0, 0); margin-top: 5px;"/>
+                                <li style="list-style: none;"><a th:href="@{myunit.do(classcode=${classcode}, menu=1)}" style="text-decoration: none; color: black; font-weight: bold; font-size: medium;" class="menu">일정 관리</a></li>
+                                <hr style="margin-top: 5px; margin-bottom: 5px;" />
+                                <li style="list-style: none;"><a th:href="@{myunit.do(classcode=${classcode}, menu=2)}" style="text-decoration: none; color: black; font-weight: bold; font-size: medium;" class="menu">신청 관리</a></li>
+                                <hr style="margin-top: 5px; margin-bottom: 5px;" />
+                            </ul>
+                            <button class="btn btn-sm" style="width: 215px; border: 1px solid rgba(168, 166, 166, 0.466); height: 40px; margin-top: 560px; color: gray; font-weight: bold;"><a class="nav-link" th:href="@{/member/myclass.do?menu=1}">클래스 관리</a></button>
+                            
+                        </div>
+                    </div>
+                </div>
+                <!-- /left -->
+
+                <!-- right -->
+                <div class="col-sm-8" style="margin-left: 50px;">
+                    <th:block th:if="${#strings.equals(param.menu, '1')}">
+                        <div style="font-size: x-large; font-family: 'Do Hyeon', sans-serif;  color: gray;">Title. <label style="color: black;" th:text="${title}"></label></div>
+                        <hr style="border : 2px solid #339985;"/>
+                        <div style="margin-top: 5px; font-size: small; font-weight: normal; color: gray; color: gray; font-family: 'Noto Sans KR', sans-serif;"><i class="fa-solid fa-pen-to-square" style="color: gray;"></i> 클래스 상세일정을 등록해주세요.</div>
+                        <div th:replace="~{/classunit/menu/menu_unitmanage :: menu_unitmanage}"></div>
+                    </th:block>
+          
+                    <th:block th:if="${#strings.equals(param.menu, '2')}">
+                        <div th:replace="~{/classunit/menu/menu_applymanage :: menu_applymanage}"></div>
+                    </th:block>
+                </div>
+                <!-- /right -->                
+            </div>
+        </div>
+    </div>
+    
+    <!--footer 영역-->
+    <div style="margin-top: 150px;">
+        <footer th:replace="~{footer :: footerFragment}"></footer>
+    </div>
+    
+    <script>
+        const contextPath = $("#contextPathHolder").attr("data-contextPath");
+    </script>
+    <!--Main js-->
+    <script th:src="@{/js/main.js}"></script>
+</body>
+</html>

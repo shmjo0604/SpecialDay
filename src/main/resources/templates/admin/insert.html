@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>관리자 등록</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+</head>
+<body>
+    <form th:action="@{/admin/insert.do}" method="post">
+        아이디 : <input type="text" name="id" /><br/>
+        암호 : <input type="password" name="password"/><br/>
+        이름 : <input type="text" name="name"/><br/>
+        <input type="submit" value="등록하기" />
+</body>
+</html>

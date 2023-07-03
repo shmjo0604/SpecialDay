@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.example.mapper.CommunityMapper">
+<!--조회수증가-->
+<update id = "updatehit" parameterType ="long">
+ update community set hit = hit+1 where no = #{no}
+</update>
+</mapper>

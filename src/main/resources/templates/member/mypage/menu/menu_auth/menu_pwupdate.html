@@ -1,0 +1,49 @@
+<div th:fragment="menu_pwupdate" class="col-md-8" style="margin-left: 30px;">
+    <style>
+        .form-label { font-size: medium; color: gray;}
+        .form-control {float: left; width: 100%;}
+        .form-btn {margin-top: 50px; height: 35px; width: 100px; float: right; }
+        input::placeholder {font-size: small;}
+    </style>
+    
+    <p>| 비밀번호 변경</p>
+    <div class="container" style="border: 1px solid gainsboro; padding-top: 50px; padding-bottom: 50px; padding-left: 30px; padding-right: 30px; display: inline-block;" >
+        <div class="row">
+            <div>
+                <label class="form-label" style="font-weight: bold;"> 로그인 ID</label>
+                <div style="display: inline-block; width: 100%;">
+                    <input id="id" class="form-control" type ="text" name ="id" th:value ="${user.username}" readonly style="background-color: ghostwhite; color: gray;"/><br />
+                </div>
+            </div>
+
+            <div style="margin-top: 50px;">
+                <label class="form-label" style="font-weight: bold;">현재 비밀번호</label>
+                <div style="display: inline-block; width: 100%;">
+                    <input id="pwupdate_password" class="form-control" type ="password" placeholder ="기존 비밀번호를 입력해주세요." name ="password" value ="pw2"/><br />
+                </div>
+            </div>
+
+            <div style="margin-top: 50px;">
+                <label class="form-label" style="font-weight: bold;">새 비밀번호</label>
+                <div style="display: inline-block; width: 100%;">
+                    <input id="pwupdate_newpassword1" class="form-control" type ="password" placeholder ="변경할 비밀번호를 입력해주세요." name ="newpassword" value =""/><br />
+                </div>
+            </div>
+
+            <div style="margin-top: 50px;">
+                <label class="form-label" style="font-weight: bold;">새 비밀번호(확인)</label>
+                <div style="display: inline-block; width: 100%;">
+                    <input id="pwupdate_newpassword2" class="form-control" type ="password" placeholder ="변경할 비밀번호를 재입력해주세요." value =""/><br />
+                </div>
+            </div>
+            <div style="display: inline-block;">
+                <div style="float: right;">
+                    <input type="button" value="변경하기" class="btn btn-sm btn-success form-btn" onclick="updatePwAction()"/><br />
+                    <!-- <label style="margin-top: 10px; float: right; font-size: small; color: red; margin-left: 10px;">변경에 실패하셨습니다.</label> -->
+                </div>
+                
+            </div>
+            
+        </div>
+    </div>    
+</div>
